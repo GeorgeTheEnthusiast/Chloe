@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="bc41b0aa754a4771a31c2883ec0b3e25" Name="Diagram1">
+        <EntityTypeShape EntityType="FlightsModel.Carriers" Width="1.5" PointX="5.625" PointY="6.5" />
+        <EntityTypeShape EntityType="FlightsModel.Cities" Width="2.75" PointX="0.875" PointY="3.5" />
+        <EntityTypeShape EntityType="FlightsModel.Currencies" Width="1.5" PointX="9.5" PointY="4.625" />
+        <EntityTypeShape EntityType="FlightsModel.Flights" Width="1.5" PointX="6.625" PointY="3" />
+        <EntityTypeShape EntityType="FlightsModel.NotificationsReceivers" Width="1.5" PointX="9.5" PointY="2.75" />
+        <EntityTypeShape EntityType="FlightsModel.SearchCriterias" Width="1.5" PointX="4.375" PointY="3.25" />
+        <AssociationConnector Association="FlightsModel.FK_SearchCriteria_CityFrom1" />
+        <AssociationConnector Association="FlightsModel.FK_SearchCriteria_CityTo1" />
+        <AssociationConnector Association="FlightsModel.FK_Flight_Currency1" />
+        <AssociationConnector Association="FlightsModel.FK_Flight_SearchCriteria1" />
+        <AssociationConnector Association="FlightsModel.FK_Flight_Carrier" />
+        <AssociationConnector Association="FlightsModel.FK_Flights_Flights" />
+        <AssociationConnector Association="FlightsModel.FK_SearchCriterias_Carriers" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

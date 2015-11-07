@@ -1,0 +1,439 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FlightsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Carriers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="WebSite" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Cities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Currencies">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Flights">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SearchCriteria_Id" Type="int" Nullable="false" />
+          <Property Name="DepartureDate" Type="datetime" />
+          <Property Name="Currency_Id" Type="int" Nullable="false" />
+          <Property Name="Price" Type="int" Nullable="false" />
+          <Property Name="SearchDate" Type="datetime" Nullable="false" />
+          <Property Name="ValidationText" Type="nvarchar" MaxLength="2048" />
+          <Property Name="Carrier_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="NotificationsReceivers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="SearchCriterias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CityFrom_Id" Type="int" Nullable="false" />
+          <Property Name="CityTo_Id" Type="int" Nullable="false" />
+          <Property Name="DepartureDate" Type="date" Nullable="false" />
+          <Property Name="Carrier_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Flight_Carrier">
+          <End Role="Carriers" Type="Self.Carriers" Multiplicity="0..1" />
+          <End Role="Flights" Type="Self.Flights" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Carriers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Flights">
+              <PropertyRef Name="Carrier_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Flight_Currency">
+          <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
+          <End Role="Flights" Type="Self.Flights" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currencies">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Flights">
+              <PropertyRef Name="Currency_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Flight_SearchCriteria">
+          <End Role="SearchCriterias" Type="Self.SearchCriterias" Multiplicity="1" />
+          <End Role="Flights" Type="Self.Flights" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCriterias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Flights">
+              <PropertyRef Name="SearchCriteria_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchCriteria_CityFrom">
+          <End Role="Cities" Type="Self.Cities" Multiplicity="1" />
+          <End Role="SearchCriterias" Type="Self.SearchCriterias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchCriterias">
+              <PropertyRef Name="CityFrom_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchCriteria_CityTo">
+          <End Role="Cities" Type="Self.Cities" Multiplicity="1" />
+          <End Role="SearchCriterias" Type="Self.SearchCriterias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchCriterias">
+              <PropertyRef Name="CityTo_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchCriterias_Carriers">
+          <End Role="Carriers" Type="Self.Carriers" Multiplicity="1" />
+          <End Role="SearchCriterias" Type="Self.SearchCriterias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Carriers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchCriterias">
+              <PropertyRef Name="Carrier_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FlightsModelStoreContainer">
+          <EntitySet Name="Carriers" EntityType="Self.Carriers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cities" EntityType="Self.Cities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Currencies" EntityType="Self.Currencies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Flights" EntityType="Self.Flights" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NotificationsReceivers" EntityType="Self.NotificationsReceivers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SearchCriterias" EntityType="Self.SearchCriterias" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Flight_Carrier" Association="Self.FK_Flight_Carrier">
+            <End Role="Carriers" EntitySet="Carriers" />
+            <End Role="Flights" EntitySet="Flights" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Flight_Currency" Association="Self.FK_Flight_Currency">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="Flights" EntitySet="Flights" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Flight_SearchCriteria" Association="Self.FK_Flight_SearchCriteria">
+            <End Role="SearchCriterias" EntitySet="SearchCriterias" />
+            <End Role="Flights" EntitySet="Flights" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCriteria_CityFrom" Association="Self.FK_SearchCriteria_CityFrom">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="SearchCriterias" EntitySet="SearchCriterias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCriteria_CityTo" Association="Self.FK_SearchCriteria_CityTo">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="SearchCriterias" EntitySet="SearchCriterias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCriterias_Carriers" Association="Self.FK_SearchCriterias_Carriers">
+            <End Role="Carriers" EntitySet="Carriers" />
+            <End Role="SearchCriterias" EntitySet="SearchCriterias" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FlightsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="FlightsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Carriers" EntityType="FlightsModel.Carriers" />
+          <EntitySet Name="Cities" EntityType="FlightsModel.Cities" />
+          <EntitySet Name="Currencies" EntityType="FlightsModel.Currencies" />
+          <EntitySet Name="Flights" EntityType="FlightsModel.Flights" />
+          <EntitySet Name="NotificationsReceivers" EntityType="FlightsModel.NotificationsReceivers" />
+          <EntitySet Name="SearchCriterias" EntityType="FlightsModel.SearchCriterias" />
+          <AssociationSet Name="FK_SearchCriteria_CityFrom1" Association="FlightsModel.FK_SearchCriteria_CityFrom1">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="SearchCriterias" EntitySet="SearchCriterias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCriteria_CityTo1" Association="FlightsModel.FK_SearchCriteria_CityTo1">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="SearchCriterias" EntitySet="SearchCriterias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Flight_Currency1" Association="FlightsModel.FK_Flight_Currency1">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="Flights" EntitySet="Flights" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Flight_SearchCriteria1" Association="FlightsModel.FK_Flight_SearchCriteria1">
+            <End Role="SearchCriterias" EntitySet="SearchCriterias" />
+            <End Role="Flights" EntitySet="Flights" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Flight_Carrier" Association="FlightsModel.FK_Flight_Carrier">
+            <End Role="Carriers" EntitySet="Carriers" />
+            <End Role="Flights" EntitySet="Flights" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Flights_Flights" Association="FlightsModel.FK_Flights_Flights">
+            <End Role="Flights" EntitySet="Flights" />
+            <End Role="Flights1" EntitySet="Flights" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCriterias_Carriers" Association="FlightsModel.FK_SearchCriterias_Carriers">
+            <End Role="Carriers" EntitySet="Carriers" />
+            <End Role="SearchCriterias" EntitySet="SearchCriterias" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Carriers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="WebSite" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Flights" Relationship="FlightsModel.FK_Flight_Carrier" FromRole="Carriers" ToRole="Flights" />
+          <NavigationProperty Name="SearchCriterias" Relationship="FlightsModel.FK_SearchCriterias_Carriers" FromRole="Carriers" ToRole="SearchCriterias" />
+        </EntityType>
+        <EntityType Name="Cities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SearchCriterias_Fk_CityFrom" Relationship="FlightsModel.FK_SearchCriteria_CityFrom1" FromRole="Cities" ToRole="SearchCriterias" />
+          <NavigationProperty Name="SearchCriterias_Fk_CityTo" Relationship="FlightsModel.FK_SearchCriteria_CityTo1" FromRole="Cities" ToRole="SearchCriterias" />
+        </EntityType>
+        <EntityType Name="Currencies">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Flights" Relationship="FlightsModel.FK_Flight_Currency1" FromRole="Currencies" ToRole="Flights" />
+          <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Flights">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SearchCriteria_Id" Type="Int32" Nullable="false" />
+          <Property Name="DepartureDate" Type="DateTime" Precision="3" />
+          <Property Name="Currency_Id" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Int32" Nullable="false" />
+          <Property Name="SearchDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ValidationText" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Currencies" Relationship="FlightsModel.FK_Flight_Currency1" FromRole="Flights" ToRole="Currencies" />
+          <NavigationProperty Name="SearchCriterias" Relationship="FlightsModel.FK_Flight_SearchCriteria1" FromRole="Flights" ToRole="SearchCriterias" />
+          <Property Name="Carrier_Id" Type="Int32" />
+          <NavigationProperty Name="Carriers" Relationship="FlightsModel.FK_Flight_Carrier" FromRole="Flights" ToRole="Carriers" />
+        </EntityType>
+        <EntityType Name="NotificationsReceivers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SearchCriterias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CityFrom_Id" Type="Int32" Nullable="false" />
+          <Property Name="CityTo_Id" Type="Int32" Nullable="false" />
+          <Property Name="DepartureDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="CityFrom" Relationship="FlightsModel.FK_SearchCriteria_CityFrom1" FromRole="SearchCriterias" ToRole="Cities" />
+          <NavigationProperty Name="CityTo" Relationship="FlightsModel.FK_SearchCriteria_CityTo1" FromRole="SearchCriterias" ToRole="Cities" />
+          <NavigationProperty Name="Flights" Relationship="FlightsModel.FK_Flight_SearchCriteria1" FromRole="SearchCriterias" ToRole="Flights" />
+          <Property Name="Carrier_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Carriers" Relationship="FlightsModel.FK_SearchCriterias_Carriers" FromRole="SearchCriterias" ToRole="Carriers" />
+        </EntityType>
+        <Association Name="FK_SearchCriteria_CityFrom1">
+          <End Type="FlightsModel.Cities" Role="Cities" Multiplicity="1" />
+          <End Type="FlightsModel.SearchCriterias" Role="SearchCriterias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchCriterias">
+              <PropertyRef Name="CityFrom_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchCriteria_CityTo1">
+          <End Type="FlightsModel.Cities" Role="Cities" Multiplicity="1" />
+          <End Type="FlightsModel.SearchCriterias" Role="SearchCriterias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchCriterias">
+              <PropertyRef Name="CityTo_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Flight_Currency1">
+          <End Type="FlightsModel.Currencies" Role="Currencies" Multiplicity="1" />
+          <End Type="FlightsModel.Flights" Role="Flights" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currencies">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Flights">
+              <PropertyRef Name="Currency_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Flight_SearchCriteria1">
+          <End Type="FlightsModel.SearchCriterias" Role="SearchCriterias" Multiplicity="1" />
+          <End Type="FlightsModel.Flights" Role="Flights" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCriterias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Flights">
+              <PropertyRef Name="SearchCriteria_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Flight_Carrier">
+          <End Type="FlightsModel.Carriers" Role="Carriers" Multiplicity="0..1" />
+          <End Type="FlightsModel.Flights" Role="Flights" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Carriers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Flights">
+              <PropertyRef Name="Carrier_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Flights_Flights">
+          <End Type="FlightsModel.Flights" Role="Flights" Multiplicity="1" />
+          <End Type="FlightsModel.Flights" Role="Flights1" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Flights">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Flights1">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchCriterias_Carriers">
+          <End Type="FlightsModel.Carriers" Role="Carriers" Multiplicity="1" />
+          <End Type="FlightsModel.SearchCriterias" Role="SearchCriterias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Carriers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SearchCriterias">
+              <PropertyRef Name="Carrier_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FlightsModelStoreContainer" CdmEntityContainer="FlightsEntities">
+          <EntitySetMapping Name="Carriers">
+            <EntityTypeMapping TypeName="FlightsModel.Carriers">
+              <MappingFragment StoreEntitySet="Carriers">
+                <ScalarProperty Name="WebSite" ColumnName="WebSite" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cities">
+            <EntityTypeMapping TypeName="FlightsModel.Cities">
+              <MappingFragment StoreEntitySet="Cities">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Currencies">
+            <EntityTypeMapping TypeName="FlightsModel.Currencies">
+              <MappingFragment StoreEntitySet="Currencies">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Flights">
+            <EntityTypeMapping TypeName="FlightsModel.Flights">
+              <MappingFragment StoreEntitySet="Flights">
+                <ScalarProperty Name="Carrier_Id" ColumnName="Carrier_Id" />
+                <ScalarProperty Name="ValidationText" ColumnName="ValidationText" />
+                <ScalarProperty Name="SearchDate" ColumnName="SearchDate" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Currency_Id" ColumnName="Currency_Id" />
+                <ScalarProperty Name="DepartureDate" ColumnName="DepartureDate" />
+                <ScalarProperty Name="SearchCriteria_Id" ColumnName="SearchCriteria_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NotificationsReceivers">
+            <EntityTypeMapping TypeName="FlightsModel.NotificationsReceivers">
+              <MappingFragment StoreEntitySet="NotificationsReceivers">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchCriterias">
+            <EntityTypeMapping TypeName="FlightsModel.SearchCriterias">
+              <MappingFragment StoreEntitySet="SearchCriterias">
+                <ScalarProperty Name="Carrier_Id" ColumnName="Carrier_Id" />
+                <ScalarProperty Name="DepartureDate" ColumnName="DepartureDate" />
+                <ScalarProperty Name="CityTo_Id" ColumnName="CityTo_Id" />
+                <ScalarProperty Name="CityFrom_Id" ColumnName="CityFrom_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
