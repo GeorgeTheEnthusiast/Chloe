@@ -10,6 +10,7 @@ using Flights.Domain.Query;
 using Flights.Dto;
 using Flights.Dto.Enums;
 using Flights.Exceptions;
+using NLog;
 using NUnit.Framework.Constraints;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
@@ -19,28 +20,23 @@ namespace Flights
     public class RyanAirWebSiteController : IRyanAirWebSiteController
     {
         private readonly IWebDriver _driver;
-        private readonly ICurrencyConverter _currencyConverter;
         private readonly ICurrienciesCommand _currienciesCommand;
         private readonly IRyanAirDateConverter _ryanAirDateConverter;
         private readonly ICarrierQuery _carrierQuery;
-
         private Carrier _carrier;
-        private const string FlightsIsNotAvailable = "Brak lotów w tym dniu";
-        
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+
         public RyanAirWebSiteController(IWebDriver driver, 
-            ICurrencyConverter currencyConverter, 
             ICurrienciesCommand currienciesCommand, 
             IRyanAirDateConverter ryanAirDateConverter, 
             ICarrierQuery carrierQuery)
         {
             if (driver == null) throw new ArgumentNullException("driver");
-            if (currencyConverter == null) throw new ArgumentNullException("currencyConverter");
             if (currienciesCommand == null) throw new ArgumentNullException("currienciesCommand");
             if (ryanAirDateConverter == null) throw new ArgumentNullException("ryanAirDateConverter");
             if (carrierQuery == null) throw new ArgumentNullException("carrierQuery");
 
             _driver = driver;
-            _currencyConverter = currencyConverter;
             _currienciesCommand = currienciesCommand;
             _ryanAirDateConverter = ryanAirDateConverter;
             _carrierQuery = carrierQuery;
@@ -265,7 +261,7 @@ namespace Flights
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                _logger.Error(ex);
             }
             return result;
         }

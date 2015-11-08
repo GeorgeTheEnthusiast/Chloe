@@ -12,6 +12,7 @@ using Flights.Domain.Query;
 using Flights.Dto;
 using Flights.Dto.Enums;
 using Flights.Exceptions;
+using NLog;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 
@@ -23,9 +24,9 @@ namespace Flights
         private readonly ICurrienciesCommand _currienciesCommand;
         private readonly ICarrierQuery _carrierQuery;
         private readonly IWizzAirCalendarConverter _wizzAirCalendarConverter;
-
         private Carrier _carrier;
-        
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
+
         public WizzAirWebSiteController(IWebDriver driver,
             ICurrienciesCommand currienciesCommand,
             ICarrierQuery carrierQuery,
@@ -193,7 +194,7 @@ namespace Flights
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                _logger.Error(ex);
 
                 return null;
             }

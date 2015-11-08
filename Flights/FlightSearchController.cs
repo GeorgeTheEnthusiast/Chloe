@@ -8,6 +8,7 @@ using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
+using NLog;
 using OpenQA.Selenium;
 
 namespace Flights
@@ -20,6 +21,7 @@ namespace Flights
         private readonly IWebDriver _driver;
         private List<int> _searchesToRepeat;
         private List<SearchCriteria> _searchCriterias;
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
 
         public FlightSearchController(
             IFlightService flightService,
@@ -49,7 +51,7 @@ namespace Flights
 
                 try
                 {
-                    Console.WriteLine("Rozpoczynam szukanie przelotów {0} na dzień {1} z {2} do {3}...", criterias.Carrier.Name, criterias.DepartureDate.ToShortDateString(), criterias.CityFrom.Name, criterias.CityTo.Name);
+                    _logger.Info("Rozpoczynam szukanie przelotów {0} na dzień {1} z {2} do {3}...", criterias.Carrier.Name, criterias.DepartureDate.ToShortDateString(), criterias.CityFrom.Name, criterias.CityTo.Name);
                     
                     _flightService = Bootstrapper.Container.Resolve<IFlightService>();
 
@@ -62,13 +64,13 @@ namespace Flights
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    _logger.Error(e);
                 }
             }
 
             if (_searchesToRepeat.Count > 0)
             {
-                Console.WriteLine("Pozostało: " + _searchesToRepeat.Count);
+                _logger.Info("Pozostało: " + _searchesToRepeat.Count);
                 return false;
             }
             else

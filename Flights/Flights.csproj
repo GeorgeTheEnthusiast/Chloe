@@ -197,7 +197,9 @@
     <Compile Include="WizzAirWebSiteController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <EntityDeploy Include="Domain\Dto\FlightDataModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>FlightDataModel.Designer.cs</LastGenOutput>
