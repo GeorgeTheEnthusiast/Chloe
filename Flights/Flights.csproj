@@ -100,8 +100,10 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Converters\CarriersConverter.cs" />
+    <Compile Include="Converters\CountriesConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\FlightsConverter.cs" />
+    <Compile Include="Converters\ICountriesConverter.cs" />
     <Compile Include="Converters\ICarriersConverter.cs" />
     <Compile Include="Converters\ICurrencyConverter.cs" />
     <Compile Include="Converters\IFlightsConverter.cs" />
@@ -121,6 +123,9 @@
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Domain\Dto\Cities.cs">
+      <DependentUpon>FlightDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\Dto\Countries.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Domain\Dto\Currencies.cs">
@@ -150,19 +155,18 @@
     <Compile Include="Domain\Dto\SearchCriterias.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Domain\Query\CountryQuery.cs" />
     <Compile Include="Domain\Query\FlightsQuery.cs" />
     <Compile Include="Domain\Query\CarrierQuery.cs" />
-    <Compile Include="Domain\Query\CityQuery.cs" />
-    <Compile Include="Domain\Query\CurrencyQuery.cs" />
+    <Compile Include="Domain\Query\ICountryQuery.cs" />
     <Compile Include="Domain\Query\IFlightsQuery.cs" />
     <Compile Include="Domain\Query\ICarrierQuery.cs" />
-    <Compile Include="Domain\Query\ICityQuery.cs" />
-    <Compile Include="Domain\Query\ICurrencyQuery.cs" />
     <Compile Include="Domain\Query\INotificationsReceiverQuery.cs" />
     <Compile Include="Domain\Query\ISearchCriteriaQuery.cs" />
     <Compile Include="Domain\Query\NotificationsReceiverQuery.cs" />
     <Compile Include="Domain\Query\SearchCriteriaQuery.cs" />
     <Compile Include="Dto\Carriers.cs" />
+    <Compile Include="Dto\Country.cs" />
     <Compile Include="Dto\Enums\CarrierType.cs" />
     <Compile Include="Dto\City.cs" />
     <Compile Include="Dto\Currency.cs" />

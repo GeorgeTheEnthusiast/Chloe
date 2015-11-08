@@ -12,18 +12,19 @@ namespace Flights.Domain.Dto
     using System;
     using System.Collections.Generic;
     
-    public partial class Flights
+    public partial class Countries
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Countries()
+        {
+            this.Cities = new HashSet<Cities>();
+        }
+    
+        public string Name { get; set; }
         public int Id { get; set; }
-        public int SearchCriteria_Id { get; set; }
-        public Nullable<System.DateTime> DepartureDate { get; set; }
-        public int Currency_Id { get; set; }
-        public int Price { get; set; }
-        public System.DateTime SearchDate { get; set; }
-        public string ValidationText { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
     
-        public virtual Currencies Currencies { get; set; }
-        public virtual SearchCriterias SearchCriterias { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Cities> Cities { get; set; }
     }
 }

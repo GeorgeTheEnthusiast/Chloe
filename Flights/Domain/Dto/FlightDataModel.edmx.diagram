@@ -16,6 +16,8 @@
         <AssociationConnector Association="FlightsModel.FK_Flight_Currency1" />
         <AssociationConnector Association="FlightsModel.FK_Flight_SearchCriteria1" />
         <AssociationConnector Association="FlightsModel.FK_SearchCriterias_Carriers" />
+        <EntityTypeShape EntityType="FlightsModel.Countries" Width="1.5" PointX="0.875" PointY="0.75" />
+        <AssociationConnector Association="FlightsModel.FK_Cities_Countries" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

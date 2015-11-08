@@ -39,8 +39,6 @@ namespace Flights
                 Component.For<ICurrienciesCommand>().ImplementedBy(typeof(CurrenciesCommand)),
                 Component.For<IFlightsCommand>().ImplementedBy(typeof(FlightsCommand)),
                 Component.For<ICarrierQuery>().ImplementedBy(typeof(CarrierQuery)),
-                Component.For<ICityQuery>().ImplementedBy(typeof(CityQuery)),
-                Component.For<ICurrencyQuery>().ImplementedBy(typeof(CurrencyQuery)),
                 Component.For<INotificationsReceiverQuery>().ImplementedBy(typeof(NotificationsReceiverQuery)),
                 Component.For<ISearchCriteriaQuery>().ImplementedBy(typeof(SearchCriteriaQuery)),
                 Component.For<IFlightService>().ImplementedBy(typeof(FlightService)),
@@ -49,7 +47,9 @@ namespace Flights
                 Component.For<IWebDriver>().ImplementedBy(typeof(ChromeDriver)),
                 Component.For<IWizzAirCalendarConverter>().ImplementedBy(typeof(WizzAirCalendarConverter)),
                 Component.For<IFlightsQuery>().ImplementedBy(typeof(FlightsQuery)),
-                Component.For<INotificationReceiversConverter>().ImplementedBy(typeof(NotificationReceiversConverter))
+                Component.For<INotificationReceiversConverter>().ImplementedBy(typeof(NotificationReceiversConverter)),
+                Component.For<ICountryQuery>().ImplementedBy(typeof(CountryQuery)),
+                Component.For<ICountriesConverter>().ImplementedBy(typeof(CountriesConverter))
                 );
         }
     }

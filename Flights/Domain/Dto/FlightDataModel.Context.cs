@@ -31,5 +31,6 @@ namespace Flights.Domain.Dto
         public virtual DbSet<Flights> Flights { get; set; }
         public virtual DbSet<NotificationsReceivers> NotificationsReceivers { get; set; }
         public virtual DbSet<SearchCriterias> SearchCriterias { get; set; }
+        public virtual DbSet<Countries> Countries { get; set; }
     }
 }

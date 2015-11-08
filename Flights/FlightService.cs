@@ -84,8 +84,8 @@ namespace Flights
             if (DateTime.Compare(searchCriteria.DepartureDate, DateTime.Now) <= 0)
                 return new List<Flight>();
 
-            //if (searchCriteria.Carrier.Id == (int)CarrierType.RyanAir)
-            //    result.AddRange(GetRyanAirFlights(searchCriteria));
+            if (searchCriteria.Carrier.Id == (int)CarrierType.RyanAir)
+                result.AddRange(GetRyanAirFlights(searchCriteria));
             if (searchCriteria.Carrier.Id == (int)CarrierType.WizzAir)
                 result.AddRange(GetWizzAirFlights(searchCriteria));
 

@@ -16,5 +16,6 @@ namespace Flights.Domain.Dto
     {
         public int Id { get; set; }
         public string Email { get; set; }
+        public Nullable<System.DateTime> Created { get; set; }
     }
 }

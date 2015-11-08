@@ -23,19 +23,20 @@ namespace Flights
             {
                 Bootstrapper.Register();
 
-                FlightSearchController flightSearchController = new FlightSearchController(
-                    Bootstrapper.Container.Resolve<IFlightService>(),
-                    Bootstrapper.Container.Resolve<IFlightsCommand>(),
-                    Bootstrapper.Container.Resolve<ISearchCriteriaQuery>(),
-                    Bootstrapper.Container.Resolve<IWebDriver>());
-
-                while(flightSearchController.StartSearch() == false);
-
-                Console.WriteLine("Szukanie przelotów zakończone.");
+//                FlightSearchController flightSearchController = new FlightSearchController(
+//                    Bootstrapper.Container.Resolve<IFlightService>(),
+//                    Bootstrapper.Container.Resolve<IFlightsCommand>(),
+//                    Bootstrapper.Container.Resolve<ISearchCriteriaQuery>(),
+//                    Bootstrapper.Container.Resolve<IWebDriver>());
+//
+//                while(flightSearchController.StartSearch() == false);
+//
+//                Console.WriteLine("Szukanie przelotów zakończone.");
 
                 IFlightMailingService flightMailingService = new FlightMailingService(
                     Bootstrapper.Container.Resolve<IFlightsQuery>(), 
-                    Bootstrapper.Container.Resolve<INotificationsReceiverQuery>());
+                    Bootstrapper.Container.Resolve<INotificationsReceiverQuery>(),
+                    Bootstrapper.Container.Resolve<ICountryQuery>());
 
                 flightMailingService.SendResults(DateTime.Now);
 

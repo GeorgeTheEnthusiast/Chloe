@@ -19,9 +19,12 @@ namespace Flights.Converters
                 .ForMember(x => x.Carrier, expression => expression.MapFrom(src => src.Carriers));
 
             Mapper.CreateMap<FlightsDomain.Cities, FlightsDto.City>()
-                .ForMember(x => x.Name, expression => expression.MapFrom(src => src.Name.Trim()));
+                .ForMember(x => x.Name, expression => expression.MapFrom(src => src.Name.Trim()))
+                .ForMember(x => x.Country, expression => expression.MapFrom(src => src.Countries));
 
             Mapper.CreateMap<FlightsDomain.Carriers, FlightsDto.Carrier>();
+
+            Mapper.CreateMap<FlightsDomain.Countries, FlightsDto.Country>();
         }
 
         public FlightsDto.SearchCriteria Convert(FlightsDomain.SearchCriterias searchCriteria)

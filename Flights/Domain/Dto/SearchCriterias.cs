@@ -25,6 +25,7 @@ namespace Flights.Domain.Dto
         public int CityTo_Id { get; set; }
         public System.DateTime DepartureDate { get; set; }
         public int Carrier_Id { get; set; }
+        public Nullable<System.DateTime> Created { get; set; }
     
         public virtual Cities CityFrom { get; set; }
         public virtual Cities CityTo { get; set; }

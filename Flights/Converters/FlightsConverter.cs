@@ -15,9 +15,7 @@ namespace Flights.Converters
         {
             Mapper.CreateMap<FlightsDto.Flight, FlightsDomain.Flights>()
                 .ForMember(x => x.DepartureDate, expression => expression.MapFrom(src => src.DepartureTime))
-                .ForMember(x => x.ValidationText, expression => expression.MapFrom(src => src.SearchValidationText))
-                .ForMember(x => x.Currencies, expression => expression.MapFrom(src => src.Currency))
-                .ForMember(x => x.SearchCriterias, expression => expression.MapFrom(src => src.SearchCriteria));
+                .ForMember(x => x.ValidationText, expression => expression.MapFrom(src => src.SearchValidationText));
 
             Mapper.CreateMap<FlightsDomain.Flights, FlightsDto.Flight>()
                 .ForMember(x => x.DepartureTime, expression => expression.MapFrom(src => src.DepartureDate))
@@ -35,15 +33,21 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.SearchCriterias, FlightsDto.SearchCriteria>()
                 .ForMember(x => x.Carrier, expression => expression.MapFrom(src => src.Carriers));
 
-            Mapper.CreateMap<FlightsDto.City, FlightsDomain.Cities>();
+            Mapper.CreateMap<FlightsDto.City, FlightsDomain.Cities>()
+                .ForMember(x => x.Countries, expression => expression.MapFrom(src => src.Country));
 
-            Mapper.CreateMap<FlightsDomain.Cities, FlightsDto.City>();
+            Mapper.CreateMap<FlightsDomain.Cities, FlightsDto.City>()
+                .ForMember(x => x.Country, expression => expression.MapFrom(src => src.Countries));
 
             Mapper.CreateMap<FlightsDto.Carrier, FlightsDomain.Carriers>()
                 .ForMember(x => x.Name, expression => expression.ResolveUsing(carrier => carrier.Name.Trim()));
 
             Mapper.CreateMap<FlightsDomain.Carriers, FlightsDto.Carrier>()
                 .ForMember(x => x.Name, expression => expression.ResolveUsing(carrier => carrier.Name.Trim()));
+
+            Mapper.CreateMap<FlightsDto.Country, FlightsDomain.Countries>();
+
+            Mapper.CreateMap<FlightsDomain.Countries, FlightsDto.Country>();
         }
 
         public FlightsDomain.Flights Convert(FlightsDto.Flight flight)
