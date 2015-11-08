@@ -48,7 +48,8 @@ namespace Flights
                 Component.For<IWizzAirWebSiteController>().ImplementedBy(typeof(WizzAirWebSiteController)),
                 Component.For<IWebDriver>().ImplementedBy(typeof(ChromeDriver)),
                 Component.For<IWizzAirCalendarConverter>().ImplementedBy(typeof(WizzAirCalendarConverter)),
-                Component.For<IFlightsQuery>().ImplementedBy(typeof(FlightsQuery))
+                Component.For<IFlightsQuery>().ImplementedBy(typeof(FlightsQuery)),
+                Component.For<INotificationReceiversConverter>().ImplementedBy(typeof(NotificationReceiversConverter))
                 );
         }
     }

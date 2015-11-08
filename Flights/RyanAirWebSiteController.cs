@@ -262,12 +262,10 @@ namespace Flights
                 var fareLong = webElement.FindElement(By.ClassName("fare")).GetAttribute("innerHTML");
 
                 AddCurrency(ref result, fareLong);
-
-                result.Carrier = _carrier;
             }
             catch (Exception ex)
             {
-                
+                Console.WriteLine(ex);
             }
             return result;
         }

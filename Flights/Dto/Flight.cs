@@ -21,7 +21,5 @@ namespace Flights.Dto
         public DateTime SearchDate { get; set; }
 
         public string SearchValidationText { get; set; }
-
-        public Carrier Carrier { get; set; }
     }
 }

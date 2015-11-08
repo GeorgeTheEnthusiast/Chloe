@@ -190,11 +190,11 @@ namespace Flights
                 result.SearchValidationText = "OK";
                 
                 AddCurrency(ref result, priceValue);
-
-                result.Carrier = _carrier;
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
+
                 return null;
             }
             return result;

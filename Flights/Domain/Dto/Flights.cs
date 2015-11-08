@@ -21,10 +21,8 @@ namespace Flights.Domain.Dto
         public int Price { get; set; }
         public System.DateTime SearchDate { get; set; }
         public string ValidationText { get; set; }
-        public Nullable<int> Carrier_Id { get; set; }
     
         public virtual Currencies Currencies { get; set; }
         public virtual SearchCriterias SearchCriterias { get; set; }
-        public virtual Carriers Carriers { get; set; }
     }
 }

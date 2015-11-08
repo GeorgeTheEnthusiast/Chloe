@@ -16,22 +16,34 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDto.Flight, FlightsDomain.Flights>()
                 .ForMember(x => x.DepartureDate, expression => expression.MapFrom(src => src.DepartureTime))
                 .ForMember(x => x.ValidationText, expression => expression.MapFrom(src => src.SearchValidationText))
-                .ForMember(x => x.Carriers, expression => expression.MapFrom(src => src.Carrier));
+                .ForMember(x => x.Currencies, expression => expression.MapFrom(src => src.Currency))
+                .ForMember(x => x.SearchCriterias, expression => expression.MapFrom(src => src.SearchCriteria));
 
             Mapper.CreateMap<FlightsDomain.Flights, FlightsDto.Flight>()
                 .ForMember(x => x.DepartureTime, expression => expression.MapFrom(src => src.DepartureDate))
                 .ForMember(x => x.SearchValidationText, expression => expression.MapFrom(src => src.ValidationText))
-                .ForMember(x => x.Carrier, expression => expression.MapFrom(src => src.Carriers));
+                .ForMember(x => x.Currency, expression => expression.MapFrom(src => src.Currencies))
+                .ForMember(x => x.SearchCriteria, expression => expression.MapFrom(src => src.SearchCriterias));
 
             Mapper.CreateMap<FlightsDto.Currency, FlightsDomain.Currencies>();
 
-            Mapper.CreateMap<FlightsDto.SearchCriteria, FlightsDomain.SearchCriterias>();
+            Mapper.CreateMap<FlightsDomain.Currencies, FlightsDto.Currency>();
+
+            Mapper.CreateMap<FlightsDto.SearchCriteria, FlightsDomain.SearchCriterias>()
+                .ForMember(x => x.Carriers, expression => expression.MapFrom(src => src.Carrier));
+
+            Mapper.CreateMap<FlightsDomain.SearchCriterias, FlightsDto.SearchCriteria>()
+                .ForMember(x => x.Carrier, expression => expression.MapFrom(src => src.Carriers));
 
             Mapper.CreateMap<FlightsDto.City, FlightsDomain.Cities>();
 
-            Mapper.CreateMap<FlightsDto.Carrier, FlightsDomain.Carriers>();
+            Mapper.CreateMap<FlightsDomain.Cities, FlightsDto.City>();
 
-            Mapper.CreateMap<FlightsDomain.Carriers, FlightsDto.Carrier>();
+            Mapper.CreateMap<FlightsDto.Carrier, FlightsDomain.Carriers>()
+                .ForMember(x => x.Name, expression => expression.ResolveUsing(carrier => carrier.Name.Trim()));
+
+            Mapper.CreateMap<FlightsDomain.Carriers, FlightsDto.Carrier>()
+                .ForMember(x => x.Name, expression => expression.ResolveUsing(carrier => carrier.Name.Trim()));
         }
 
         public FlightsDomain.Flights Convert(FlightsDto.Flight flight)

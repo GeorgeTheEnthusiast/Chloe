@@ -55,6 +55,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.7.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.7\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.2.0\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -102,9 +106,11 @@
     <Compile Include="Converters\ICurrencyConverter.cs" />
     <Compile Include="Converters\IFlightsConverter.cs" />
     <Compile Include="Converters\IRyanAirDateConverter.cs" />
+    <Compile Include="Converters\INotificationReceiversConverter.cs" />
     <Compile Include="Converters\ISearchCriteriaConverter.cs" />
     <Compile Include="Converters\IWizzAirCalendarConverter.cs" />
     <Compile Include="Converters\RyanAirDateConverter.cs" />
+    <Compile Include="Converters\NotificationReceiversConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
     <Compile Include="Converters\WizzAirCalendarConverter.cs" />
     <Compile Include="Domain\Command\CurrenciesCommand.cs" />

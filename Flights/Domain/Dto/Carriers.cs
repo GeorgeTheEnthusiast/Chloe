@@ -17,7 +17,6 @@ namespace Flights.Domain.Dto
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Carriers()
         {
-            this.Flights = new HashSet<Flights>();
             this.SearchCriterias = new HashSet<SearchCriterias>();
         }
     
@@ -25,8 +24,6 @@ namespace Flights.Domain.Dto
         public string Name { get; set; }
         public string WebSite { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Flights> Flights { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SearchCriterias> SearchCriterias { get; set; }
     }

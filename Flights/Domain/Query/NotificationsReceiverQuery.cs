@@ -3,19 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Flights.Domain.Dto;
+using Flights.Converters;
+using FlightsDomain = Flights.Domain.Dto;
+using FlightsDto = Flights.Dto;
 
 namespace Flights.Domain.Query
 {
     public class NotificationsReceiverQuery : INotificationsReceiverQuery
     {
-        public List<NotificationsReceivers> GetAllNotificationsReceivers()
-        {
-            List<NotificationsReceivers> result;
+        private readonly INotificationReceiversConverter _notificationReceiversConverter;
 
-            using (var flightDataModel = new FlightsEntities())
+        public NotificationsReceiverQuery(INotificationReceiversConverter notificationReceiversConverter)
+        {
+            if (notificationReceiversConverter == null)
+                throw new ArgumentNullException("notificationReceiversConverter");
+
+            _notificationReceiversConverter = notificationReceiversConverter;
+        }
+
+        public List<FlightsDto.NotificationReceiver> GetAllNotificationsReceivers()
+        {
+            List<FlightsDto.NotificationReceiver> result;
+
+            using (var flightDataModel = new FlightsDomain.FlightsEntities())
             {
-                result = flightDataModel.NotificationsReceivers.ToList();
+                var notificationReceiversDomain = flightDataModel.NotificationsReceivers.ToList();
+                result = _notificationReceiversConverter.Convert(notificationReceiversDomain);
             }
 
             return result;

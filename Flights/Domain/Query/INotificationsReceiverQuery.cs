@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Flights.Domain.Dto;
+using FlightsDomain = Flights.Domain.Dto;
+using FLightsDto = Flights.Dto;
 
 namespace Flights.Domain.Query
 {
     public interface INotificationsReceiverQuery
     {
-        List<NotificationsReceivers> GetAllNotificationsReceivers();
+        List<FLightsDto.NotificationReceiver> GetAllNotificationsReceivers();
     }
 }

@@ -38,7 +38,6 @@
           <Property Name="Price" Type="int" Nullable="false" />
           <Property Name="SearchDate" Type="datetime" Nullable="false" />
           <Property Name="ValidationText" Type="nvarchar" MaxLength="2048" />
-          <Property Name="Carrier_Id" Type="int" />
         </EntityType>
         <EntityType Name="NotificationsReceivers">
           <Key>
@@ -57,18 +56,6 @@
           <Property Name="DepartureDate" Type="date" Nullable="false" />
           <Property Name="Carrier_Id" Type="int" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Flight_Carrier">
-          <End Role="Carriers" Type="Self.Carriers" Multiplicity="0..1" />
-          <End Role="Flights" Type="Self.Flights" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Carriers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Flights">
-              <PropertyRef Name="Carrier_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Flight_Currency">
           <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
           <End Role="Flights" Type="Self.Flights" Multiplicity="*" />
@@ -136,10 +123,6 @@
           <EntitySet Name="Flights" EntityType="Self.Flights" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NotificationsReceivers" EntityType="Self.NotificationsReceivers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchCriterias" EntityType="Self.SearchCriterias" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Flight_Carrier" Association="Self.FK_Flight_Carrier">
-            <End Role="Carriers" EntitySet="Carriers" />
-            <End Role="Flights" EntitySet="Flights" />
-          </AssociationSet>
           <AssociationSet Name="FK_Flight_Currency" Association="Self.FK_Flight_Currency">
             <End Role="Currencies" EntitySet="Currencies" />
             <End Role="Flights" EntitySet="Flights" />
@@ -188,14 +171,6 @@
             <End Role="SearchCriterias" EntitySet="SearchCriterias" />
             <End Role="Flights" EntitySet="Flights" />
           </AssociationSet>
-          <AssociationSet Name="FK_Flight_Carrier" Association="FlightsModel.FK_Flight_Carrier">
-            <End Role="Carriers" EntitySet="Carriers" />
-            <End Role="Flights" EntitySet="Flights" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Flights_Flights" Association="FlightsModel.FK_Flights_Flights">
-            <End Role="Flights" EntitySet="Flights" />
-            <End Role="Flights1" EntitySet="Flights" />
-          </AssociationSet>
           <AssociationSet Name="FK_SearchCriterias_Carriers" Association="FlightsModel.FK_SearchCriterias_Carriers">
             <End Role="Carriers" EntitySet="Carriers" />
             <End Role="SearchCriterias" EntitySet="SearchCriterias" />
@@ -208,7 +183,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="WebSite" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Flights" Relationship="FlightsModel.FK_Flight_Carrier" FromRole="Carriers" ToRole="Flights" />
           <NavigationProperty Name="SearchCriterias" Relationship="FlightsModel.FK_SearchCriterias_Carriers" FromRole="Carriers" ToRole="SearchCriterias" />
         </EntityType>
         <EntityType Name="Cities">
@@ -241,8 +215,6 @@
           <Property Name="ValidationText" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Currencies" Relationship="FlightsModel.FK_Flight_Currency1" FromRole="Flights" ToRole="Currencies" />
           <NavigationProperty Name="SearchCriterias" Relationship="FlightsModel.FK_Flight_SearchCriteria1" FromRole="Flights" ToRole="SearchCriterias" />
-          <Property Name="Carrier_Id" Type="Int32" />
-          <NavigationProperty Name="Carriers" Relationship="FlightsModel.FK_Flight_Carrier" FromRole="Flights" ToRole="Carriers" />
         </EntityType>
         <EntityType Name="NotificationsReceivers">
           <Key>
@@ -313,30 +285,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Flight_Carrier">
-          <End Type="FlightsModel.Carriers" Role="Carriers" Multiplicity="0..1" />
-          <End Type="FlightsModel.Flights" Role="Flights" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Carriers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Flights">
-              <PropertyRef Name="Carrier_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Flights_Flights">
-          <End Type="FlightsModel.Flights" Role="Flights" Multiplicity="1" />
-          <End Type="FlightsModel.Flights" Role="Flights1" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Flights">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Flights1">
-              <PropertyRef Name="Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SearchCriterias_Carriers">
           <End Type="FlightsModel.Carriers" Role="Carriers" Multiplicity="1" />
           <End Type="FlightsModel.SearchCriterias" Role="SearchCriterias" Multiplicity="*" />
@@ -383,7 +331,6 @@
           <EntitySetMapping Name="Flights">
             <EntityTypeMapping TypeName="FlightsModel.Flights">
               <MappingFragment StoreEntitySet="Flights">
-                <ScalarProperty Name="Carrier_Id" ColumnName="Carrier_Id" />
                 <ScalarProperty Name="ValidationText" ColumnName="ValidationText" />
                 <ScalarProperty Name="SearchDate" ColumnName="SearchDate" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
