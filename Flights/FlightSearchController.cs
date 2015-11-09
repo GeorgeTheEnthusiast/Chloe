@@ -51,7 +51,7 @@ namespace Flights
 
                 try
                 {
-                    _logger.Info("Rozpoczynam szukanie przelotów {0} na dzień {1} z {2} do {3}...", criterias.Carrier.Name, criterias.DepartureDate.ToShortDateString(), criterias.CityFrom.Name, criterias.CityTo.Name);
+                    _logger.Info("Searching for flights from {0} with departures day {1} from {2} to {3}...", criterias.Carrier.Name, criterias.DepartureDate.ToShortDateString(), criterias.CityFrom.Name, criterias.CityTo.Name);
                     
                     _flightService = Bootstrapper.Container.Resolve<IFlightService>();
 
@@ -70,7 +70,7 @@ namespace Flights
 
             if (_searchesToRepeat.Count > 0)
             {
-                _logger.Info("Pozostało: " + _searchesToRepeat.Count);
+                _logger.Info("Left: " + _searchesToRepeat.Count);
                 return false;
             }
             else
@@ -78,6 +78,15 @@ namespace Flights
                 _driver.Quit();
                 return true;
             }
+        }
+
+        public void DeleteOldFlights()
+        {
+            _logger.Debug("Deleting old records...");
+
+            _flightsCommand.DeleteFlightsBySearchDate(DateTime.Now);
+
+            _logger.Debug("Deleting old records completed...");
         }
 
         private void PrepareSearch()
@@ -88,5 +97,7 @@ namespace Flights
             if (_searchesToRepeat == null)
                 _searchesToRepeat = _searchCriterias.Select(x => x.Id).ToList();
         }
+
+        
     }
 }

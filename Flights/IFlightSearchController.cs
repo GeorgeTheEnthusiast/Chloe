@@ -9,5 +9,7 @@ namespace Flights
     public interface IFlightSearchController
     {
         bool StartSearch();
+
+        void DeleteOldFlights();
     }
 }

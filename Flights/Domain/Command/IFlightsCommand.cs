@@ -10,5 +10,7 @@ namespace Flights.Domain.Command
     public interface IFlightsCommand
     {
         void Add(FlightsDto.Flight flight);
+
+        void DeleteFlightsBySearchDate(DateTime date);
     }
 }

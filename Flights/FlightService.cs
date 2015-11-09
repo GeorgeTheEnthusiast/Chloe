@@ -86,8 +86,12 @@ namespace Flights
 
             if (searchCriteria.Carrier.Id == (int)CarrierType.RyanAir)
                 result.AddRange(GetRyanAirFlights(searchCriteria));
+
             if (searchCriteria.Carrier.Id == (int)CarrierType.WizzAir)
                 result.AddRange(GetWizzAirFlights(searchCriteria));
+
+//            if (searchCriteria.Carrier.Id == (int)CarrierType.Norwegian)
+//                result.AddRange(GetWizzszAirFlights(searchCriteria));
 
             return result;
         }

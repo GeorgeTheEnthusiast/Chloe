@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,35 +26,25 @@ namespace Flights
         {
             try
             {
-                _logger.Info("Registering dependencies...");
-                
-                Bootstrapper.Register();
+                if (args != null && args[0] != null && args[0] == "/console")
+                {
+                    FlightsNtService flightsNtService = new FlightsNtService();
+                    flightsNtService.SearchThread();
+                }
+                else
+                {
+                    var flightsService = new FlightsNtService();
 
-                FlightSearchController flightSearchController = new FlightSearchController(
-                    Bootstrapper.Container.Resolve<IFlightService>(),
-                    Bootstrapper.Container.Resolve<IFlightsCommand>(),
-                    Bootstrapper.Container.Resolve<ISearchCriteriaQuery>(),
-                    Bootstrapper.Container.Resolve<IWebDriver>());
-
-                while(flightSearchController.StartSearch() == false);
-
-                _logger.Info("Szukanie przelotów zakończone.");
-
-                IFlightMailingService flightMailingService = new FlightMailingService(
-                    Bootstrapper.Container.Resolve<IFlightsQuery>(), 
-                    Bootstrapper.Container.Resolve<INotificationsReceiverQuery>(),
-                    Bootstrapper.Container.Resolve<ICountryQuery>());
-
-                flightMailingService.SendResults(DateTime.Now);
-
-                _logger.Info("Wysyłanie najtańszych lotów zakończone.");
+                    ServiceBase.Run(new ServiceBase[]
+                    {
+                        flightsService,
+                    });
+                }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
             }
-
-            Console.ReadKey();
         }
     }
 }

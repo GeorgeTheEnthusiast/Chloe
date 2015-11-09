@@ -1,6 +1,6 @@
 ﻿namespace Flights
 {
-    partial class Flights
+    partial class FlightsNtService
     {
         /// <summary> 
         /// Required designer variable.

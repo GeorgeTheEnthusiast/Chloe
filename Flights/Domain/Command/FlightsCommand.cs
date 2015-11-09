@@ -29,5 +29,20 @@ namespace Flights.Domain.Command
                 flightsEntities.SaveChanges();
             }
         }
+
+        public void DeleteFlightsBySearchDate(DateTime date)
+        {
+            using (var flightsEntities = new FlightsDomain.FlightsEntities())
+            {
+                var flightsToDelete = flightsEntities.Flights.Where(x => x.SearchDate.Year == date.Year
+                                                                         && x.SearchDate.Month == date.Month
+                                                                         && x.SearchDate.Day == date.Day);
+                if (flightsToDelete.Any())
+                {
+                    flightsEntities.Flights.RemoveRange(flightsToDelete);
+                    flightsEntities.SaveChanges();
+                }
+            }
+        }
     }
 }
