@@ -15,10 +15,11 @@ using Flights.Exceptions;
 using NLog;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 
 namespace Flights
 {
-    public class WizzAirWebSiteController : IWizzAirWebSiteController
+    public class WizzAirWebSiteController : IWebSiteController
     {
         private readonly IWebDriver _driver;
         private readonly ICurrienciesCommand _currienciesCommand;
@@ -26,6 +27,7 @@ namespace Flights
         private readonly IWizzAirCalendarConverter _wizzAirCalendarConverter;
         private Carrier _carrier;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
+        private WebDriverWait _webDriverWait;
 
         public WizzAirWebSiteController(IWebDriver driver,
             ICurrienciesCommand currienciesCommand,
@@ -41,22 +43,25 @@ namespace Flights
             _currienciesCommand = currienciesCommand;
             _carrierQuery = carrierQuery;
             _wizzAirCalendarConverter = wizzAirCalendarConverter;
+            _webDriverWait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         }
 
-        public void NavigateToUrl()
+        private void NavigateToUrl()
         {
             _carrier = _carrierQuery.GetCarrierByType(CarrierType.WizzAir);
 
             _driver.Manage().Cookies.DeleteAllCookies();
             _driver.Manage().Window.Maximize();
+            _driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(4));
+            _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
             _driver.Navigate().GoToUrl(_carrier.Website);
 
-            Thread.Sleep(TimeSpan.FromSeconds(10));
+            //Thread.Sleep(TimeSpan.FromSeconds(10));
         }
 
-        public void FillCityFrom(SearchCriteria searchCriteria)
+        private void FillCityFrom(SearchCriteria searchCriteria)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+            //Thread.Sleep(TimeSpan.FromSeconds(1));
 
             IWebElement fromCityWebElement = _driver.FindElement(By.ClassName("city-from"));
 
@@ -65,9 +70,9 @@ namespace Flights
             fromCityWebElement.SendKeys(Keys.Enter);
         }
 
-        public void FillCityTo(SearchCriteria searchCriteria)
+        private void FillCityTo(SearchCriteria searchCriteria)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+            //Thread.Sleep(TimeSpan.FromSeconds(1));
 
             IWebElement toCityWebElement = _driver.FindElement(By.ClassName("city-to"));
             
@@ -76,18 +81,18 @@ namespace Flights
             toCityWebElement.SendKeys(Keys.Enter);
         }
 
-        public void FillDate(SearchCriteria searchCriteria)
+        private void FillDate(SearchCriteria searchCriteria)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+            //Thread.Sleep(TimeSpan.FromSeconds(1));
 
             IWebElement datePickerWebElement = _driver.FindElement(By.CssSelector("div[id='ui-datepicker-div']"));
 
-            datePickerWebElement.Click();
+            ClickWebElement(datePickerWebElement);
 
             SetCalendar(searchCriteria);
         }
 
-        public void SetCalendar(SearchCriteria searchCriteria)
+        private void SetCalendar(SearchCriteria searchCriteria)
         {
             SetCalendarYear(searchCriteria);
 
@@ -96,7 +101,7 @@ namespace Flights
             SetCalendarDay(searchCriteria);
         }
 
-        void SetCalendarYear(SearchCriteria searchCriteria)
+        private void SetCalendarYear(SearchCriteria searchCriteria)
         {
             string printedYear = _driver.FindElement(By.CssSelector("span[class='ui-datepicker-year']")).Text;
             int year = int.Parse(printedYear);
@@ -110,7 +115,7 @@ namespace Flights
             }
         }
 
-        void SetCalendarMonth(SearchCriteria searchCriteria)
+        private void SetCalendarMonth(SearchCriteria searchCriteria)
         {
             string printedMonth = _driver.FindElement(By.CssSelector("span[class='ui-datepicker-month']")).Text;
             int month = _wizzAirCalendarConverter.ConvertMonth(printedMonth);
@@ -124,7 +129,7 @@ namespace Flights
             }
         }
 
-        void SetCalendarDay(SearchCriteria searchCriteria)
+        private void SetCalendarDay(SearchCriteria searchCriteria)
         {
             var calendarTableWebElement = _driver.FindElement(By.ClassName("ui-datepicker-calendar"));
             var daysInTableWebElement = calendarTableWebElement.FindElements(By.TagName("td"));
@@ -134,21 +139,34 @@ namespace Flights
             correctDayWebElement.Click();
         }
 
-        public void FindFlights()
+        private void FindFlights()
         {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+            //Thread.Sleep(TimeSpan.FromSeconds(1));
 
             IWebElement searchButton = _driver.FindElement(By.CssSelector("button[class='buttonN button primary search preloader ']"));
-            searchButton.Click();
+            ClickWebElement(searchButton);
 
-            Thread.Sleep(TimeSpan.FromSeconds(10));
+            //Thread.Sleep(TimeSpan.FromSeconds(10));
         }
 
         public List<Flight> GetFlights(SearchCriteria searchCriteria)
         {
             List<Flight> result = new List<Flight>();
 
-            var flightSlides = _driver.FindElements(By.CssSelector("div[class='flight-row']"));
+            if (searchCriteria.Carrier.Id != (int)CarrierType.WizzAir)
+                return result;
+
+            NavigateToUrl();
+
+            FillCityFrom(searchCriteria);
+
+            FillCityTo(searchCriteria);
+
+            FillDate(searchCriteria);
+
+            FindFlights();
+            
+            var flightSlides = _webDriverWait.Until(x => x.FindElements(By.CssSelector("div[class='flight-row']")));
 
             foreach (var slide in flightSlides)
             {
@@ -201,7 +219,7 @@ namespace Flights
             return result;
         }
 
-        public void AddCurrency(ref Flight flightToAddCurrency, string price)
+        private void AddCurrency(ref Flight flightToAddCurrency, string price)
         {
             price = price.Trim('\r', '\n', ' ');
             string[] priceArray = price.Split(new[] { "&nbsp;", " " }, StringSplitOptions.RemoveEmptyEntries);
@@ -211,6 +229,14 @@ namespace Flights
                 Name = priceArray.Last()
             });
             flightToAddCurrency.Price = int.Parse(string.Join("", priceArray.Reverse().Skip(1).Reverse()), NumberStyles.Currency);
+        }
+
+        private void ClickWebElement(IWebElement webElement)
+        {
+            IWait<IWebElement> wait = new DefaultWait<IWebElement>(webElement);
+            wait.Timeout = TimeSpan.FromSeconds(5);
+            wait.Until(x => x.Displayed);
+            webElement.Click();
         }
     }
 }

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Flights.Dto;
 
-namespace Flights.Domain.Query
+namespace Flights.Extensions
 {
-    public interface ICountryQuery
+    class WebElementExtensions
     {
-        IEnumerable<Country> GetAllCountries();
     }
 }

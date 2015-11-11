@@ -9,40 +9,51 @@ using Flights.Domain.Query;
 using NLog;
 using OpenQA.Selenium;
 using Quartz;
+using Quartz.Impl;
+using Quartz.Listener;
+using Quartz.Spi;
 
 namespace Flights.Quartz
 {
     [DisallowConcurrentExecution]
     public class SearchFlightsJob : IJob
     {
+        private readonly IFlightSearchController _flightSearchController;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
+        public SearchFlightsJob(IFlightSearchController flightSearchController)
+        {
+            if (flightSearchController == null) throw new ArgumentNullException("flightSearchController");
+
+            _flightSearchController = flightSearchController;
+        }
 
         public void Execute(IJobExecutionContext context)
         {
             try
-            { 
-                _logger.Info("Registering dependencies...");
-                
-                Bootstrapper.Register();
+            {
+                _logger.Info("Searching for the cheapest prices...");
 
-                FlightSearchController flightSearchController = new FlightSearchController(
-                    Bootstrapper.Container.Resolve<IFlightService>(),
-                    Bootstrapper.Container.Resolve<IFlightsCommand>(),
-                    Bootstrapper.Container.Resolve<ISearchCriteriaQuery>(),
-                    Bootstrapper.Container.Resolve<IWebDriver>());
-
-                while (flightSearchController.StartSearch() == false) ;
+                while (_flightSearchController.StartSearch() == false) ;
 
                 _logger.Info("Searching for the cheapest prices completed.");
 
-                IFlightMailingService flightMailingService = new FlightMailingService(
-                    Bootstrapper.Container.Resolve<IFlightsQuery>(),
-                    Bootstrapper.Container.Resolve<INotificationsReceiverQuery>(),
-                    Bootstrapper.Container.Resolve<ICountryQuery>());
+                ISchedulerFactory schedFact = new StdSchedulerFactory();
 
-                flightMailingService.SendResults(DateTime.Now);
+                IScheduler sched = schedFact.GetScheduler();
+                sched.JobFactory = Bootstrapper.Container.Resolve<IJobFactory>();
+                sched.Start();
 
-                _logger.Info("Sending flights through e-mails completed.");
+                IJobDetail job = JobBuilder.Create<FlightMailingJob>()
+                    .WithIdentity("mailingJob")
+                    .Build();
+
+                ITrigger trigger = TriggerBuilder.Create()
+                    .WithIdentity("start_now_Trigger")
+                    .StartNow()
+                    .Build();
+
+                sched.ScheduleJob(job, trigger);
             }
             catch (Exception ex)
             {

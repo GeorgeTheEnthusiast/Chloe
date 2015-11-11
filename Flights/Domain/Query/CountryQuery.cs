@@ -20,9 +20,9 @@ namespace Flights.Domain.Query
             _countriesConverter = countriesConverter;
         }
 
-        public List<FlightsDto.Country> GetAllCountries()
+        public IEnumerable<FlightsDto.Country> GetAllCountries()
         {
-            List<FlightsDto.Country> result;
+            IEnumerable<FlightsDto.Country> result;
 
             using (var flightDataModel = new FlightsDomain.FlightsEntities())
             {

@@ -10,6 +10,6 @@ namespace Flights.Converters
 {
     public interface ICountriesConverter
     {
-        List<FlightsDto.Country> Convert(List<FlightsDomain.Countries> countries);
+        IEnumerable<FlightsDto.Country> Convert(IEnumerable<FlightsDomain.Countries> countries);
     }
 }

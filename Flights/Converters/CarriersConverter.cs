@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,9 +30,14 @@ namespace Flights.Converters
             return Mapper.Map<FlightsDto.Carrier>(carriers);
         }
 
-        public List<FlightsDto.Carrier> Convert(List<FlightsDomain.Carriers> carriers)
+        public IEnumerable<FlightsDto.Carrier> Convert(IEnumerable<FlightsDomain.Carriers> carriers)
         {
-            return Mapper.Map<List<FlightsDto.Carrier>>(carriers);
+            return Mapper.Map<IEnumerable<FlightsDto.Carrier>>(carriers);
+        }
+
+        public IEnumerable<FlightsDto.Carrier> Convert(DbSet<FlightsDomain.Carriers> carriers)
+        {
+            return Mapper.Map<IEnumerable<FlightsDto.Carrier>>(carriers);
         }
     }
 }

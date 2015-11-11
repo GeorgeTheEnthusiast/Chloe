@@ -22,14 +22,13 @@ namespace Flights.Domain.Query
             _flightsConverter = flightsConverter;
         }
 
-        public List<FlightsDto.Flight> GetAllFLights()
+        public IEnumerable<FlightsDto.Flight> GetAllFlights()
         {
-            List<FlightsDto.Flight> result;
+            IEnumerable<FlightsDto.Flight> result;
 
             using (var flightDataModel = new FlightsDomain.FlightsEntities())
             {
-                var flights = flightDataModel.Flights
-                    .ToList();
+                var flights = flightDataModel.Flights;
 
                 result = _flightsConverter.Convert(flights);
             }
@@ -37,17 +36,16 @@ namespace Flights.Domain.Query
             return result;
         }
 
-        public List<FlightsDto.Flight> GetFlightsBySearchDate(DateTime date)
+        public IEnumerable<FlightsDto.Flight> GetFlightsBySearchDate(DateTime date)
         {
-            List<FlightsDto.Flight> result;
+            IEnumerable<FlightsDto.Flight> result;
 
             using (var flightDataModel = new FlightsDomain.FlightsEntities())
             {
                 var flights = flightDataModel.Flights
                     .Where(x => x.SearchDate.Year == date.Year
-                   && x.SearchDate.Month == date.Month
-                   && x.SearchDate.Day == date.Day)
-                    .ToList();
+                                && x.SearchDate.Month == date.Month
+                                && x.SearchDate.Day == date.Day);
 
                 result = _flightsConverter.Convert(flights);
             }

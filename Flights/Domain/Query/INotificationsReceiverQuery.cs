@@ -10,6 +10,6 @@ namespace Flights.Domain.Query
 {
     public interface INotificationsReceiverQuery
     {
-        List<FLightsDto.NotificationReceiver> GetAllNotificationsReceivers();
+        IEnumerable<FLightsDto.NotificationReceiver> GetAllNotificationsReceivers();
     }
 }

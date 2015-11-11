@@ -12,5 +12,7 @@ namespace Flights.Domain.Command
         void Add(FlightsDto.Flight flight);
 
         void DeleteFlightsBySearchDate(DateTime date);
+
+        void AddRange(IEnumerable<FlightsDto.Flight> flights);
     }
 }

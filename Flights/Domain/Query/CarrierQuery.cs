@@ -22,13 +22,13 @@ namespace Flights.Domain.Query
             _carriersConverter = carriersConverter;
         }
 
-        public List<FlightsDto.Carrier> GetAllCarriers()
+        public IEnumerable<FlightsDto.Carrier> GetAllCarriers()
         {
-            List<FlightsDto.Carrier> result;
+            IEnumerable<FlightsDto.Carrier> result;
 
             using (var flightDataModel = new FlightsDomain.FlightsEntities())
             {
-                var carriers = flightDataModel.Carriers.ToList();
+                var carriers = flightDataModel.Carriers;
                 result = _carriersConverter.Convert(carriers);
             }
 

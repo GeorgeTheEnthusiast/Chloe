@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Flights.Dto;
 
-namespace Flights.Domain.Query
+namespace Flights
 {
-    public interface ISearchCriteriaQuery
+    public interface IWebSiteController
     {
-        IEnumerable<SearchCriteria> GetAllSearchCriterias();
+        List<Flight> GetFlights(SearchCriteria searchCriteria);
     }
 }

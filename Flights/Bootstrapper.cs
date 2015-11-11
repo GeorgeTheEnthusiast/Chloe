@@ -10,8 +10,11 @@ using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Exceptions;
+using Flights.Quartz;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using Quartz;
+using Quartz.Spi;
 
 namespace Flights
 {
@@ -41,15 +44,19 @@ namespace Flights
                 Component.For<ICarrierQuery>().ImplementedBy(typeof(CarrierQuery)),
                 Component.For<INotificationsReceiverQuery>().ImplementedBy(typeof(NotificationsReceiverQuery)),
                 Component.For<ISearchCriteriaQuery>().ImplementedBy(typeof(SearchCriteriaQuery)),
-                Component.For<IFlightService>().ImplementedBy(typeof(FlightService)),
-                Component.For<IRyanAirWebSiteController>().ImplementedBy(typeof(RyanAirWebSiteController)),
-                Component.For<IWizzAirWebSiteController>().ImplementedBy(typeof(WizzAirWebSiteController)),
+                Component.For<IWebSiteController>().ImplementedBy(typeof(RyanAirWebSiteController)),
+                Component.For<IWebSiteController>().ImplementedBy(typeof(WizzAirWebSiteController)),
                 Component.For<IWebDriver>().ImplementedBy(typeof(ChromeDriver)),
                 Component.For<IWizzAirCalendarConverter>().ImplementedBy(typeof(WizzAirCalendarConverter)),
                 Component.For<IFlightsQuery>().ImplementedBy(typeof(FlightsQuery)),
                 Component.For<INotificationReceiversConverter>().ImplementedBy(typeof(NotificationReceiversConverter)),
                 Component.For<ICountryQuery>().ImplementedBy(typeof(CountryQuery)),
-                Component.For<ICountriesConverter>().ImplementedBy(typeof(CountriesConverter))
+                Component.For<ICountriesConverter>().ImplementedBy(typeof(CountriesConverter)),
+                Component.For<IFlightSearchController>().ImplementedBy(typeof(FlightSearchController)),
+                Component.For<IJob>().ImplementedBy(typeof(SearchFlightsJob)),
+                Component.For<IJob>().ImplementedBy(typeof(FlightMailingJob)),
+                Component.For<IJobFactory>().ImplementedBy(typeof(WindsorJobFactory)),
+                Component.For<IFlightMailingService>().ImplementedBy(typeof(FlightMailingService))
                 );
         }
     }

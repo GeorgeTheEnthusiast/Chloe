@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Flights.Dto;
 
-namespace Flights.Domain.Query
+namespace Flights.Quartz
 {
-    public interface ICountryQuery
+    public static class QuartzFactory
     {
-        IEnumerable<Country> GetAllCountries();
+
     }
 }

@@ -13,7 +13,5 @@ namespace Flights.Converters
         FlightDto.SearchCriteria Convert(FlightDomain.SearchCriterias searchCriteria);
 
         IEnumerable<FlightDto.SearchCriteria> Convert(IEnumerable<FlightDomain.SearchCriterias> searchCriteria);
-
-        List<FlightDto.SearchCriteria> Convert(List<FlightDomain.SearchCriterias> searchCriteria);
     }
 }

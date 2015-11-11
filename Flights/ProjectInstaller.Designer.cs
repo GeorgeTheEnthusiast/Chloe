@@ -30,9 +30,11 @@
         {
             this.FlightsServiceProcessInstaller = new System.ServiceProcess.ServiceProcessInstaller();
             this.FlightsServiceInstaller = new System.ServiceProcess.ServiceInstaller();
+            this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
             // 
             // FlightsServiceProcessInstaller
             // 
+            this.FlightsServiceProcessInstaller.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
             this.FlightsServiceProcessInstaller.Password = null;
             this.FlightsServiceProcessInstaller.Username = null;
             // 
@@ -43,11 +45,16 @@
             this.FlightsServiceInstaller.ServiceName = "Flights";
             this.FlightsServiceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
+            // serviceInstaller1
+            // 
+            this.serviceInstaller1.ServiceName = "Service1";
+            // 
             // ProjectInstaller
             // 
             this.Installers.AddRange(new System.Configuration.Install.Installer[] {
             this.FlightsServiceProcessInstaller,
-            this.FlightsServiceInstaller});
+            this.FlightsServiceInstaller,
+            this.serviceInstaller1});
 
         }
 
@@ -55,5 +62,6 @@
 
         private System.ServiceProcess.ServiceProcessInstaller FlightsServiceProcessInstaller;
         private System.ServiceProcess.ServiceInstaller FlightsServiceInstaller;
+        private System.ServiceProcess.ServiceInstaller serviceInstaller1;
     }
 }

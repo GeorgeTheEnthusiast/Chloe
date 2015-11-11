@@ -36,10 +36,5 @@ namespace Flights.Converters
         {
             return Mapper.Map<IEnumerable<FlightsDto.SearchCriteria>>(searchCriteria);
         }
-
-        public List<FlightsDto.SearchCriteria> Convert(List<FlightsDomain.SearchCriterias> searchCriteria)
-        {
-            return Mapper.Map<List<FlightsDto.SearchCriteria>>(searchCriteria);
-        }
     }
 }

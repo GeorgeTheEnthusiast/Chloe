@@ -21,9 +21,9 @@ namespace Flights.Domain.Query
             _searchCriteriaConverter = searchCriteriaConverter;
         }
 
-        public List<FlightDto.SearchCriteria> GetAllSearchCriterias()
+        public IEnumerable<FlightDto.SearchCriteria> GetAllSearchCriterias()
         {
-            List<FlightDto.SearchCriteria> result;
+            IEnumerable<FlightDto.SearchCriteria> result;
             
             using (FlightDataModel.FlightsEntities flightDataModel = new FlightDataModel.FlightsEntities())
             {

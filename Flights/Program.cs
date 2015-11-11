@@ -26,10 +26,12 @@ namespace Flights
         {
             try
             {
-                if (args != null && args[0] != null && args[0] == "/console")
+                Bootstrapper.Register();
+
+                if (args != null && args.Any() && args[0] != null && args[0] == "/console")
                 {
                     FlightsNtService flightsNtService = new FlightsNtService();
-                    flightsNtService.SearchThread();
+                    flightsNtService.StartQuartzJob();
                 }
                 else
                 {

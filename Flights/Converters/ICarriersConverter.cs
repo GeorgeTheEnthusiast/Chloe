@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace Flights.Converters
 
         FlightsDto.Carrier Convert(FlightsDomain.Carriers carriers);
 
-        List<FlightsDto.Carrier> Convert(List<FlightsDomain.Carriers> carriers);
+        IEnumerable<FlightsDto.Carrier> Convert(IEnumerable<FlightsDomain.Carriers> carriers);
+
+        IEnumerable<FlightsDto.Carrier> Convert(DbSet<FlightsDomain.Carriers> carriers);
     }
 }

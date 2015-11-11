@@ -21,9 +21,9 @@ namespace Flights.Domain.Query
             _notificationReceiversConverter = notificationReceiversConverter;
         }
 
-        public List<FlightsDto.NotificationReceiver> GetAllNotificationsReceivers()
+        public IEnumerable<FlightsDto.NotificationReceiver> GetAllNotificationsReceivers()
         {
-            List<FlightsDto.NotificationReceiver> result;
+            IEnumerable<FlightsDto.NotificationReceiver> result;
 
             using (var flightDataModel = new FlightsDomain.FlightsEntities())
             {

@@ -44,5 +44,15 @@ namespace Flights.Domain.Command
                 }
             }
         }
+
+        public void AddRange(IEnumerable<FlightsDto.Flight> flights)
+        {
+            using (var flightsEntities = new FlightsDomain.FlightsEntities())
+            {
+                var domainFlights = _flightsConverter.Convert(flights);
+                flightsEntities.Flights.AddRange(domainFlights);
+                flightsEntities.SaveChanges();
+            }
+        }
     }
 }

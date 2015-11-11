@@ -8,6 +8,7 @@ using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
+using Flights.Dto.Enums;
 using NLog;
 using OpenQA.Selenium;
 
@@ -15,26 +16,23 @@ namespace Flights
 {
     public class FlightSearchController : IFlightSearchController
     {
-        private IFlightService _flightService;
         private readonly IFlightsCommand _flightsCommand;
         private readonly ISearchCriteriaQuery _searchCriteriaQuery;
         private readonly IWebDriver _driver;
         private List<int> _searchesToRepeat;
-        private List<SearchCriteria> _searchCriterias;
-        private static Logger _logger = LogManager.GetCurrentClassLogger();
+        private IEnumerable<SearchCriteria> _searchCriterias;
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private IWebSiteController[] _webSiteControllers;
 
         public FlightSearchController(
-            IFlightService flightService,
             IFlightsCommand flightsCommand,
             ISearchCriteriaQuery searchCriteriaQuery, 
             IWebDriver driver)
         {
-            if (flightService == null) throw new ArgumentNullException("flightService");
             if (flightsCommand == null) throw new ArgumentNullException("flightsCommand");
             if (searchCriteriaQuery == null) throw new ArgumentNullException("searchCriteriaQuery");
             if (driver == null) throw new ArgumentNullException("driver");
-            
-            _flightService = flightService;
+
             _flightsCommand = flightsCommand;
             _searchCriteriaQuery = searchCriteriaQuery;
             _driver = driver;
@@ -53,13 +51,16 @@ namespace Flights
                 {
                     _logger.Info("Searching for flights from {0} with departures day {1} from {2} to {3}...", criterias.Carrier.Name, criterias.DepartureDate.ToShortDateString(), criterias.CityFrom.Name, criterias.CityTo.Name);
                     
-                    _flightService = Bootstrapper.Container.Resolve<IFlightService>();
+                    if (DateTime.Compare(criterias.DepartureDate, DateTime.Now) <= 0)
+                        continue;
 
-                    List<Flight> flights = _flightService.GetFlights(criterias);
+                    foreach (var webSiteController in _webSiteControllers)
+                    {
+                        List<Flight> flights = webSiteController.GetFlights(criterias);
+
+                        _flightsCommand.AddRange(flights);
+                    }
                     
-                    foreach(var flight in flights)
-                        _flightsCommand.Add(flight);
-
                     _searchesToRepeat.Remove(criterias.Id);
                 }
                 catch (Exception e)
@@ -96,8 +97,9 @@ namespace Flights
 
             if (_searchesToRepeat == null)
                 _searchesToRepeat = _searchCriterias.Select(x => x.Id).ToList();
-        }
 
-        
+            if (_webSiteControllers == null)
+                _webSiteControllers = Bootstrapper.Container.ResolveAll<IWebSiteController>();
+        }
     }
 }

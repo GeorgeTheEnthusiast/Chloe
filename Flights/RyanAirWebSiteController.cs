@@ -14,10 +14,11 @@ using NLog;
 using NUnit.Framework.Constraints;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 
 namespace Flights
 {
-    public class RyanAirWebSiteController : IRyanAirWebSiteController
+    public class RyanAirWebSiteController : IWebSiteController
     {
         private readonly IWebDriver _driver;
         private readonly ICurrienciesCommand _currienciesCommand;
@@ -25,6 +26,10 @@ namespace Flights
         private readonly ICarrierQuery _carrierQuery;
         private Carrier _carrier;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
+        private readonly string FlightIsNotAvailableOnThisDay = "W&nbsp;tym dniu nie ma żadnych lotów";
+        private readonly string FlightIsAvailable = "OK";
+        //private readonly string FlightDepartureDateIsRequired = "Wymagana jest data wylotu.";
+        private WebDriverWait _webDriverWait;
 
         public RyanAirWebSiteController(IWebDriver driver, 
             ICurrienciesCommand currienciesCommand, 
@@ -40,45 +45,43 @@ namespace Flights
             _currienciesCommand = currienciesCommand;
             _ryanAirDateConverter = ryanAirDateConverter;
             _carrierQuery = carrierQuery;
+            _webDriverWait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
         }
 
-        public void NavigateToUrl()
+        private void NavigateToUrl()
         {
             if (_carrier == null)
                 _carrier = _carrierQuery.GetCarrierByType(CarrierType.RyanAir);
 
             _driver.Manage().Cookies.DeleteAllCookies();
             _driver.Manage().Window.Maximize();
+            _driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
+            _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
             _driver.Navigate().GoToUrl(_carrier.Website);
-
-            Thread.Sleep(TimeSpan.FromSeconds(10));
         }
 
-        public void MakeTicketOneWay()
+        private void MakeTicketOneWay()
         {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-
             IReadOnlyCollection<IWebElement> typeOfTicketWebElements = _driver.FindElements(By.ClassName("flight-search-type-option"));
             IWebElement oneWayTicketWebElement = typeOfTicketWebElements.First(x => x.Text == "W jedną stronę");
             oneWayTicketWebElement.Click();
         }
 
-        public void FillCityFrom(SearchCriteria searchCriteria)
+        private void FillCityFrom(string cityName)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-
             IWebElement fromCityWebElement = _driver.FindElement(By.CssSelector("div[form-field-id='airport-selector-from']"));
+            
 
             Actions actions = new Actions(_driver);
             actions.MoveToElement(fromCityWebElement);
 
             actions.Click();
             actions.SendKeys(Keys.Backspace);
-            actions.SendKeys(searchCriteria.CityFrom.Name);
+            actions.SendKeys(cityName);
             actions.SendKeys(Keys.Tab);
             actions.Build().Perform();
 
-            if (IsInputWasFilledCorrectly(searchCriteria.CityFrom.Name, fromCityWebElement) == false)
+            if (IsInputWasFilledCorrectly(cityName, fromCityWebElement) == false)
             {
                 throw new InputWasNotFilledCorrectlyException()
                 {
@@ -87,10 +90,8 @@ namespace Flights
             }
         }
 
-        public void FillCityTo(SearchCriteria searchCriteria)
+        private void FillCityTo(string cityName)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-
             IWebElement toCityWebElement = _driver.FindElement(By.CssSelector("div[form-field-id='airport-selector-to']"));
 
             Actions actions = new Actions(_driver);
@@ -98,11 +99,11 @@ namespace Flights
 
             actions.Click();
             actions.SendKeys(Keys.Backspace);
-            actions.SendKeys(searchCriteria.CityTo.Name);
+            actions.SendKeys(cityName);
             actions.SendKeys(Keys.Enter);
             actions.Build().Perform();
 
-            if (IsInputWasFilledCorrectly(searchCriteria.CityTo.Name, toCityWebElement) == false)
+            if (IsInputWasFilledCorrectly(cityName, toCityWebElement) == false)
             {
                 throw new InputWasNotFilledCorrectlyException()
                 {
@@ -111,21 +112,19 @@ namespace Flights
             }
         }
 
-        public void FillDate(SearchCriteria searchCriteria)
+        private void FillDate(DateTime departureDate)
         {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-
             IWebElement datePickerWebElement = _driver.FindElement(By.ClassName("date-input"));
             IWebElement dayPickerWebElement = datePickerWebElement.FindElement(By.ClassName("dd"));
             IWebElement monthPickerWebElement = datePickerWebElement.FindElement(By.ClassName("mm"));
             IWebElement yearPickerWebElement = datePickerWebElement.FindElement(By.ClassName("yyyy"));
 
-            SetDatePickerDigital(dayPickerWebElement, searchCriteria.DepartureDate.Day.ToString("00"));
-            SetDatePickerDigital(monthPickerWebElement, searchCriteria.DepartureDate.Month.ToString("00"));
-            SetDatePickerDigital(yearPickerWebElement, searchCriteria.DepartureDate.Year.ToString("0000"));
+            SetDatePickerDigital(dayPickerWebElement, departureDate.Day.ToString("00"));
+            SetDatePickerDigital(monthPickerWebElement, departureDate.Month.ToString("00"));
+            SetDatePickerDigital(yearPickerWebElement, departureDate.Year.ToString("0000"));
         }
 
-        public void SetDatePickerDigital(IWebElement webElement, string value)
+        private void SetDatePickerDigital(IWebElement webElement, string value)
         {
             if (webElement == null) throw new ArgumentNullException("webElement");
             if (value == null) throw new ArgumentNullException("value");
@@ -146,31 +145,40 @@ namespace Flights
             actions.Build().Perform();
         }
 
-        public void FindFlights()
+        private void ProceedToDatesForm()
         {
-            Thread.Sleep(TimeSpan.FromSeconds(1));
+            GoToFlightsPage();
+        }
 
-            IReadOnlyCollection<IWebElement> buttonsWebElements = _driver.FindElements(By.ClassName("btn-smart-search-go"));
-            foreach (var btn in buttonsWebElements)
+        private void GoToFlightsPage()
+        {
+            var buttonWebElements = _driver.FindElements(By.ClassName("btn-smart-search-go"));
+            foreach (var btn in buttonWebElements)
             {
                 if (btn.Displayed)
-                    btn.Click();
+                {
+                    Actions actions = new Actions(_driver);
+                    actions.MoveToElement(btn);
+                    actions.Click();
+                    actions.Build().Perform();
+                }
             }
         }
 
-        public string GetInputValidationState()
+        private string GetInputValidationState()
         {
             IWebElement errorWebElement = null;
-
-            Thread.Sleep(TimeSpan.FromSeconds(1));
-
+            
             try
             {
                 errorWebElement = _driver.FindElement(By.ClassName("ryanair-error-tooltip"));
+
+                if (!errorWebElement.Displayed)
+                    return FlightIsAvailable;
             }
             catch
             {
-                return "OK";
+                return FlightIsAvailable;
             }
 
             return errorWebElement.FindElement(By.TagName("span")).GetAttribute("innerHTML");
@@ -180,6 +188,45 @@ namespace Flights
         {
             List<Flight> result = new List<Flight>();
 
+            //if (searchCriteria.Carrier.Id != (int) CarrierType.RyanAir)
+                return result;
+
+            NavigateToUrl();
+
+            MakeTicketOneWay();
+
+            FillCityFrom(searchCriteria.CityFrom.Name);
+
+            FillCityTo(searchCriteria.CityTo.Name);
+
+            ProceedToDatesForm();
+
+            int retryCount = 5;
+
+            while (retryCount != 0)
+            {
+                FillDate(searchCriteria.DepartureDate);
+
+                string errorText = GetInputValidationState();
+
+                if (errorText == FlightIsNotAvailableOnThisDay)
+                    searchCriteria.DepartureDate = searchCriteria.DepartureDate.AddDays(1);
+                else if (errorText == FlightIsAvailable)
+                    break;
+
+                retryCount--;
+            }
+
+            if (retryCount == 0)
+                return result;
+
+            GoToFlightsPage();
+            
+            if (IsNextPageLoadedSuccessfully() == false)
+            {
+                throw new FlightsPageIsNotLoadedCorrectlyException();
+            }
+            
             var flightSlides = _driver.FindElement(By.CssSelector("div[class='wrapper']")).FindElements(By.ClassName("slide"));
 
             foreach (var slide in flightSlides)
@@ -189,21 +236,14 @@ namespace Flights
                 if (flight != null)
                     result.Add(flight);
             }
-
+            
             return result;
         } 
 
-        public void TerminateSite()
-        {
-            //_driver.Close();
-        }
-
-        public bool IsNextPageLoadedSuccessfully()
+        private bool IsNextPageLoadedSuccessfully()
         {
             try
             {
-                Thread.Sleep(TimeSpan.FromSeconds(10));
-                
                 _driver.FindElement(By.CssSelector("div[class='slide active']"));
             }
             catch
@@ -213,7 +253,7 @@ namespace Flights
             return true;
         }
 
-        public bool IsInputWasFilledCorrectly(string text, IWebElement webElement)
+        private bool IsInputWasFilledCorrectly(string text, IWebElement webElement)
         {
             var value = webElement.GetAttribute("value");
 
@@ -245,7 +285,7 @@ namespace Flights
 
                 var priceSlide = webElement.FindElement(By.ClassName("carousel-item"));
                 string className = priceSlide.GetAttribute("class");
-
+                
                 switch (className)
                 {
                     case "carousel-item daily item-not-available":
@@ -254,28 +294,57 @@ namespace Flights
                         result.SearchValidationText = "OK";
                         break;
                 }
+                
+                string price = string.Empty;
 
-                var fareLong = webElement.FindElement(By.ClassName("fare")).GetAttribute("innerHTML");
+                while (true)
+                {
+                    var fareLong = webElement.FindElement(By.ClassName("fare")).GetAttribute("innerHTML");
+                    price = fareLong.Trim('\r', '\n', ' ');
 
-                AddCurrency(ref result, fareLong);
+                    if (!string.IsNullOrEmpty(price))
+                        break;
+
+                    _logger.Info("Price is empty");
+                }
+
+                if (price.Contains("∞"))
+                    return null;
+
+                AddCurrency(ref result, price);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
+
+                return null;
             }
             return result;
         }
 
-        public void AddCurrency(ref Flight flightToAddCurrency, string price)
+        private void AddCurrency(ref Flight flightToAddCurrency, string price)
         {
-            price = price.Trim('\r', '\n', ' ');
+            if (string.IsNullOrEmpty(price))
+                throw new PriceIsEmptyException();
+
             string[] priceArray = price.Split(new [] { "&nbsp;" }, StringSplitOptions.RemoveEmptyEntries);
 
             flightToAddCurrency.Currency = _currienciesCommand.Merge(new Currency()
             {
                 Name = priceArray.Last()
             });
-            flightToAddCurrency.Price = int.Parse(string.Join("", priceArray.Reverse().Skip(1).Reverse()), NumberStyles.Currency);
+
+            string joinedPriceValue = string.Join("", priceArray.Reverse().Skip(1).Reverse());
+            decimal parsedPrice = 0;
+            if (decimal.TryParse(joinedPriceValue, out parsedPrice))
+            {
+                flightToAddCurrency.Price = (int)parsedPrice;
+            }
+            else
+            {
+                _logger.Error("Could not parse price value: [{0}]", joinedPriceValue);
+                throw new FormatException("Price is invalid!");
+            }
         }
     }
 }

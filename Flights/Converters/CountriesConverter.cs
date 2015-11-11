@@ -16,9 +16,9 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.Countries, FlightsDto.Country>();
         }
         
-        public List<FlightsDto.Country> Convert(List<FlightsDomain.Countries> countries)
+        public IEnumerable<FlightsDto.Country> Convert(IEnumerable<FlightsDomain.Countries> countries)
         {
-            return Mapper.Map<List<FlightsDto.Country>>(countries);
+            return Mapper.Map<IEnumerable<FlightsDto.Country>>(countries);
         }
     }
 }

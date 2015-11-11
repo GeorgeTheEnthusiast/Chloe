@@ -11,8 +11,8 @@ namespace Flights.Domain.Query
 {
     public interface IFlightsQuery
     {
-        List<FlightsDto.Flight> GetAllFLights();
+        IEnumerable<FlightsDto.Flight> GetAllFlights();
 
-        List<FlightsDto.Flight> GetFlightsBySearchDate(DateTime date);
+        IEnumerable<FlightsDto.Flight> GetFlightsBySearchDate(DateTime date);
     }
 }
