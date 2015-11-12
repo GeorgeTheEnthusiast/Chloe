@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FlightsDto = Flights.Dto;
 using FlightsDomain = Flights.Domain.Dto;
+using FlightsDto = Flights.Dto;
 
 namespace Flights.Converters
 {
-    public interface ICountriesConverter
+    public interface ICityConverter
     {
-        IEnumerable<FlightsDto.Country> Convert(IEnumerable<FlightsDomain.Countries> countries);
+        FlightsDomain.Cities Convert(FlightsDto.City currency);
+
+        FlightsDto.City Convert(FlightsDomain.Cities currency);
     }
 }

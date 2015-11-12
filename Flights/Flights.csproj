@@ -125,11 +125,13 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Converters\CarriersConverter.cs" />
-    <Compile Include="Converters\CountriesConverter.cs" />
+    <Compile Include="Converters\INetConverter.cs" />
+    <Compile Include="Converters\NetConverter.cs" />
+    <Compile Include="Converters\CityConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\FlightsConverter.cs" />
-    <Compile Include="Converters\ICountriesConverter.cs" />
     <Compile Include="Converters\ICarriersConverter.cs" />
+    <Compile Include="Converters\ICityConverter.cs" />
     <Compile Include="Converters\ICurrencyConverter.cs" />
     <Compile Include="Converters\IFlightsConverter.cs" />
     <Compile Include="Converters\IRyanAirDateConverter.cs" />
@@ -140,17 +142,18 @@
     <Compile Include="Converters\NotificationReceiversConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
     <Compile Include="Converters\WizzAirCalendarConverter.cs" />
+    <Compile Include="Domain\Command\NetCommand.cs" />
+    <Compile Include="Domain\Command\CitiesCommand.cs" />
     <Compile Include="Domain\Command\CurrenciesCommand.cs" />
     <Compile Include="Domain\Command\FlightsCommand.cs" />
+    <Compile Include="Domain\Command\INetCommand.cs" />
+    <Compile Include="Domain\Command\ICitiesCommand.cs" />
     <Compile Include="Domain\Command\ICurrienciesCommand.cs" />
     <Compile Include="Domain\Command\IFlightsCommand.cs" />
     <Compile Include="Domain\Dto\Carriers.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Domain\Dto\Cities.cs">
-      <DependentUpon>FlightDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Dto\Countries.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Domain\Dto\Currencies.cs">
@@ -174,16 +177,19 @@
     <Compile Include="Domain\Dto\Flights.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Domain\Dto\Net.cs">
+      <DependentUpon>FlightDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Domain\Dto\NotificationsReceivers.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Domain\Dto\SearchCriterias.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Domain\Query\CountryQuery.cs" />
+    <Compile Include="Domain\Query\CityQuery.cs" />
     <Compile Include="Domain\Query\FlightsQuery.cs" />
     <Compile Include="Domain\Query\CarrierQuery.cs" />
-    <Compile Include="Domain\Query\ICountryQuery.cs" />
+    <Compile Include="Domain\Query\ICityQuery.cs" />
     <Compile Include="Domain\Query\IFlightsQuery.cs" />
     <Compile Include="Domain\Query\ICarrierQuery.cs" />
     <Compile Include="Domain\Query\INotificationsReceiverQuery.cs" />
@@ -191,7 +197,7 @@
     <Compile Include="Domain\Query\NotificationsReceiverQuery.cs" />
     <Compile Include="Domain\Query\SearchCriteriaQuery.cs" />
     <Compile Include="Dto\Carriers.cs" />
-    <Compile Include="Dto\Country.cs" />
+    <Compile Include="Dto\Net.cs" />
     <Compile Include="Dto\Enums\CarrierType.cs" />
     <Compile Include="Dto\City.cs" />
     <Compile Include="Dto\Currency.cs" />
@@ -213,8 +219,11 @@
       <DependentUpon>Flights.NtService.cs</DependentUpon>
     </Compile>
     <Compile Include="FlightSearchController.cs" />
+    <Compile Include="WizzAirFlightsNetController.cs" />
+    <Compile Include="RyanAirFlightsNetController.cs" />
     <Compile Include="IFlightMailingService.cs" />
     <Compile Include="IFlightSearchController.cs" />
+    <Compile Include="IFlightsNetController.cs" />
     <Compile Include="IWebSiteController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
@@ -225,7 +234,6 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quartz\FlightMailingJob.cs" />
-    <Compile Include="Quartz\QuartzFactory.cs" />
     <Compile Include="Quartz\SearchFlightsJob.cs" />
     <Compile Include="Quartz\WindsorJobFactory.cs" />
     <Compile Include="RyanAirWebSiteController.cs" />

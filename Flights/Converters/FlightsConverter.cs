@@ -34,21 +34,15 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.SearchCriterias, FlightsDto.SearchCriteria>()
                 .ForMember(x => x.Carrier, expression => expression.MapFrom(src => src.Carriers));
 
-            Mapper.CreateMap<FlightsDto.City, FlightsDomain.Cities>()
-                .ForMember(x => x.Countries, expression => expression.MapFrom(src => src.Country));
+            Mapper.CreateMap<FlightsDto.City, FlightsDomain.Cities>();
 
-            Mapper.CreateMap<FlightsDomain.Cities, FlightsDto.City>()
-                .ForMember(x => x.Country, expression => expression.MapFrom(src => src.Countries));
+            Mapper.CreateMap<FlightsDomain.Cities, FlightsDto.City>();
 
             Mapper.CreateMap<FlightsDto.Carrier, FlightsDomain.Carriers>()
                 .ForMember(x => x.Name, expression => expression.ResolveUsing(carrier => carrier.Name.Trim()));
 
             Mapper.CreateMap<FlightsDomain.Carriers, FlightsDto.Carrier>()
                 .ForMember(x => x.Name, expression => expression.ResolveUsing(carrier => carrier.Name.Trim()));
-
-            Mapper.CreateMap<FlightsDto.Country, FlightsDomain.Countries>();
-
-            Mapper.CreateMap<FlightsDomain.Countries, FlightsDto.Country>();
         }
 
         public FlightsDomain.Flights Convert(FlightsDto.Flight flight)

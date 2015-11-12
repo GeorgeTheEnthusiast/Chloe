@@ -18,6 +18,7 @@ namespace Flights.Domain.Dto
         public Carriers()
         {
             this.SearchCriterias = new HashSet<SearchCriterias>();
+            this.Net = new HashSet<Net>();
         }
     
         public int Id { get; set; }
@@ -27,5 +28,7 @@ namespace Flights.Domain.Dto
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SearchCriterias> SearchCriterias { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Net> Net { get; set; }
     }
 }

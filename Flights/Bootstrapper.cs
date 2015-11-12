@@ -50,13 +50,18 @@ namespace Flights
                 Component.For<IWizzAirCalendarConverter>().ImplementedBy(typeof(WizzAirCalendarConverter)),
                 Component.For<IFlightsQuery>().ImplementedBy(typeof(FlightsQuery)),
                 Component.For<INotificationReceiversConverter>().ImplementedBy(typeof(NotificationReceiversConverter)),
-                Component.For<ICountryQuery>().ImplementedBy(typeof(CountryQuery)),
-                Component.For<ICountriesConverter>().ImplementedBy(typeof(CountriesConverter)),
                 Component.For<IFlightSearchController>().ImplementedBy(typeof(FlightSearchController)),
                 Component.For<IJob>().ImplementedBy(typeof(SearchFlightsJob)),
                 Component.For<IJob>().ImplementedBy(typeof(FlightMailingJob)),
                 Component.For<IJobFactory>().ImplementedBy(typeof(WindsorJobFactory)),
-                Component.For<IFlightMailingService>().ImplementedBy(typeof(FlightMailingService))
+                Component.For<IFlightMailingService>().ImplementedBy(typeof(FlightMailingService)),
+                Component.For<IFlightsNetController>().ImplementedBy(typeof(RyanAirFlightsNetController)),
+                Component.For<INetCommand>().ImplementedBy(typeof(NetCommand)),
+                Component.For<INetConverter>().ImplementedBy(typeof(NetConverter)),
+                Component.For<ICitiesCommand>().ImplementedBy(typeof(CitiesCommand)),
+                Component.For<ICityConverter>().ImplementedBy(typeof(CityConverter)),
+                Component.For<ICityQuery>().ImplementedBy(typeof(CityQuery)),
+                Component.For<IFlightsNetController>().ImplementedBy(typeof(WizzAirFlightsNetController))
                 );
         }
     }

@@ -16,19 +16,15 @@ namespace Flights
     {
         private readonly IFlightsQuery _flightsQuery;
         private readonly INotificationsReceiverQuery _notificationsReceiverQuery;
-        private readonly ICountryQuery _countryQuery;
 
         public FlightMailingService(IFlightsQuery flightsQuery, 
-            INotificationsReceiverQuery notificationsReceiverQuery,
-            ICountryQuery countryQuery)
+            INotificationsReceiverQuery notificationsReceiverQuery)
         {
             if (flightsQuery == null) throw new ArgumentNullException("flightsQuery");
             if (notificationsReceiverQuery == null) throw new ArgumentNullException("notificationsReceiverQuery");
-            if (countryQuery == null) throw new ArgumentNullException("countryQuery");
 
             _flightsQuery = flightsQuery;
             _notificationsReceiverQuery = notificationsReceiverQuery;
-            _countryQuery = countryQuery;
         }
 
         public void SendResults(DateTime fromDate)
@@ -56,7 +52,7 @@ namespace Flights
             Document doc = new Document();
             string fileName = string.Format("cheapest_flights_{0}.pdf", DateTime.Now.ToString("yyyy-MM-dd_HHmmss"));
             var flightsToSend = _flightsQuery.GetFlightsBySearchDate(fromDate);
-            var countries = _countryQuery.GetAllCountries();
+            var searchGroups = flightsToSend.GroupBy(x => x.SearchCriteria.DepartureDate);
             var fontBold = FontFactory.GetFont(BaseFont.TIMES_BOLD, BaseFont.CP1257, 8, Font.BOLD);
             var fontNormal = FontFactory.GetFont(BaseFont.COURIER, BaseFont.CP1257, 8, Font.NORMAL);
             var fontHeader = FontFactory.GetFont(BaseFont.TIMES_BOLD, BaseFont.CP1257, 12, Font.BOLD);
@@ -66,18 +62,16 @@ namespace Flights
                 PdfWriter.GetInstance(doc, fs);
                 doc.Open();
                 
-                foreach (var country in countries)
+                foreach (var group in searchGroups)
                 {
                     var flightsFromCountry = flightsToSend
-                        .Where(x => country.Id == x.SearchCriteria.CityFrom.Country.Id)
+                        .Where(x => x.SearchCriteria.DepartureDate == group.Key)
                         .OrderBy(x => x.Price);
 
                     if (!flightsFromCountry.Any())
                         continue;
-
-                    var firstFlight = flightsFromCountry.First();
                     
-                    doc.Add(new Phrase(string.Format("{0} --> {1}", firstFlight.SearchCriteria.CityFrom.Country.Name, firstFlight.SearchCriteria.CityTo.Country.Name), fontHeader));
+                    doc.Add(new Phrase(string.Format("Loty blisko {0}", group.Key.Date), fontHeader));
 
                     PdfPTable table = new PdfPTable(7);
 

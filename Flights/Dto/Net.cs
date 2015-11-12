@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace Flights.Dto
 {
-    public class City
+    public class Net
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public Carrier Carrier { get; set; }
+
+        public City CityFrom { get; set; }
+
+        public City CityTo { get; set; }
     }
 }

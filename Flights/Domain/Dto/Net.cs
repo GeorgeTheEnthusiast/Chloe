@@ -12,19 +12,16 @@ namespace Flights.Domain.Dto
     using System;
     using System.Collections.Generic;
     
-    public partial class Countries
+    public partial class Net
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Countries()
-        {
-            this.Cities = new HashSet<Cities>();
-        }
-    
-        public string Name { get; set; }
         public int Id { get; set; }
+        public int Carrier_Id { get; set; }
+        public int CityFrom_Id { get; set; }
+        public int CityTo_Id { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Cities> Cities { get; set; }
+        public virtual Carriers Carriers { get; set; }
+        public virtual Cities CitiesFrom { get; set; }
+        public virtual Cities CitiesTo { get; set; }
     }
 }

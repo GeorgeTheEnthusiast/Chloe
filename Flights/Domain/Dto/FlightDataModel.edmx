@@ -12,7 +12,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" />
           <Property Name="WebSite" Type="nvarchar" MaxLength="100" />
-          <Property Name="Created" Type="date" />
+          <Property Name="Created" Type="datetime" />
         </EntityType>
         <EntityType Name="Cities">
           <Key>
@@ -20,16 +20,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
-          <Property Name="Country_Id" Type="int" />
-          <Property Name="Created" Type="date" />
-        </EntityType>
-        <EntityType Name="Countries">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Name" Type="nvarchar" MaxLength="255" />
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Created" Type="date" />
+          <Property Name="Created" Type="datetime" />
         </EntityType>
         <EntityType Name="Currencies">
           <Key>
@@ -37,7 +28,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="10" />
-          <Property Name="Created" Type="date" />
+          <Property Name="Created" Type="datetime" />
         </EntityType>
         <EntityType Name="Flights">
           <Key>
@@ -50,7 +41,17 @@
           <Property Name="Price" Type="int" Nullable="false" />
           <Property Name="SearchDate" Type="datetime" Nullable="false" />
           <Property Name="ValidationText" Type="nvarchar" MaxLength="2048" />
-          <Property Name="Created" Type="date" />
+          <Property Name="Created" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Net">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Carrier_Id" Type="int" Nullable="false" />
+          <Property Name="CityFrom_Id" Type="int" Nullable="false" />
+          <Property Name="CityTo_Id" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
         </EntityType>
         <EntityType Name="NotificationsReceivers">
           <Key>
@@ -58,7 +59,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="255" />
-          <Property Name="Created" Type="date" />
+          <Property Name="Created" Type="datetime" />
         </EntityType>
         <EntityType Name="SearchCriterias">
           <Key>
@@ -69,20 +70,8 @@
           <Property Name="CityTo_Id" Type="int" Nullable="false" />
           <Property Name="DepartureDate" Type="date" Nullable="false" />
           <Property Name="Carrier_Id" Type="int" Nullable="false" />
-          <Property Name="Created" Type="date" />
+          <Property Name="Created" Type="datetime" />
         </EntityType>
-        <Association Name="FK_Cities_Countries">
-          <End Role="Countries" Type="Self.Countries" Multiplicity="0..1" />
-          <End Role="Cities" Type="Self.Cities" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Countries">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Cities">
-              <PropertyRef Name="Country_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Flight_Currency">
           <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
           <End Role="Flights" Type="Self.Flights" Multiplicity="*" />
@@ -104,6 +93,42 @@
             </Principal>
             <Dependent Role="Flights">
               <PropertyRef Name="SearchCriteria_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Net_Carriers">
+          <End Role="Carriers" Type="Self.Carriers" Multiplicity="1" />
+          <End Role="Net" Type="Self.Net" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Carriers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Net">
+              <PropertyRef Name="Carrier_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Net_CitiesFrom">
+          <End Role="Cities" Type="Self.Cities" Multiplicity="1" />
+          <End Role="Net" Type="Self.Net" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Net">
+              <PropertyRef Name="CityFrom_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Net_CitiesTo">
+          <End Role="Cities" Type="Self.Cities" Multiplicity="1" />
+          <End Role="Net" Type="Self.Net" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Net">
+              <PropertyRef Name="CityTo_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -146,15 +171,11 @@
         <EntityContainer Name="FlightsModelStoreContainer">
           <EntitySet Name="Carriers" EntityType="Self.Carriers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cities" EntityType="Self.Cities" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Countries" EntityType="Self.Countries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Currencies" EntityType="Self.Currencies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Flights" EntityType="Self.Flights" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Net" EntityType="Self.Net" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NotificationsReceivers" EntityType="Self.NotificationsReceivers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchCriterias" EntityType="Self.SearchCriterias" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Cities_Countries" Association="Self.FK_Cities_Countries">
-            <End Role="Countries" EntitySet="Countries" />
-            <End Role="Cities" EntitySet="Cities" />
-          </AssociationSet>
           <AssociationSet Name="FK_Flight_Currency" Association="Self.FK_Flight_Currency">
             <End Role="Currencies" EntitySet="Currencies" />
             <End Role="Flights" EntitySet="Flights" />
@@ -162,6 +183,18 @@
           <AssociationSet Name="FK_Flight_SearchCriteria" Association="Self.FK_Flight_SearchCriteria">
             <End Role="SearchCriterias" EntitySet="SearchCriterias" />
             <End Role="Flights" EntitySet="Flights" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Net_Carriers" Association="Self.FK_Net_Carriers">
+            <End Role="Carriers" EntitySet="Carriers" />
+            <End Role="Net" EntitySet="Net" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Net_CitiesFrom" Association="Self.FK_Net_CitiesFrom">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="Net" EntitySet="Net" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Net_CitiesTo" Association="Self.FK_Net_CitiesTo">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="Net" EntitySet="Net" />
           </AssociationSet>
           <AssociationSet Name="FK_SearchCriteria_CityFrom" Association="Self.FK_SearchCriteria_CityFrom">
             <End Role="Cities" EntitySet="Cities" />
@@ -207,10 +240,18 @@
             <End Role="Carriers" EntitySet="Carriers" />
             <End Role="SearchCriterias" EntitySet="SearchCriterias" />
           </AssociationSet>
-          <EntitySet Name="Countries" EntityType="FlightsModel.Countries" />
-          <AssociationSet Name="FK_Cities_Countries" Association="FlightsModel.FK_Cities_Countries">
-            <End Role="Countries" EntitySet="Countries" />
+          <EntitySet Name="Net" EntityType="FlightsModel.Net" />
+          <AssociationSet Name="FK_Net_Carriers" Association="FlightsModel.FK_Net_Carriers">
+            <End Role="Carriers" EntitySet="Carriers" />
+            <End Role="Net" EntitySet="Net" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Net_CitiesFrom" Association="FlightsModel.FK_Net_CitiesFrom">
             <End Role="Cities" EntitySet="Cities" />
+            <End Role="Net" EntitySet="Net" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Net_CitiesTo" Association="FlightsModel.FK_Net_CitiesTo">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="Net" EntitySet="Net" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Carriers">
@@ -221,7 +262,8 @@
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="WebSite" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SearchCriterias" Relationship="FlightsModel.FK_SearchCriterias_Carriers" FromRole="Carriers" ToRole="SearchCriterias" />
-          <Property Name="Created" Type="DateTime" Precision="0" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Net" Relationship="FlightsModel.FK_Net_Carriers" FromRole="Carriers" ToRole="Net" />
         </EntityType>
         <EntityType Name="Cities">
           <Key>
@@ -231,9 +273,9 @@
           <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SearchCriterias_Fk_CityFrom" Relationship="FlightsModel.FK_SearchCriteria_CityFrom1" FromRole="Cities" ToRole="SearchCriterias" />
           <NavigationProperty Name="SearchCriterias_Fk_CityTo" Relationship="FlightsModel.FK_SearchCriteria_CityTo1" FromRole="Cities" ToRole="SearchCriterias" />
-          <Property Name="Country_Id" Type="Int32" />
-          <Property Name="Created" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="Countries" Relationship="FlightsModel.FK_Cities_Countries" FromRole="Cities" ToRole="Countries" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Net_Fk_CityFrom" Relationship="FlightsModel.FK_Net_CitiesFrom" FromRole="Cities" ToRole="Net" />
+          <NavigationProperty Name="Net_Fk_CityTo" Relationship="FlightsModel.FK_Net_CitiesTo" FromRole="Cities" ToRole="Net" />
         </EntityType>
         <EntityType Name="Currencies">
           <Key>
@@ -242,7 +284,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="Flights" Relationship="FlightsModel.FK_Flight_Currency1" FromRole="Currencies" ToRole="Flights" />
           <Property Name="Name" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Created" Type="DateTime" Precision="0" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Flights">
           <Key>
@@ -257,7 +299,7 @@
           <Property Name="ValidationText" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Currencies" Relationship="FlightsModel.FK_Flight_Currency1" FromRole="Flights" ToRole="Currencies" />
           <NavigationProperty Name="SearchCriterias" Relationship="FlightsModel.FK_Flight_SearchCriteria1" FromRole="Flights" ToRole="SearchCriterias" />
-          <Property Name="Created" Type="DateTime" Precision="0" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="NotificationsReceivers">
           <Key>
@@ -265,7 +307,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Created" Type="DateTime" Precision="0" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="SearchCriterias">
           <Key>
@@ -280,7 +322,7 @@
           <NavigationProperty Name="Flights" Relationship="FlightsModel.FK_Flight_SearchCriteria1" FromRole="SearchCriterias" ToRole="Flights" />
           <Property Name="Carrier_Id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Carriers" Relationship="FlightsModel.FK_SearchCriterias_Carriers" FromRole="SearchCriterias" ToRole="Carriers" />
-          <Property Name="Created" Type="DateTime" Precision="0" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_SearchCriteria_CityFrom1">
           <End Type="FlightsModel.Cities" Role="Cities" Multiplicity="1" />
@@ -342,24 +384,52 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Countries">
+        <EntityType Name="Net">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Created" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="Cities" Relationship="FlightsModel.FK_Cities_Countries" FromRole="Countries" ToRole="Cities" />
+          <Property Name="Carrier_Id" Type="Int32" Nullable="false" />
+          <Property Name="CityFrom_Id" Type="Int32" Nullable="false" />
+          <Property Name="CityTo_Id" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Carriers" Relationship="FlightsModel.FK_Net_Carriers" FromRole="Net" ToRole="Carriers" />
+          <NavigationProperty Name="CitiesFrom" Relationship="FlightsModel.FK_Net_CitiesFrom" FromRole="Net" ToRole="Cities" />
+          <NavigationProperty Name="CitiesTo" Relationship="FlightsModel.FK_Net_CitiesTo" FromRole="Net" ToRole="Cities" />
         </EntityType>
-        <Association Name="FK_Cities_Countries">
-          <End Type="FlightsModel.Countries" Role="Countries" Multiplicity="0..1" />
-          <End Type="FlightsModel.Cities" Role="Cities" Multiplicity="*" />
+        <Association Name="FK_Net_Carriers">
+          <End Type="FlightsModel.Carriers" Role="Carriers" Multiplicity="1" />
+          <End Type="FlightsModel.Net" Role="Net" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Countries">
+            <Principal Role="Carriers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Cities">
-              <PropertyRef Name="Country_Id" />
+            <Dependent Role="Net">
+              <PropertyRef Name="Carrier_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Net_CitiesFrom">
+          <End Type="FlightsModel.Cities" Role="Cities" Multiplicity="1" />
+          <End Type="FlightsModel.Net" Role="Net" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Net">
+              <PropertyRef Name="CityFrom_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Net_CitiesTo">
+          <End Type="FlightsModel.Cities" Role="Cities" Multiplicity="1" />
+          <End Type="FlightsModel.Net" Role="Net" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Net">
+              <PropertyRef Name="CityTo_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -383,7 +453,6 @@
             <EntityTypeMapping TypeName="FlightsModel.Cities">
               <MappingFragment StoreEntitySet="Cities">
                 <ScalarProperty Name="Created" ColumnName="Created" />
-                <ScalarProperty Name="Country_Id" ColumnName="Country_Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -433,12 +502,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Countries">
-            <EntityTypeMapping TypeName="FlightsModel.Countries">
-              <MappingFragment StoreEntitySet="Countries">
+          <EntitySetMapping Name="Net">
+            <EntityTypeMapping TypeName="FlightsModel.Net">
+              <MappingFragment StoreEntitySet="Net">
                 <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CityTo_Id" ColumnName="CityTo_Id" />
+                <ScalarProperty Name="CityFrom_Id" ColumnName="CityFrom_Id" />
+                <ScalarProperty Name="Carrier_Id" ColumnName="Carrier_Id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

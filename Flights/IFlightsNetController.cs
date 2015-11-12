@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flights.Dto
+namespace Flights
 {
-    public class Country
+    public interface IFlightsNetController
     {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
+        void CreateNet();
     }
 }

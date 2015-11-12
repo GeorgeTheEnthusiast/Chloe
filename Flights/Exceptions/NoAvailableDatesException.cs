@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Flights.Dto;
 
-namespace Flights.Domain.Query
+namespace Flights.Exceptions
 {
-    public interface ICountryQuery
+    public class NoAvailableDatesException : Exception
     {
-        IEnumerable<Country> GetAllCountries();
     }
 }
