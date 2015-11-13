@@ -34,7 +34,7 @@ namespace Flights.Quartz
             {
                 _logger.Info("Searching for the cheapest prices...");
 
-                while (_flightSearchController.StartSearch() == false) ;
+                _flightSearchController.StartSearch();
 
                 _logger.Info("Searching for the cheapest prices completed.");
 

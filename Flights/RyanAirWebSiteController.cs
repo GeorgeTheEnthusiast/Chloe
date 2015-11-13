@@ -188,7 +188,7 @@ namespace Flights
         {
             List<Flight> result = new List<Flight>();
 
-            //if (searchCriteria.Carrier.Id != (int) CarrierType.RyanAir)
+            if (searchCriteria.Carrier.Id != (int) CarrierType.RyanAir)
                 return result;
 
             NavigateToUrl();

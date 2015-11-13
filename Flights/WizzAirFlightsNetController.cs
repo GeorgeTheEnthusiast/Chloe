@@ -125,7 +125,6 @@ namespace Flights
         private void FillCityFrom(string cityName)
         {
             IWebElement fromCityWebElement = _driver.FindElement(By.ClassName("city-from"));
-            int maxDigitals = 30;
             
             fromCityWebElement.Click();
             fromCityWebElement.SendKeys(Keys.Backspace);

@@ -63,15 +63,5 @@ namespace Flights
 
             sched.ScheduleJob(job, trigger);
         }
-
-        private void CreateNet()
-        {
-            var implementations = Bootstrapper.Container.ResolveAll<IFlightsNetController>();
-
-            foreach (var implementation in implementations)
-            {
-                implementation.CreateNet();
-            }
-        }
     }
 }

@@ -53,6 +53,7 @@ namespace Flights
                 Component.For<IFlightSearchController>().ImplementedBy(typeof(FlightSearchController)),
                 Component.For<IJob>().ImplementedBy(typeof(SearchFlightsJob)),
                 Component.For<IJob>().ImplementedBy(typeof(FlightMailingJob)),
+                Component.For<IJob>().ImplementedBy(typeof(FlightsNetJob)),
                 Component.For<IJobFactory>().ImplementedBy(typeof(WindsorJobFactory)),
                 Component.For<IFlightMailingService>().ImplementedBy(typeof(FlightMailingService)),
                 Component.For<IFlightsNetController>().ImplementedBy(typeof(RyanAirFlightsNetController)),

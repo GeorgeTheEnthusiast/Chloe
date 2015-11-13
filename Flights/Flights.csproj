@@ -219,6 +219,7 @@
       <DependentUpon>Flights.NtService.cs</DependentUpon>
     </Compile>
     <Compile Include="FlightSearchController.cs" />
+    <Compile Include="Quartz\FlightsNetJob.cs" />
     <Compile Include="WizzAirFlightsNetController.cs" />
     <Compile Include="RyanAirFlightsNetController.cs" />
     <Compile Include="IFlightMailingService.cs" />
