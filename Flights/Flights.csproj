@@ -28,7 +28,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -125,7 +125,10 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Converters\CarriersConverter.cs" />
+    <Compile Include="Converters\CommonConverters.cs" />
+    <Compile Include="Converters\ICommonConverters.cs" />
     <Compile Include="Converters\INetConverter.cs" />
+    <Compile Include="Converters\INorwegianDateConverter.cs" />
     <Compile Include="Converters\NetConverter.cs" />
     <Compile Include="Converters\CityConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
@@ -138,6 +141,7 @@
     <Compile Include="Converters\INotificationReceiversConverter.cs" />
     <Compile Include="Converters\ISearchCriteriaConverter.cs" />
     <Compile Include="Converters\IWizzAirCalendarConverter.cs" />
+    <Compile Include="Converters\NorwegianDateConverter.cs" />
     <Compile Include="Converters\RyanAirDateConverter.cs" />
     <Compile Include="Converters\NotificationReceiversConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
@@ -238,12 +242,7 @@
     <Compile Include="Quartz\SearchFlightsJob.cs" />
     <Compile Include="Quartz\WindsorJobFactory.cs" />
     <Compile Include="RyanAirWebSiteController.cs" />
-    <Compile Include="Service1.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Service1.Designer.cs">
-      <DependentUpon>Service1.cs</DependentUpon>
-    </Compile>
+    <Compile Include="NorwegianWebSiteController.cs" />
     <Compile Include="WizzAirWebSiteController.cs" />
   </ItemGroup>
   <ItemGroup>

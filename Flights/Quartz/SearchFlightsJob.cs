@@ -32,11 +32,9 @@ namespace Flights.Quartz
         {
             try
             {
-                _logger.Info("Searching for the cheapest prices...");
+                //_flightSearchController.DeleteOldFlights();
 
-                _flightSearchController.StartSearch();
-
-                _logger.Info("Searching for the cheapest prices completed.");
+                //_flightSearchController.StartSearch();
 
                 ISchedulerFactory schedFact = new StdSchedulerFactory();
 

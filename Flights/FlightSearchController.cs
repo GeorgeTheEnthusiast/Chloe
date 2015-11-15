@@ -35,6 +35,8 @@ namespace Flights
 
         public void StartSearch()
         {
+            _logger.Info("Searching for the cheapest prices...");
+
             IEnumerable<SearchCriteria> criterias = _searchCriteriaQuery.GetAllSearchCriterias();
             List<SearchCriteria> criteriasToRepeat = criterias.ToList();
 
@@ -44,7 +46,7 @@ namespace Flights
                 {
                     try
                     {
-                        _logger.Info("Searching for flights from {0} with departures day {1} from {2} to {3}...", criteria.Carrier.Name, criteria.DepartureDate.ToShortDateString(), criteria.CityFrom.Name, criteria.CityTo.Name);
+                        _logger.Info("Searching for flights from {0} with departure day {1} from {2} to {3}...", criteria.Carrier.Name, criteria.DepartureDate.ToShortDateString(), criteria.CityFrom.Name, criteria.CityTo.Name);
 
                         if (DateTime.Compare(criteria.DepartureDate, DateTime.Now) <= 0)
                         {
@@ -61,7 +63,7 @@ namespace Flights
 
                         criteriasToRepeat.Remove(criteria);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         criteriasToRepeat.Add(criteria);
                     }
@@ -69,15 +71,17 @@ namespace Flights
 
                 criterias = criteriasToRepeat.ToList();
             }
+            
+            _logger.Info("Searching for the cheapest prices completed.");
         }
 
         public void DeleteOldFlights()
         {
-            _logger.Debug("Deleting old records...");
+            _logger.Debug("Deleting old records from today...");
 
             _flightsCommand.DeleteFlightsBySearchDate(DateTime.Now);
 
-            _logger.Debug("Deleting old records completed...");
+            _logger.Debug("Deleting old records from today completed...");
         }
     }
 }

@@ -48,21 +48,15 @@ namespace Flights
 
         private void NavigateToUrl()
         {
-            _carrier = _carrierQuery.GetCarrierByType(CarrierType.WizzAir);
-
             _driver.Manage().Cookies.DeleteAllCookies();
             _driver.Manage().Window.Maximize();
             _driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(4));
             _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
             _driver.Navigate().GoToUrl(_carrier.Website);
-
-            //Thread.Sleep(TimeSpan.FromSeconds(10));
         }
 
         private void FillCityFrom(SearchCriteria searchCriteria)
         {
-            //Thread.Sleep(TimeSpan.FromSeconds(1));
-
             IWebElement fromCityWebElement = _driver.FindElement(By.ClassName("city-from"));
 
             fromCityWebElement.Click();
@@ -72,8 +66,6 @@ namespace Flights
 
         private void FillCityTo(SearchCriteria searchCriteria)
         {
-            //Thread.Sleep(TimeSpan.FromSeconds(1));
-
             IWebElement toCityWebElement = _driver.FindElement(By.ClassName("city-to"));
             
             toCityWebElement.Click();
@@ -83,8 +75,6 @@ namespace Flights
 
         private void FillDate(SearchCriteria searchCriteria)
         {
-            //Thread.Sleep(TimeSpan.FromSeconds(1));
-
             IWebElement datePickerWebElement = _driver.FindElement(By.CssSelector("div[id='ui-datepicker-div']"));
 
             ClickWebElement(datePickerWebElement);
@@ -141,19 +131,18 @@ namespace Flights
 
         private void FindFlights()
         {
-            //Thread.Sleep(TimeSpan.FromSeconds(1));
-
             IWebElement searchButton = _driver.FindElement(By.CssSelector("button[class='buttonN button primary search preloader ']"));
             ClickWebElement(searchButton);
-
-            //Thread.Sleep(TimeSpan.FromSeconds(10));
         }
 
         public List<Flight> GetFlights(SearchCriteria searchCriteria)
         {
+            if (_carrier == null)
+                _carrier = _carrierQuery.GetCarrierByType(CarrierType.WizzAir);
+
             List<Flight> result = new List<Flight>();
 
-            if (searchCriteria.Carrier.Id != (int)CarrierType.WizzAir)
+            if (searchCriteria.Carrier.Id != _carrier.Id)
                 return result;
 
             NavigateToUrl();
@@ -184,7 +173,8 @@ namespace Flights
             Flight result = new Flight()
             {
                 SearchDate = DateTime.Now,
-                SearchCriteria = searchCriteria
+                SearchCriteria = searchCriteria,
+                IsDirect = true
             };
 
             try
@@ -205,8 +195,6 @@ namespace Flights
                 var priceSlide = webElement.FindElement(By.CssSelector("label[class='flight flight-data flight-fare flight-radio flight-fare-type--basic flight-fare--active']"));
                 string priceValue = priceSlide.GetAttribute("innerHTML");
                 priceValue = priceValue.Remove(0, priceValue.LastIndexOf(">") + 1);
-
-                result.SearchValidationText = "OK";
                 
                 AddCurrency(ref result, priceValue);
             }

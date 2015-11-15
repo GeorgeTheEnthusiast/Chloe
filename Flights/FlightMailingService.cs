@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Flights.Domain.Query;
 using System.Net.Mail;
+using Flights.Converters;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 
@@ -16,15 +17,19 @@ namespace Flights
     {
         private readonly IFlightsQuery _flightsQuery;
         private readonly INotificationsReceiverQuery _notificationsReceiverQuery;
+        private readonly ICommonConverters _commonConverters;
 
         public FlightMailingService(IFlightsQuery flightsQuery, 
-            INotificationsReceiverQuery notificationsReceiverQuery)
+            INotificationsReceiverQuery notificationsReceiverQuery,
+            ICommonConverters commonConverters)
         {
             if (flightsQuery == null) throw new ArgumentNullException("flightsQuery");
             if (notificationsReceiverQuery == null) throw new ArgumentNullException("notificationsReceiverQuery");
+            if (commonConverters == null) throw new ArgumentNullException("commonConverters");
 
             _flightsQuery = flightsQuery;
             _notificationsReceiverQuery = notificationsReceiverQuery;
+            _commonConverters = commonConverters;
         }
 
         public void SendResults(DateTime fromDate)
@@ -60,8 +65,10 @@ namespace Flights
             using (var fs = new FileStream(fileName, FileMode.Create))
             {
                 PdfWriter.GetInstance(doc, fs);
+                doc.SetPageSize(PageSize.A4.Rotate());
                 doc.Open();
                 
+
                 foreach (var group in searchGroups)
                 {
                     var flightsFromCountry = flightsToSend
@@ -71,9 +78,11 @@ namespace Flights
                     if (!flightsFromCountry.Any())
                         continue;
                     
-                    doc.Add(new Phrase(string.Format("Loty blisko {0}", group.Key.Date), fontHeader));
+                    doc.Add(new Phrase(string.Format("Loty blisko {0}", group.Key.Date.ToShortDateString()), fontHeader));
 
-                    PdfPTable table = new PdfPTable(7);
+                    PdfPTable table = new PdfPTable(8);
+                    float[] cellWidths = new float[] {32f, 32f, 28f, 10f, 10f, 20f, 10f, 28f};
+                    table.SetWidths(cellWidths);
 
                     table.AddCell(new Phrase("Od", fontBold));
                     table.AddCell(new Phrase("Do", fontBold));
@@ -81,6 +90,7 @@ namespace Flights
                     table.AddCell(new Phrase("Cena", fontBold));
                     table.AddCell(new Phrase("Waluta", fontBold));
                     table.AddCell(new Phrase("Przewoźnik", fontBold));
+                    table.AddCell(new Phrase("Lot bezpośredni", fontBold));
                     table.AddCell(new Phrase("Dane z dnia", fontBold));
 
                     foreach (var flight in flightsFromCountry)
@@ -91,6 +101,10 @@ namespace Flights
                         table.AddCell(new Phrase(flight.Price.ToString(), fontNormal));
                         table.AddCell(new Phrase(flight.Currency.Name, fontNormal));
                         table.AddCell(new Phrase(flight.SearchCriteria.Carrier.Name, fontNormal));
+
+                        string isDirect = _commonConverters.ConvertBoolToYesNo(flight.IsDirect);
+                        table.AddCell(new Phrase(isDirect, fontNormal));
+                        
                         table.AddCell(new Phrase(flight.SearchDate.ToString(), fontNormal));
                     }
 

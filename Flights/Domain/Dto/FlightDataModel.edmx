@@ -40,8 +40,8 @@
           <Property Name="Currency_Id" Type="int" Nullable="false" />
           <Property Name="Price" Type="int" Nullable="false" />
           <Property Name="SearchDate" Type="datetime" Nullable="false" />
-          <Property Name="ValidationText" Type="nvarchar" MaxLength="2048" />
           <Property Name="Created" Type="datetime" />
+          <Property Name="IsDirect" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Net">
           <Key>
@@ -296,10 +296,10 @@
           <Property Name="Currency_Id" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Int32" Nullable="false" />
           <Property Name="SearchDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ValidationText" Type="String" MaxLength="2048" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Currencies" Relationship="FlightsModel.FK_Flight_Currency1" FromRole="Flights" ToRole="Currencies" />
           <NavigationProperty Name="SearchCriterias" Relationship="FlightsModel.FK_Flight_SearchCriteria1" FromRole="Flights" ToRole="SearchCriterias" />
           <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="IsDirect" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="NotificationsReceivers">
           <Key>
@@ -470,8 +470,8 @@
           <EntitySetMapping Name="Flights">
             <EntityTypeMapping TypeName="FlightsModel.Flights">
               <MappingFragment StoreEntitySet="Flights">
+                <ScalarProperty Name="IsDirect" ColumnName="IsDirect" />
                 <ScalarProperty Name="Created" ColumnName="Created" />
-                <ScalarProperty Name="ValidationText" ColumnName="ValidationText" />
                 <ScalarProperty Name="SearchDate" ColumnName="SearchDate" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Currency_Id" ColumnName="Currency_Id" />

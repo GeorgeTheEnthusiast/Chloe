@@ -15,12 +15,10 @@ namespace Flights.Converters
         public FlightsConverter()
         {
             Mapper.CreateMap<FlightsDto.Flight, FlightsDomain.Flights>()
-                .ForMember(x => x.DepartureDate, expression => expression.MapFrom(src => src.DepartureTime))
-                .ForMember(x => x.ValidationText, expression => expression.MapFrom(src => src.SearchValidationText));
+                .ForMember(x => x.DepartureDate, expression => expression.MapFrom(src => src.DepartureTime));
 
             Mapper.CreateMap<FlightsDomain.Flights, FlightsDto.Flight>()
                 .ForMember(x => x.DepartureTime, expression => expression.MapFrom(src => src.DepartureDate))
-                .ForMember(x => x.SearchValidationText, expression => expression.MapFrom(src => src.ValidationText))
                 .ForMember(x => x.Currency, expression => expression.MapFrom(src => src.Currencies))
                 .ForMember(x => x.SearchCriteria, expression => expression.MapFrom(src => src.SearchCriterias));
 

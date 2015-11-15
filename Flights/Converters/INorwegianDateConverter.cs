@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Flights.Converters
 {
-    public interface IRyanAirDateConverter
+    public interface INorwegianDateConverter
     {
-        DateTime Convert(DateTime dateToMergeWith, string ryanAirDate);
+        DateTime Convert(string norwegianPrintedDate);
     }
 }

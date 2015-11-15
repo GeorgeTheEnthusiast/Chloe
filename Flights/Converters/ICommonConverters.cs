@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlightsDomain = Flights.Domain.Dto;
+using FlightsDto = Flights.Dto;
 
 namespace Flights.Converters
 {
-    public interface IRyanAirDateConverter
+    public interface ICommonConverters
     {
-        DateTime Convert(DateTime dateToMergeWith, string ryanAirDate);
+        string ConvertBoolToYesNo(bool value);
     }
 }

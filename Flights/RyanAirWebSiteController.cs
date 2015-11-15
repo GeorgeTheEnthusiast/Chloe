@@ -15,6 +15,7 @@ using NUnit.Framework.Constraints;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using Quartz.Util;
 
 namespace Flights
 {
@@ -50,9 +51,6 @@ namespace Flights
 
         private void NavigateToUrl()
         {
-            if (_carrier == null)
-                _carrier = _carrierQuery.GetCarrierByType(CarrierType.RyanAir);
-
             _driver.Manage().Cookies.DeleteAllCookies();
             _driver.Manage().Window.Maximize();
             _driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
@@ -186,9 +184,12 @@ namespace Flights
 
         public List<Flight> GetFlights(SearchCriteria searchCriteria)
         {
+            if (_carrier == null)
+                _carrier = _carrierQuery.GetCarrierByType(CarrierType.RyanAir);
+
             List<Flight> result = new List<Flight>();
 
-            if (searchCriteria.Carrier.Id != (int) CarrierType.RyanAir)
+            if (searchCriteria.Carrier.Id != _carrier.Id)
                 return result;
 
             NavigateToUrl();
@@ -202,15 +203,16 @@ namespace Flights
             ProceedToDatesForm();
 
             int retryCount = 5;
+            DateTime departureDate = searchCriteria.DepartureDate.Date;
 
             while (retryCount != 0)
             {
-                FillDate(searchCriteria.DepartureDate);
+                FillDate(departureDate);
 
                 string errorText = GetInputValidationState();
 
                 if (errorText == FlightIsNotAvailableOnThisDay)
-                    searchCriteria.DepartureDate = searchCriteria.DepartureDate.AddDays(1);
+                    departureDate = departureDate.AddDays(1);
                 else if (errorText == FlightIsAvailable)
                     break;
 
@@ -227,7 +229,56 @@ namespace Flights
                 throw new FlightsPageIsNotLoadedCorrectlyException();
             }
             
-            var flightSlides = _driver.FindElement(By.CssSelector("div[class='wrapper']")).FindElements(By.ClassName("slide"));
+            var flightSlides = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElements(By.ClassName("slide")));
+            var slideActive = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElement(By.CssSelector("div[class='slide active']")));
+            DateTime activeSlideDateTime = GetDateFromCarousel(slideActive, searchCriteria.DepartureDate.Date);
+
+            if (DateTime.Compare(activeSlideDateTime.Date, searchCriteria.DepartureDate.Date) != 0)
+            {
+                //
+                try
+                {
+                    DateTime slideDateTime = new DateTime();
+                    bool goForward = false;
+                    bool stopTheCarousel = false;
+                    int daysToAdd;
+
+                    while (true)
+                    {
+                        if (goForward)
+                            daysToAdd = -1;
+                        else
+                            daysToAdd = 1;
+
+                        foreach (var slide in flightSlides)
+                        {
+                            slideDateTime = GetDateFromCarousel(slide, activeSlideDateTime.Date);
+                            if (DateTime.Compare(slideDateTime.Date.AddDays(daysToAdd), activeSlideDateTime.Date) == 0)
+                            {
+                                slide.Click();
+                                activeSlideDateTime = slideDateTime.Date;
+                                break;
+                            }
+                        }
+
+                        if (DateTime.Compare(activeSlideDateTime.Date.AddDays(2), searchCriteria.DepartureDate.Date) == 0)
+                            goForward = true;
+                        else if (DateTime.Compare(activeSlideDateTime.Date, searchCriteria.DepartureDate.Date) == 0)
+                        {
+                            if (stopTheCarousel)
+                                break;
+                            else
+                                stopTheCarousel = true;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+            //kliknij spowrotem w dzien, ktory byl szukany
+            //podaj date 
 
             foreach (var slide in flightSlides)
             {
@@ -268,7 +319,8 @@ namespace Flights
             Flight result = new Flight()
             {
                 SearchDate = DateTime.Now,
-                SearchCriteria = searchCriteria
+                SearchCriteria = searchCriteria,
+                IsDirect = true
             };
 
             try
@@ -283,15 +335,15 @@ namespace Flights
                     DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(2)) > 0)
                     return null;
 
-                var priceSlide = webElement.FindElement(By.ClassName("carousel-item"));
-                string className = priceSlide.GetAttribute("class");
+                var className = webElement
+                    .FindElement(By.ClassName("carousel-item"))
+                    .GetAttribute("class");
                 
                 switch (className)
                 {
                     case "carousel-item daily item-not-available":
                         return null;
                     default:
-                        result.SearchValidationText = "OK";
                         break;
                 }
                 
@@ -299,11 +351,23 @@ namespace Flights
 
                 while (true)
                 {
-                    var fareLong = webElement.FindElement(By.ClassName("fare")).GetAttribute("innerHTML");
+                    var fareLong = webElement.FindElement(By.ClassName("fare")).Text;
                     price = fareLong.Trim('\r', '\n', ' ');
 
                     if (!string.IsNullOrEmpty(price))
                         break;
+
+                    className = webElement
+                        .FindElement(By.ClassName("carousel-item"))
+                        .GetAttribute("class");
+
+                    switch (className)
+                    {
+                        case "carousel-item daily item-not-available":
+                            return null;
+                        default:
+                            break;
+                    }
 
                     _logger.Info("Price is empty");
                 }
@@ -322,12 +386,24 @@ namespace Flights
             return result;
         }
 
+        private DateTime GetDateFromCarousel(IWebElement webElement, DateTime searchDepartureDate)
+        {
+            string dateLong = webElement.FindElement(By.ClassName("date")).GetAttribute("innerHTML");
+
+            DateTime result = _ryanAirDateConverter.Convert(searchDepartureDate, dateLong);
+
+            return result;
+        }
+
         private void AddCurrency(ref Flight flightToAddCurrency, string price)
         {
             if (string.IsNullOrEmpty(price))
                 throw new PriceIsEmptyException();
 
             string[] priceArray = price.Split(new [] { "&nbsp;" }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (priceArray.Count() == 1)
+                priceArray = price.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
             flightToAddCurrency.Currency = _currienciesCommand.Merge(new Currency()
             {

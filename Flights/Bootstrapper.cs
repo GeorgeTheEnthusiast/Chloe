@@ -46,6 +46,7 @@ namespace Flights
                 Component.For<ISearchCriteriaQuery>().ImplementedBy(typeof(SearchCriteriaQuery)),
                 Component.For<IWebSiteController>().ImplementedBy(typeof(RyanAirWebSiteController)),
                 Component.For<IWebSiteController>().ImplementedBy(typeof(WizzAirWebSiteController)),
+                Component.For<IWebSiteController>().ImplementedBy(typeof(NorwegianWebSiteController)),
                 Component.For<IWebDriver>().ImplementedBy(typeof(ChromeDriver)),
                 Component.For<IWizzAirCalendarConverter>().ImplementedBy(typeof(WizzAirCalendarConverter)),
                 Component.For<IFlightsQuery>().ImplementedBy(typeof(FlightsQuery)),
@@ -62,7 +63,9 @@ namespace Flights
                 Component.For<ICitiesCommand>().ImplementedBy(typeof(CitiesCommand)),
                 Component.For<ICityConverter>().ImplementedBy(typeof(CityConverter)),
                 Component.For<ICityQuery>().ImplementedBy(typeof(CityQuery)),
-                Component.For<IFlightsNetController>().ImplementedBy(typeof(WizzAirFlightsNetController))
+                Component.For<IFlightsNetController>().ImplementedBy(typeof(WizzAirFlightsNetController)),
+                Component.For<INorwegianDateConverter>().ImplementedBy(typeof(NorwegianDateConverter)),
+                Component.For<ICommonConverters>().ImplementedBy(typeof(CommonConverters))
                 );
         }
     }

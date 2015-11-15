@@ -26,6 +26,8 @@ namespace Flights
         {
             try
             {
+                Console.WriteLine("Uruchomiono usługę Flights.");
+
                 Bootstrapper.Register();
 
                 if (args != null && args.Any() && args[0] != null && args[0] == "/console")
