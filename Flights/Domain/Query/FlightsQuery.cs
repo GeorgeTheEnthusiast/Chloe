@@ -52,5 +52,20 @@ namespace Flights.Domain.Query
 
             return result;
         }
+
+        public IEnumerable<FlightsDto.Flight> GetFlightsByReceiverGroup(FlightsDto.ReceiverGroup receiverGroup)
+        {
+            IEnumerable<FlightsDto.Flight> result;
+
+            using (var flightDataModel = new FlightsDomain.FlightsEntities())
+            {
+                var flights = flightDataModel.Flights
+                    .Where(x => x.SearchCriterias.ReceiverGroups_Id == receiverGroup.Id);
+
+                result = _flightsConverter.Convert(flights);
+            }
+
+            return result;
+        }
     }
 }

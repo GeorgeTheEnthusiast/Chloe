@@ -64,8 +64,11 @@ namespace Flights
                 Component.For<ICityConverter>().ImplementedBy(typeof(CityConverter)),
                 Component.For<ICityQuery>().ImplementedBy(typeof(CityQuery)),
                 Component.For<IFlightsNetController>().ImplementedBy(typeof(WizzAirFlightsNetController)),
+                Component.For<IFlightsNetController>().ImplementedBy(typeof(NorwegianFlightsNetController)),
                 Component.For<INorwegianDateConverter>().ImplementedBy(typeof(NorwegianDateConverter)),
-                Component.For<ICommonConverters>().ImplementedBy(typeof(CommonConverters))
+                Component.For<ICommonConverters>().ImplementedBy(typeof(CommonConverters)),
+                Component.For<INotificationReceiversGroupsQuery>().ImplementedBy(typeof(NotificationReceiversGroupsQuery)),
+                Component.For<INotificationReceiversGroupsConverter>().ImplementedBy(typeof(NotificationReceiversGroupsConverter))
                 );
         }
     }

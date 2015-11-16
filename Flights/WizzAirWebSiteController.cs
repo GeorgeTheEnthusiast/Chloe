@@ -176,34 +176,26 @@ namespace Flights
                 SearchCriteria = searchCriteria,
                 IsDirect = true
             };
+            
+            var dateWebElement = webElement.FindElement(By.CssSelector("div[class='flight-data flight-date']"));
 
-            try
-            {
-                var dateWebElement = webElement.FindElement(By.CssSelector("div[class='flight-data flight-date']"));
-
-                if (dateWebElement.GetAttribute("innerHTML") == "Wylot i przylot")
-                    return null;
-
-                if (dateWebElement.GetAttribute("class") == "flight-row disabled")
-                    return null;
-
-                string dateLong = dateWebElement.FindElement(By.TagName("span"))
-                    .GetAttribute("data-flight-departure");
-
-                result.DepartureTime = DateTime.Parse(dateLong);
-                
-                var priceSlide = webElement.FindElement(By.CssSelector("label[class='flight flight-data flight-fare flight-radio flight-fare-type--basic flight-fare--active']"));
-                string priceValue = priceSlide.GetAttribute("innerHTML");
-                priceValue = priceValue.Remove(0, priceValue.LastIndexOf(">") + 1);
-                
-                AddCurrency(ref result, priceValue);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-
+            if (dateWebElement.GetAttribute("innerHTML") == "Wylot i przylot")
                 return null;
-            }
+
+            if (dateWebElement.GetAttribute("class") == "flight-row disabled")
+                return null;
+
+            string dateLong = dateWebElement.FindElement(By.TagName("span"))
+                .GetAttribute("data-flight-departure");
+
+            result.DepartureTime = DateTime.Parse(dateLong);
+                
+            var priceSlide = webElement.FindElement(By.CssSelector("label[class='flight flight-data flight-fare flight-radio flight-fare-type--basic flight-fare--active']"));
+            string priceValue = priceSlide.GetAttribute("innerHTML");
+            priceValue = priceValue.Remove(0, priceValue.LastIndexOf(">") + 1);
+                
+            AddCurrency(ref result, priceValue);
+            
             return result;
         }
 

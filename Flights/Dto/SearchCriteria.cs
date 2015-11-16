@@ -17,5 +17,7 @@ namespace Flights.Dto
         public DateTime DepartureDate { get; set; }
 
         public Carrier Carrier { get; set; }
+
+        public ReceiverGroup ReceiverGroup { get; set; }
     }
 }

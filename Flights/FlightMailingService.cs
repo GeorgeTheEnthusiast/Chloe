@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Flights.Domain.Query;
 using System.Net.Mail;
 using Flights.Converters;
+using Flights.Dto;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 
@@ -16,47 +17,64 @@ namespace Flights
     public class FlightMailingService : IFlightMailingService
     {
         private readonly IFlightsQuery _flightsQuery;
-        private readonly INotificationsReceiverQuery _notificationsReceiverQuery;
         private readonly ICommonConverters _commonConverters;
+        private readonly INotificationReceiversGroupsQuery _notificationReceiversGroupsQuery;
 
         public FlightMailingService(IFlightsQuery flightsQuery, 
-            INotificationsReceiverQuery notificationsReceiverQuery,
-            ICommonConverters commonConverters)
+            ICommonConverters commonConverters,
+            INotificationReceiversGroupsQuery notificationReceiversGroupsQuery)
         {
             if (flightsQuery == null) throw new ArgumentNullException("flightsQuery");
-            if (notificationsReceiverQuery == null) throw new ArgumentNullException("notificationsReceiverQuery");
             if (commonConverters == null) throw new ArgumentNullException("commonConverters");
+            if (notificationReceiversGroupsQuery == null)
+                throw new ArgumentNullException("notificationReceiversGroupsQuery");
 
             _flightsQuery = flightsQuery;
-            _notificationsReceiverQuery = notificationsReceiverQuery;
             _commonConverters = commonConverters;
+            _notificationReceiversGroupsQuery = notificationReceiversGroupsQuery;
         }
 
-        public void SendResults(DateTime fromDate)
+        public void SendResults()
         {
-            string pdfFileName = CreatePdf(fromDate);
-            var mailReceivers = _notificationsReceiverQuery.GetAllNotificationsReceivers();
+            var notificationReceiversGroups = _notificationReceiversGroupsQuery.GetAllNotificationReceiversGroups();
 
-            foreach (var receiver in mailReceivers)
+            foreach (var nrg in notificationReceiversGroups.GroupBy(x => x.ReceiverGroup))
             {
-                MailAddress mailAddressFrom = new MailAddress("flights.adam.kwiat@gmail.com", "Wyszukiwarka lotów GK");
-                MailAddress mailAddressTo = new MailAddress(receiver.Email);
-                MailMessage mailMessage = new MailMessage(mailAddressFrom, mailAddressTo);
-                mailMessage.Subject = "Najtańsze loty na dzień " + DateTime.Now;
-                mailMessage.Attachments.Add(new Attachment(pdfFileName));
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-                smtpClient.EnableSsl = true;
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential("flights.adam.kwiat", "ToJest1KontoPocztowe");
-                smtpClient.Send(mailMessage);
+                var mailReceivers = nrg.ToList();
+
+                if (!mailReceivers.Any())
+                    continue;
+
+                string pdfFileName = CreatePdf(nrg.Key);
+
+                if (pdfFileName == null)
+                    continue;
+
+                foreach (var receiver in mailReceivers)
+                {
+                    MailAddress mailAddressFrom = new MailAddress("flights.adam.kwiat@gmail.com", "Wyszukiwarka lotów GK");
+                    MailAddress mailAddressTo = new MailAddress(receiver.NotificationReceiver.Email);
+                    MailMessage mailMessage = new MailMessage(mailAddressFrom, mailAddressTo);
+                    mailMessage.Subject = "Najtańsze loty na dzień " + DateTime.Now;
+                    mailMessage.Attachments.Add(new Attachment(pdfFileName));
+                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                    smtpClient.EnableSsl = true;
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Credentials = new NetworkCredential("flights.adam.kwiat", "ToJest1KontoPocztowe");
+                    smtpClient.Send(mailMessage);
+                }
             }
         }
 
-        private string CreatePdf(DateTime fromDate)
+        private string CreatePdf(ReceiverGroup receiverGroup)
         {
             Document doc = new Document();
             string fileName = string.Format("cheapest_flights_{0}.pdf", DateTime.Now.ToString("yyyy-MM-dd_HHmmss"));
-            var flightsToSend = _flightsQuery.GetFlightsBySearchDate(fromDate);
+            var flightsToSend = _flightsQuery.GetFlightsByReceiverGroup(receiverGroup);
+
+            if (!flightsToSend.Any())
+                return null;
+
             var searchGroups = flightsToSend.GroupBy(x => x.SearchCriteria.DepartureDate);
             var fontBold = FontFactory.GetFont(BaseFont.TIMES_BOLD, BaseFont.CP1257, 8, Font.BOLD);
             var fontNormal = FontFactory.GetFont(BaseFont.COURIER, BaseFont.CP1257, 8, Font.NORMAL);

@@ -12,10 +12,14 @@ namespace Flights.Domain.Dto
     using System;
     using System.Collections.Generic;
     
-    public partial class NotificationsReceivers
+    public partial class NotificationReceiversGroups
     {
         public int Id { get; set; }
-        public string Email { get; set; }
+        public int ReceiverGroups_Id { get; set; }
+        public int NotificationReceivers_Id { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
+    
+        public virtual NotificationReceivers NotificationReceivers { get; set; }
+        public virtual ReceiverGroups ReceiverGroups { get; set; }
     }
 }

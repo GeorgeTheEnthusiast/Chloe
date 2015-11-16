@@ -129,6 +129,7 @@
     <Compile Include="Converters\ICommonConverters.cs" />
     <Compile Include="Converters\INetConverter.cs" />
     <Compile Include="Converters\INorwegianDateConverter.cs" />
+    <Compile Include="Converters\INotificationReceiversGroupsConverter.cs" />
     <Compile Include="Converters\NetConverter.cs" />
     <Compile Include="Converters\CityConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Converters\ISearchCriteriaConverter.cs" />
     <Compile Include="Converters\IWizzAirCalendarConverter.cs" />
     <Compile Include="Converters\NorwegianDateConverter.cs" />
+    <Compile Include="Converters\NotificationReceiversGroupsConverter.cs" />
     <Compile Include="Converters\RyanAirDateConverter.cs" />
     <Compile Include="Converters\NotificationReceiversConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
@@ -184,7 +186,13 @@
     <Compile Include="Domain\Dto\Net.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Domain\Dto\NotificationsReceivers.cs">
+    <Compile Include="Domain\Dto\NotificationReceivers.cs">
+      <DependentUpon>FlightDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\Dto\NotificationReceiversGroups.cs">
+      <DependentUpon>FlightDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Domain\Dto\ReceiverGroups.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Domain\Dto\SearchCriterias.cs">
@@ -196,8 +204,10 @@
     <Compile Include="Domain\Query\ICityQuery.cs" />
     <Compile Include="Domain\Query\IFlightsQuery.cs" />
     <Compile Include="Domain\Query\ICarrierQuery.cs" />
+    <Compile Include="Domain\Query\INotificationReceiversGroupsQuery.cs" />
     <Compile Include="Domain\Query\INotificationsReceiverQuery.cs" />
     <Compile Include="Domain\Query\ISearchCriteriaQuery.cs" />
+    <Compile Include="Domain\Query\NotificationReceiversGroupsQuery.cs" />
     <Compile Include="Domain\Query\NotificationsReceiverQuery.cs" />
     <Compile Include="Domain\Query\SearchCriteriaQuery.cs" />
     <Compile Include="Dto\Carriers.cs" />
@@ -206,6 +216,8 @@
     <Compile Include="Dto\City.cs" />
     <Compile Include="Dto\Currency.cs" />
     <Compile Include="Dto\Flight.cs" />
+    <Compile Include="Dto\NotificationReceiverGroup.cs" />
+    <Compile Include="Dto\ReceiverGroup.cs" />
     <Compile Include="Dto\NotificationReceiver.cs" />
     <Compile Include="Dto\SearchCriteria.cs" />
     <Compile Include="Exceptions\PriceIsEmptyException.cs" />
@@ -224,6 +236,7 @@
     </Compile>
     <Compile Include="FlightSearchController.cs" />
     <Compile Include="Quartz\FlightsNetJob.cs" />
+    <Compile Include="NorwegianFlightsNetController.cs" />
     <Compile Include="WizzAirFlightsNetController.cs" />
     <Compile Include="RyanAirFlightsNetController.cs" />
     <Compile Include="IFlightMailingService.cs" />

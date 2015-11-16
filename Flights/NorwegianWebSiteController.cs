@@ -230,45 +230,34 @@ namespace Flights
                 SearchDate = DateTime.Now,
                 SearchCriteria = searchCriteria
             };
-
-            try
-            {
-                var flightWebElement = webElement.FindElement(By.TagName("div"));
-                string flightType = flightWebElement.GetAttribute("class");
+            
+            var flightWebElement = webElement.FindElement(By.TagName("div"));
+            string flightType = flightWebElement.GetAttribute("class");
                 
-                if (flightType == "fareCalDayDirect")
-                    result.IsDirect = true;
-                else if (flightType == "fareCalDayDirectLowest")
-                    result.IsDirect = true;
-                else if (flightType == "fareCalDayTransit")
-                    result.IsDirect = false;
-                else if (flightType == "fareCalDayTransitLowest")
-                    result.IsDirect = false;
-                else if (flightType == "fareCalNoDay")
-                    return null;
-                else if (flightType == "fareCalNoFlight")
-                    return null;
-
-                string onClickValue = flightWebElement.GetAttribute("onclick");
-
-                result.Price = GetPriceFromCarousel(onClickValue);
-                result.DepartureTime = GetDateFromCarousel(onClickValue);
-
-                var res1 = DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(-2));
-                var res2 = DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(2));
-
-                if (DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(-2)) < 0 ||
-                    DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(2)) > 0)
-                    return null;
-
-                AddCurrency(ref result);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-
+            if (flightType == "fareCalDayDirect")
+                result.IsDirect = true;
+            else if (flightType == "fareCalDayDirectLowest")
+                result.IsDirect = true;
+            else if (flightType == "fareCalDayTransit")
+                result.IsDirect = false;
+            else if (flightType == "fareCalDayTransitLowest")
+                result.IsDirect = false;
+            else if (flightType == "fareCalNoDay")
                 return null;
-            }
+            else if (flightType == "fareCalNoFlight")
+                return null;
+
+            string onClickValue = flightWebElement.GetAttribute("onclick");
+
+            result.Price = GetPriceFromCarousel(onClickValue);
+            result.DepartureTime = GetDateFromCarousel(onClickValue);
+
+            if (DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(-2)) < 0 ||
+                DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(2)) > 0)
+                return null;
+
+            AddCurrency(ref result);
+          
             return result;
         }
 

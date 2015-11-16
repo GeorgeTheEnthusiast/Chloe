@@ -31,7 +31,7 @@ namespace Flights.Quartz
             {
                 _logger.Info("Sending flights through e-mails...");
 
-                _flightMailingService.SendResults(DateTime.Now);
+                _flightMailingService.SendResults();
 
                 _logger.Info("Sending flights through e-mails completed.");
             }

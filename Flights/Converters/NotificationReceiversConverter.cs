@@ -13,11 +13,11 @@ namespace Flights.Converters
     {
         public NotificationReceiversConverter()
         {
-            Mapper.CreateMap<FlightsDomain.NotificationsReceivers, FlightsDto.NotificationReceiver>()
+            Mapper.CreateMap<FlightsDomain.NotificationReceivers, FlightsDto.NotificationReceiver>()
                 .ForMember(x => x.Email, expression => expression.ResolveUsing(result => result.Email.Trim()));
         }
 
-        public IEnumerable<FlightsDto.NotificationReceiver> Convert(IEnumerable<FlightsDomain.NotificationsReceivers> notificationsReceivers)
+        public IEnumerable<FlightsDto.NotificationReceiver> Convert(IEnumerable<FlightsDomain.NotificationReceivers> notificationsReceivers)
         {
             return Mapper.Map<IEnumerable<FlightsDto.NotificationReceiver>>(notificationsReceivers);
         }

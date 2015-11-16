@@ -12,27 +12,19 @@ namespace Flights.Domain.Dto
     using System;
     using System.Collections.Generic;
     
-    public partial class SearchCriterias
+    public partial class NotificationReceivers
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public SearchCriterias()
+        public NotificationReceivers()
         {
-            this.Flights = new HashSet<Flights>();
+            this.NotificationReceiversGroups = new HashSet<NotificationReceiversGroups>();
         }
     
         public int Id { get; set; }
-        public int CityFrom_Id { get; set; }
-        public int CityTo_Id { get; set; }
-        public System.DateTime DepartureDate { get; set; }
-        public int Carrier_Id { get; set; }
+        public string Email { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
-        public int ReceiverGroups_Id { get; set; }
     
-        public virtual Cities CityFrom { get; set; }
-        public virtual Cities CityTo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Flights> Flights { get; set; }
-        public virtual Carriers Carriers { get; set; }
-        public virtual ReceiverGroups ReceiverGroups { get; set; }
+        public virtual ICollection<NotificationReceiversGroups> NotificationReceiversGroups { get; set; }
     }
 }

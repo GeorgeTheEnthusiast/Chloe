@@ -54,7 +54,7 @@ namespace Flights
             _driver.Manage().Cookies.DeleteAllCookies();
             _driver.Manage().Window.Maximize();
             _driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
-            _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+            _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(20));
             _driver.Navigate().GoToUrl(_carrier.Website);
         }
 
@@ -276,9 +276,8 @@ namespace Flights
                 {
                 }
             }
-
-            //kliknij spowrotem w dzien, ktory byl szukany
-            //podaj date 
+            
+            Thread.Sleep(TimeSpan.FromSeconds(3));
 
             foreach (var slide in flightSlides)
             {
@@ -322,67 +321,37 @@ namespace Flights
                 SearchCriteria = searchCriteria,
                 IsDirect = true
             };
-
-            try
-            {
-                string dateLong = webElement.FindElement(By.ClassName("date")).GetAttribute("innerHTML");
-                result.DepartureTime = _ryanAirDateConverter.Convert(searchCriteria.DepartureDate, dateLong);
-
-                var res1 = DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(-2));
-                var res2 = DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(2));
-
-                if (DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(-2)) < 0 ||
-                    DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(2)) > 0)
-                    return null;
-
-                var className = webElement
-                    .FindElement(By.ClassName("carousel-item"))
-                    .GetAttribute("class");
-                
-                switch (className)
-                {
-                    case "carousel-item daily item-not-available":
-                        return null;
-                    default:
-                        break;
-                }
-                
-                string price = string.Empty;
-
-                while (true)
-                {
-                    var fareLong = webElement.FindElement(By.ClassName("fare")).Text;
-                    price = fareLong.Trim('\r', '\n', ' ');
-
-                    if (!string.IsNullOrEmpty(price))
-                        break;
-
-                    className = webElement
-                        .FindElement(By.ClassName("carousel-item"))
-                        .GetAttribute("class");
-
-                    switch (className)
-                    {
-                        case "carousel-item daily item-not-available":
-                            return null;
-                        default:
-                            break;
-                    }
-
-                    _logger.Info("Price is empty");
-                }
-
-                if (price.Contains("∞"))
-                    return null;
-
-                AddCurrency(ref result, price);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-
+            
+            string dateLong = webElement.FindElement(By.ClassName("date")).GetAttribute("innerHTML");
+            result.DepartureTime = _ryanAirDateConverter.Convert(searchCriteria.DepartureDate, dateLong);
+            
+            if (DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(-2)) < 0 ||
+                DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(2)) > 0)
                 return null;
+
+            var className = webElement
+                .FindElement(By.ClassName("carousel-item"))
+                .GetAttribute("class");
+                
+            switch (className)
+            {
+                case "carousel-item daily item-not-available":
+                    return null;
             }
+                
+            string price = webElement.FindElement(By.ClassName("fare")).Text;
+
+            if (price.Contains("∞"))
+                return null;
+
+            if (string.IsNullOrEmpty(price))
+            {
+                _logger.Info("Price is empty for departure date [{0}]", result.DepartureTime.Date.ToShortDateString());
+                throw new PriceIsEmptyException();
+            }
+
+            AddCurrency(ref result, price);
+           
             return result;
         }
 

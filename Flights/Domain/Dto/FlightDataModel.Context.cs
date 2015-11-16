@@ -29,8 +29,10 @@ namespace Flights.Domain.Dto
         public virtual DbSet<Cities> Cities { get; set; }
         public virtual DbSet<Currencies> Currencies { get; set; }
         public virtual DbSet<Flights> Flights { get; set; }
-        public virtual DbSet<NotificationsReceivers> NotificationsReceivers { get; set; }
         public virtual DbSet<SearchCriterias> SearchCriterias { get; set; }
         public virtual DbSet<Net> Net { get; set; }
+        public virtual DbSet<NotificationReceivers> NotificationReceiversSet { get; set; }
+        public virtual DbSet<NotificationReceiversGroups> NotificationReceiversGroups { get; set; }
+        public virtual DbSet<ReceiverGroups> ReceiverGroups { get; set; }
     }
 }

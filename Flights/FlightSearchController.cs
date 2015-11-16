@@ -46,7 +46,9 @@ namespace Flights
                 {
                     try
                     {
-                        _logger.Info("Searching for flights from {0} with departure day {1} from {2} to {3}...", criteria.Carrier.Name, criteria.DepartureDate.ToShortDateString(), criteria.CityFrom.Name, criteria.CityTo.Name);
+                        DeleteOldFlights(criteria);
+
+                        _logger.Info("Searching for {0} flights with departure day {1} from {2} to {3}...", criteria.Carrier.Name, criteria.DepartureDate.ToShortDateString(), criteria.CityFrom.Name, criteria.CityTo.Name);
 
                         if (DateTime.Compare(criteria.DepartureDate, DateTime.Now) <= 0)
                         {
@@ -62,26 +64,30 @@ namespace Flights
                         }
 
                         criteriasToRepeat.Remove(criteria);
+
+                        _logger.Info("Searching for flights completed without errors.");
                     }
                     catch (Exception ex)
                     {
+                        _logger.Error("I have to repeat search criteria with id [{0}]", criteria.Id);
                         criteriasToRepeat.Add(criteria);
                     }
                 }
 
                 criterias = criteriasToRepeat.ToList();
+                _logger.Info("Search criterias left: [{0}]", criterias.Count());
             }
             
             _logger.Info("Searching for the cheapest prices completed.");
         }
 
-        public void DeleteOldFlights()
+        private void DeleteOldFlights(SearchCriteria searchCriteria)
         {
-            _logger.Debug("Deleting old records from today...");
+            _logger.Debug("Deleting old records from today for search criteria id [{0}]...", searchCriteria.Id);
 
-            _flightsCommand.DeleteFlightsBySearchDate(DateTime.Now);
+            _flightsCommand.DeleteFlightsBySearchCriteria(searchCriteria);
 
-            _logger.Debug("Deleting old records from today completed...");
+            _logger.Debug("Deleting old records from today for search criteria id [{0}] completed...", searchCriteria.Id);
         }
     }
 }

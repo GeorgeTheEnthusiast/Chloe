@@ -8,6 +8,6 @@ namespace Flights
 {
     public interface IFlightMailingService
     {
-        void SendResults(DateTime fromDate);
+        void SendResults();
     }
 }

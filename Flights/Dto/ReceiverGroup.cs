@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flights
+namespace Flights.Dto
 {
-    public interface IFlightSearchController
+    public class ReceiverGroup
     {
-        void StartSearch();
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 }

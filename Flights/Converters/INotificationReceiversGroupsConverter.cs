@@ -8,8 +8,8 @@ using FlightDto = Flights.Dto;
 
 namespace Flights.Converters
 {
-    public interface INotificationReceiversConverter
+    public interface INotificationReceiversGroupsConverter
     {
-        IEnumerable<FlightDto.NotificationReceiver> Convert(IEnumerable<FlightDomain.NotificationReceivers> notificationsReceivers);
+        IEnumerable<FlightDto.NotificationReceiverGroup> Convert(IEnumerable<FlightDomain.NotificationReceiversGroups> notificationReceiversGroups);
     }
 }

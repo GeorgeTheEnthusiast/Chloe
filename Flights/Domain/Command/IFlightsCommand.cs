@@ -14,5 +14,7 @@ namespace Flights.Domain.Command
         void DeleteFlightsBySearchDate(DateTime date);
 
         void AddRange(IEnumerable<FlightsDto.Flight> flights);
+
+        void DeleteFlightsBySearchCriteria(FlightsDto.SearchCriteria searchCriteria);
     }
 }

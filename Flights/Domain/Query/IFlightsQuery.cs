@@ -14,5 +14,7 @@ namespace Flights.Domain.Query
         IEnumerable<FlightsDto.Flight> GetAllFlights();
 
         IEnumerable<FlightsDto.Flight> GetFlightsBySearchDate(DateTime date);
+
+        IEnumerable<FlightsDto.Flight> GetFlightsByReceiverGroup(FlightsDto.ReceiverGroup receiverGroup);
     }
 }

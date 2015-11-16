@@ -54,5 +54,19 @@ namespace Flights.Domain.Command
                 flightsEntities.SaveChanges();
             }
         }
+
+        public void DeleteFlightsBySearchCriteria(FlightsDto.SearchCriteria searchCriteria)
+        {
+            using (var flightsEntities = new FlightsDomain.FlightsEntities())
+            {
+                var flightsToDelete = flightsEntities.Flights.Where(x => x.SearchCriterias.Id == searchCriteria.Id);
+
+                if (flightsToDelete.Any())
+                {
+                    flightsEntities.Flights.RemoveRange(flightsToDelete);
+                    flightsEntities.SaveChanges();
+                }
+            }
+        }
     }
 }
