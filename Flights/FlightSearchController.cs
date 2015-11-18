@@ -52,7 +52,7 @@ namespace Flights
 
                         if (DateTime.Compare(criteria.DepartureDate, DateTime.Now) <= 0)
                         {
-                            criteriasToRepeat.Remove(criteria);
+                            criteriasToRepeat.RemoveAll(x => x.Id == criteria.Id);
                             continue;
                         }
                             
@@ -63,14 +63,16 @@ namespace Flights
                             _flightsCommand.AddRange(flights);
                         }
 
-                        criteriasToRepeat.Remove(criteria);
+                        criteriasToRepeat.RemoveAll(x => x.Id == criteria.Id);
 
                         _logger.Info("Searching for flights completed without errors.");
                     }
                     catch (Exception ex)
                     {
                         _logger.Error("I have to repeat search criteria with id [{0}]", criteria.Id);
-                        criteriasToRepeat.Add(criteria);
+
+                        if (criteriasToRepeat.Where(x => x.Id == criteria.Id).Count() == 0)
+                            criteriasToRepeat.Add(criteria);
                     }
                 }
 

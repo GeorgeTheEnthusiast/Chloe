@@ -150,7 +150,7 @@ namespace Flights
 
         private void GoToFlightsPage()
         {
-            var buttonWebElements = _driver.FindElements(By.ClassName("btn-smart-search-go"));
+            var buttonWebElements = _driver.FindElements(By.CssSelector("button[class='core-btn-primary core-btn-block core-btn-big']"));
             foreach (var btn in buttonWebElements)
             {
                 if (btn.Displayed)
@@ -230,7 +230,7 @@ namespace Flights
             }
             
             var flightSlides = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElements(By.ClassName("slide")));
-            var slideActive = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElement(By.CssSelector("div[class='slide active']")));
+            var slideActive = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElement(By.CssSelector("div[class='slide ng-scope active']")));
             DateTime activeSlideDateTime = GetDateFromCarousel(slideActive, searchCriteria.DepartureDate.Date);
 
             if (DateTime.Compare(activeSlideDateTime.Date, searchCriteria.DepartureDate.Date) != 0)
@@ -294,7 +294,7 @@ namespace Flights
         {
             try
             {
-                _driver.FindElement(By.CssSelector("div[class='slide active']"));
+                _driver.FindElement(By.CssSelector("div[class='slide ng-scope active']"));
             }
             catch
             {
@@ -332,12 +332,9 @@ namespace Flights
             var className = webElement
                 .FindElement(By.ClassName("carousel-item"))
                 .GetAttribute("class");
-                
-            switch (className)
-            {
-                case "carousel-item daily item-not-available":
-                    return null;
-            }
+
+            if (className.Contains("item-not-available"))
+                return null;
                 
             string price = webElement.FindElement(By.ClassName("fare")).Text;
 
