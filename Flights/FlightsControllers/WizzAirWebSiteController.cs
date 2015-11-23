@@ -19,6 +19,7 @@ namespace Flights.FlightsControllers
         private readonly ICurrienciesCommand _currienciesCommand;
         private readonly IWizzAirCalendarConverter _wizzAirCalendarConverter;
         private readonly IFlightWebsiteQuery _flightWebsiteQuery;
+        private readonly ICarrierCommand _carrierCommand;
         private Flights.Dto.FlightWebsite _flightWebsite;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
         private WebDriverWait _webDriverWait;
@@ -26,18 +27,21 @@ namespace Flights.FlightsControllers
         public WizzAirWebSiteController(IWebDriver driver,
             ICurrienciesCommand currienciesCommand,
             IWizzAirCalendarConverter wizzAirCalendarConverter,
-            IFlightWebsiteQuery flightWebsiteQuery
+            IFlightWebsiteQuery flightWebsiteQuery,
+            ICarrierCommand carrierCommand
             )
         {
             if (driver == null) throw new ArgumentNullException("driver");
             if (currienciesCommand == null) throw new ArgumentNullException("currienciesCommand");
             if (wizzAirCalendarConverter == null) throw new ArgumentNullException("wizzAirCalendarConverter");
             if (flightWebsiteQuery == null) throw new ArgumentNullException("flightWebsiteQuery");
+            if (carrierCommand == null) throw new ArgumentNullException("carrierCommand");
 
             _driver = driver;
             _currienciesCommand = currienciesCommand;
             _wizzAirCalendarConverter = wizzAirCalendarConverter;
             _flightWebsiteQuery = flightWebsiteQuery;
+            _carrierCommand = carrierCommand;
             _webDriverWait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         }
 
@@ -192,7 +196,8 @@ namespace Flights.FlightsControllers
             priceValue = priceValue.Remove(0, priceValue.LastIndexOf(">") + 1);
                 
             AddCurrency(ref result, priceValue);
-            
+            result.Carrier = _carrierCommand.Merge("WizzAir");
+
             return result;
         }
 

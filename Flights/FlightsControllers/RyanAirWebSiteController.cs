@@ -21,6 +21,7 @@ namespace Flights.FlightsControllers
         private readonly ICurrienciesCommand _currienciesCommand;
         private readonly IRyanAirDateConverter _ryanAirDateConverter;
         private readonly IFlightWebsiteQuery _flightWebsiteQuery;
+        private readonly ICarrierCommand _carrierCommand;
         private Flights.Dto.FlightWebsite _flightWebsite;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
         private readonly string FlightIsNotAvailableOnThisDay = "W&nbsp;tym dniu nie ma żadnych lotów";
@@ -31,18 +32,21 @@ namespace Flights.FlightsControllers
         public RyanAirWebSiteController(IWebDriver driver, 
             ICurrienciesCommand currienciesCommand, 
             IRyanAirDateConverter ryanAirDateConverter,
-            IFlightWebsiteQuery flightWebsiteQuery
+            IFlightWebsiteQuery flightWebsiteQuery,
+            ICarrierCommand carrierCommand
             )
         {
             if (driver == null) throw new ArgumentNullException("driver");
             if (currienciesCommand == null) throw new ArgumentNullException("currienciesCommand");
             if (ryanAirDateConverter == null) throw new ArgumentNullException("ryanAirDateConverter");
             if (flightWebsiteQuery == null) throw new ArgumentNullException("flightWebsiteQuery");
+            if (carrierCommand == null) throw new ArgumentNullException("carrierCommand");
 
             _driver = driver;
             _currienciesCommand = currienciesCommand;
             _ryanAirDateConverter = ryanAirDateConverter;
             _flightWebsiteQuery = flightWebsiteQuery;
+            _carrierCommand = carrierCommand;
             _webDriverWait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
         }
 
@@ -347,7 +351,8 @@ namespace Flights.FlightsControllers
             }
 
             AddCurrency(ref result, price);
-           
+            result.Carrier = _carrierCommand.Merge("RyanAir");
+
             return result;
         }
 

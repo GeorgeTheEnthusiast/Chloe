@@ -6,6 +6,7 @@ using Flights.Domain.Query;
 using Flights.Dto;
 using NLog;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 
 namespace Flights.FlightsControllers
@@ -100,17 +101,20 @@ namespace Flights.FlightsControllers
                 
             }
 
-            IWebElement flightWebElement;
+            IWebElement flightWebElement =
+                _driver.FindElement(
+                    By.XPath(
+                        "/html/body/div[1]/div[3]/table/tbody/tr[2]/td/table/tbody/tr/td[2]/div/div/div[3]/div[1]/div/div[2]/div[2]/div[1]"));
 
             try
             {
-                flightWebElement = _driver.FindElement(By.XPath("/html/body/div[1]/div[3]/table/tbody/tr[2]/td/table/tbody/tr/td[2]/div/div/div[3]/div[1]/div/div[2]/div[2]/div[1]/div[2]/a"));
+                flightWebElement = flightWebElement.FindElement(By.XPath("div[2]/a"));
             }
             catch (Exception ex)
             {
                 try
                 {
-                    flightWebElement = _driver.FindElement(By.XPath("/html/body/div[1]/div[3]/table/tbody/tr[2]/td/table/tbody/tr/td[2]/div/div/div[3]/div[1]/div/div[2]/div[2]/div[1]/div[1]/a"));
+                    flightWebElement = flightWebElement.FindElement(By.XPath("div[1]/a"));
                 }
                 catch (Exception e)
                 {
@@ -124,12 +128,11 @@ namespace Flights.FlightsControllers
                 SearchDate = DateTime.Now,
                 SearchCriteria = searchCriteria
             };
-
-            //var webElements = flightWebElement.FindElements(By.TagName("div"));
+            
             var priceWebElement = flightWebElement.FindElement(By.XPath("div[1]"));
             var carrierWebElement = flightWebElement.FindElement(By.XPath("div[2]"));
             var isDirectWebElement = flightWebElement.FindElement(By.XPath("div[4]"));
-
+            
             result.Price = GetPrice(priceWebElement);
             result.Carrier = GetCarrier(carrierWebElement);
             result.DepartureTime = GetDepartureDate(carrierWebElement, departureDate);

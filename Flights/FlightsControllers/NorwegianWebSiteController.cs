@@ -8,6 +8,8 @@ using Flights.Domain.Query;
 using Flights.Dto;
 using NLog;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using FlightWebsite = Flights.Dto.Enums.FlightWebsite;
 
@@ -19,6 +21,7 @@ namespace Flights.FlightsControllers
         private readonly ICurrienciesCommand _currienciesCommand;
         private readonly INorwegianDateConverter _norwegianDateConverter;
         private readonly IFlightWebsiteQuery _flightWebsiteQuery;
+        private readonly ICarrierCommand _carrierCommand;
         private Flights.Dto.FlightWebsite _flightWebsite;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
         private WebDriverWait _webDriverWait;
@@ -26,18 +29,21 @@ namespace Flights.FlightsControllers
         public NorwegianWebSiteController(IWebDriver driver,
             ICurrienciesCommand currienciesCommand,
             INorwegianDateConverter norwegianDateConverter,
-            IFlightWebsiteQuery flightWebsiteQuery
+            IFlightWebsiteQuery flightWebsiteQuery,
+            ICarrierCommand carrierCommand
             )
         {
             if (driver == null) throw new ArgumentNullException("driver");
             if (currienciesCommand == null) throw new ArgumentNullException("currienciesCommand");
             if (norwegianDateConverter == null) throw new ArgumentNullException("norwegianDateConverter");
             if (flightWebsiteQuery == null) throw new ArgumentNullException("flightWebsiteQuery");
+            if (carrierCommand == null) throw new ArgumentNullException("carrierCommand");
 
             _driver = driver;
             _currienciesCommand = currienciesCommand;
             _norwegianDateConverter = norwegianDateConverter;
             _flightWebsiteQuery = flightWebsiteQuery;
+            _carrierCommand = carrierCommand;
             _webDriverWait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
         }
 
@@ -70,6 +76,8 @@ namespace Flights.FlightsControllers
 
         private void FillDate(SearchCriteria searchCriteria)
         {
+            ScrollPageDown();
+
             IWebElement datePickerSectionWebElement = _driver.FindElement(By.CssSelector("section[id='outboundDate']"));
             IWebElement datePickerWebElement =
                 datePickerSectionWebElement.FindElement(By.CssSelector("input[type='text'][class='calendar__input']"));
@@ -175,7 +183,7 @@ namespace Flights.FlightsControllers
 
             List<Flight> result = new List<Flight>();
 
-            return result;
+            //return result;
 
             if (searchCriteria.FlightWebsite.Id != _flightWebsite.Id)
                 return result;
@@ -254,7 +262,8 @@ namespace Flights.FlightsControllers
                 return null;
 
             AddCurrency(ref result);
-          
+            result.Carrier = _carrierCommand.Merge("Norwegian");
+
             return result;
         }
 
@@ -266,7 +275,6 @@ namespace Flights.FlightsControllers
 
         private int GetPriceFromCarousel(string text)
         {
-            //FareCal_OnClick(this, '07201512', '948', 'Outbound');
             int indexFrom = FindIndexOfNthOccurence(text, "'", 3);
             int indexTo = FindIndexOfNthOccurence(text, "'", 4);
             string price = text.Substring(indexFrom + 1, indexTo - indexFrom - 1);
@@ -299,6 +307,17 @@ namespace Flights.FlightsControllers
             wait.Timeout = TimeSpan.FromSeconds(5);
             wait.Until(x => x.Displayed);
             webElement.Click();
+        }
+
+        private void ScrollPageDown()
+        {
+            try
+            {
+                _driver.ExecuteJavaScript<IWebElement>("scroll(0, 200)");
+            }
+            catch
+            {
+            }
         }
     }
 }
