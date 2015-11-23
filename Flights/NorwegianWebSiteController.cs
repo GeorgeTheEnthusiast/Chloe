@@ -151,8 +151,8 @@ namespace Flights
                 By.CssSelector("table[role='grid']"))
                 .FindElement(By.TagName("tbody"));
             
-            var daysInTableWebElement = calendarTableWebElement.FindElements(By.TagName("span"));
-            var daysInTableWIthIncorrectValue = daysInTableWebElement.Where(x => x.GetAttribute("class") == "text-muted");
+            var daysInTableWebElement = calendarTableWebElement.FindElements(By.TagName("button"));
+            var daysInTableWIthIncorrectValue = daysInTableWebElement.Where(x => x.FindElement(By.TagName("span")).GetAttribute("class") == "text-muted");
             var daysInTableWithCorrectValue = daysInTableWebElement.Except(daysInTableWIthIncorrectValue);
             
             var correctDayWebElement = daysInTableWithCorrectValue.First(x => x.Text == searchCriteria.DepartureDate.Day.ToString("00"));

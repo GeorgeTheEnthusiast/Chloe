@@ -46,8 +46,6 @@ namespace Flights
                 {
                     try
                     {
-                        DeleteOldFlights(criteria);
-
                         _logger.Info("Searching for {0} flights with departure day {1} from {2} to {3}...", criteria.Carrier.Name, criteria.DepartureDate.ToShortDateString(), criteria.CityFrom.Name, criteria.CityTo.Name);
 
                         if (DateTime.Compare(criteria.DepartureDate, DateTime.Now) <= 0)
@@ -55,7 +53,9 @@ namespace Flights
                             criteriasToRepeat.RemoveAll(x => x.Id == criteria.Id);
                             continue;
                         }
-                            
+
+                        DeleteOldFlights(criteria);
+
                         foreach (var webSiteController in _webSiteControllers)
                         {
                             List<Flight> flights = webSiteController.GetFlights(criteria);

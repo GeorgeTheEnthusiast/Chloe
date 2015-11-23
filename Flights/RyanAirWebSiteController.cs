@@ -230,7 +230,7 @@ namespace Flights
             }
             
             var flightSlides = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElements(By.ClassName("slide")));
-            var slideActive = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElement(By.CssSelector("div[class='slide ng-scope active']")));
+            var slideActive = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElement(By.CssSelector("div[class='slide active']")));
             DateTime activeSlideDateTime = GetDateFromCarousel(slideActive, searchCriteria.DepartureDate.Date);
 
             if (DateTime.Compare(activeSlideDateTime.Date, searchCriteria.DepartureDate.Date) != 0)
@@ -294,7 +294,7 @@ namespace Flights
         {
             try
             {
-                _driver.FindElement(By.CssSelector("div[class='slide ng-scope active']"));
+                _driver.FindElement(By.CssSelector("div[class='slide active']"));
             }
             catch
             {
