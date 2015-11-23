@@ -9,6 +9,7 @@ using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
 using Flights.Dto.Enums;
+using Flights.FlightsControllers;
 using NLog;
 using OpenQA.Selenium;
 
@@ -46,7 +47,7 @@ namespace Flights
                 {
                     try
                     {
-                        _logger.Info("Searching for {0} flights with departure day {1} from {2} to {3}...", criteria.Carrier.Name, criteria.DepartureDate.ToShortDateString(), criteria.CityFrom.Name, criteria.CityTo.Name);
+                        _logger.Info("Searching on {0} flights with departure day {1} from {2} to {3}...", criteria.FlightWebsite.Name, criteria.DepartureDate.ToShortDateString(), criteria.CityFrom.Name, criteria.CityTo.Name);
 
                         if (DateTime.Compare(criteria.DepartureDate, DateTime.Now) <= 0)
                         {

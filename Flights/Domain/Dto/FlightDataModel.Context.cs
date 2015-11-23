@@ -34,5 +34,7 @@ namespace Flights.Domain.Dto
         public virtual DbSet<NotificationReceivers> NotificationReceiversSet { get; set; }
         public virtual DbSet<NotificationReceiversGroups> NotificationReceiversGroups { get; set; }
         public virtual DbSet<ReceiverGroups> ReceiverGroups { get; set; }
+        public virtual DbSet<FlightWebsites> FlightWebsites { get; set; }
+        public virtual DbSet<SearchCriteria_View> SearchCriteria_View { get; set; }
     }
 }

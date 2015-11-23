@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
+using Flights.FlightsControllers;
 using NLog;
 using OpenQA.Selenium;
 using Quartz;

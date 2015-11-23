@@ -13,43 +13,29 @@ namespace Flights.Domain.Query
 {
     public class CarrierQuery : ICarrierQuery
     {
-        private readonly ICarriersConverter _carriersConverter;
+        private readonly ICarrierConverter _carrierConverter;
 
-        public CarrierQuery(ICarriersConverter carriersConverter)
+        public CarrierQuery(ICarrierConverter carrierConverter)
         {
-            if (carriersConverter == null) throw new ArgumentNullException("carriersConverter");
+            if (carrierConverter == null) throw new ArgumentNullException("carrierConverter");
 
-            _carriersConverter = carriersConverter;
+            _carrierConverter = carrierConverter;
         }
 
-        public IEnumerable<FlightsDto.Carrier> GetAllCarriers()
+        public FlightsDto.Carrier GetCarrierByName(string name)
         {
-            IEnumerable<FlightsDto.Carrier> result;
-
-            using (var flightDataModel = new FlightsDomain.FlightsEntities())
-            {
-                var carriers = flightDataModel.Carriers;
-                result = _carriersConverter.Convert(carriers);
-            }
-
-            return result;
-        }
-
-        public FlightsDto.Carrier GetCarrierByType(CarrierType carrierType)
-        {
-            int Id = (int)carrierType;
             FlightsDto.Carrier result;
 
             using (FlightsDomain.FlightsEntities flightsEntities = new FlightsDomain.FlightsEntities())
             {
                 var carrierDomain = flightsEntities.Carriers
                                         .DefaultIfEmpty(null)
-                                        .FirstOrDefault(x => x.Id == Id);
+                                        .FirstOrDefault(x => x.Name.Trim() == name.Trim());
 
                 if (carrierDomain == null)
                     throw new EntityNotFoundException();
 
-                result = _carriersConverter.Convert(carrierDomain);
+                result = _carrierConverter.Convert(carrierDomain);
             }
 
             return result;

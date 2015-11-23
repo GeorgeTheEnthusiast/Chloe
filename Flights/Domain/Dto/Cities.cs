@@ -26,6 +26,7 @@ namespace Flights.Domain.Dto
         public int Id { get; set; }
         public string Name { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
+        public string Alias { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SearchCriterias> SearchCriterias_Fk_CityFrom { get; set; }

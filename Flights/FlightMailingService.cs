@@ -118,7 +118,7 @@ namespace Flights
                         table.AddCell(new Phrase(flight.DepartureTime.ToShortDateString(), fontNormal));
                         table.AddCell(new Phrase(flight.Price.ToString(), fontNormal));
                         table.AddCell(new Phrase(flight.Currency.Name, fontNormal));
-                        table.AddCell(new Phrase(flight.SearchCriteria.Carrier.Name, fontNormal));
+                        table.AddCell(new Phrase(flight.Carrier.Name, fontNormal));
 
                         string isDirect = _commonConverters.ConvertBoolToYesNo(flight.IsDirect);
                         table.AddCell(new Phrase(isDirect, fontNormal));

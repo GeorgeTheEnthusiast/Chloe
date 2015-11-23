@@ -21,5 +21,7 @@ namespace Flights.Dto
         public DateTime SearchDate { get; set; }
 
         public bool IsDirect { get; set; }
+
+        public Carrier Carrier { get; set; }
     }
 }

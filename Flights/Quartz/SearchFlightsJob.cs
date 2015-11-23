@@ -49,7 +49,7 @@ namespace Flights.Quartz
                     .StartNow()
                     .Build();
 
-                sched.ScheduleJob(job, trigger);
+                //sched.ScheduleJob(job, trigger);
             }
             catch (Exception ex)
             {

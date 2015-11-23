@@ -20,17 +20,18 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.Flights, FlightsDto.Flight>()
                 .ForMember(x => x.DepartureTime, expression => expression.MapFrom(src => src.DepartureDate))
                 .ForMember(x => x.Currency, expression => expression.MapFrom(src => src.Currencies))
-                .ForMember(x => x.SearchCriteria, expression => expression.MapFrom(src => src.SearchCriterias));
+                .ForMember(x => x.SearchCriteria, expression => expression.MapFrom(src => src.SearchCriterias))
+                .ForMember(x => x.Carrier, expression => expression.MapFrom(src => src.Carriers));
 
             Mapper.CreateMap<FlightsDto.Currency, FlightsDomain.Currencies>();
 
             Mapper.CreateMap<FlightsDomain.Currencies, FlightsDto.Currency>();
 
             Mapper.CreateMap<FlightsDto.SearchCriteria, FlightsDomain.SearchCriterias>()
-                .ForMember(x => x.Carriers, expression => expression.MapFrom(src => src.Carrier));
+                .ForMember(x => x.FlightWebsites, expression => expression.MapFrom(src => src.FlightWebsite));
 
             Mapper.CreateMap<FlightsDomain.SearchCriterias, FlightsDto.SearchCriteria>()
-                .ForMember(x => x.Carrier, expression => expression.MapFrom(src => src.Carriers));
+                .ForMember(x => x.FlightWebsite, expression => expression.MapFrom(src => src.Flights));
 
             Mapper.CreateMap<FlightsDto.City, FlightsDomain.Cities>();
 
@@ -41,6 +42,10 @@ namespace Flights.Converters
 
             Mapper.CreateMap<FlightsDomain.Carriers, FlightsDto.Carrier>()
                 .ForMember(x => x.Name, expression => expression.ResolveUsing(carrier => carrier.Name.Trim()));
+
+            Mapper.CreateMap<FlightsDto.FlightWebsite, FlightsDomain.FlightWebsites>();
+
+            Mapper.CreateMap<FlightsDomain.FlightWebsites, FlightsDto.FlightWebsite>();
         }
 
         public FlightsDomain.Flights Convert(FlightsDto.Flight flight)

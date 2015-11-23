@@ -11,8 +11,6 @@ namespace Flights.Domain.Query
 {
     public interface ICarrierQuery
     {
-        IEnumerable<FlightsDto.Carrier> GetAllCarriers();
-
-        FlightsDto.Carrier GetCarrierByType(CarrierType carrierType);
+        FlightsDto.Carrier GetCarrierByName(string name);
     }
 }
