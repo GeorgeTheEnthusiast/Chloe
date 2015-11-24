@@ -38,7 +38,7 @@
           <Property Name="SearchCriteria_Id" Type="int" Nullable="false" />
           <Property Name="DepartureDate" Type="datetime" />
           <Property Name="Currency_Id" Type="int" Nullable="false" />
-          <Property Name="Price" Type="int" Nullable="false" />
+          <Property Name="Price" Type="decimal" Nullable="false" />
           <Property Name="SearchDate" Type="datetime" Nullable="false" />
           <Property Name="Created" Type="datetime" />
           <Property Name="IsDirect" Type="bit" Nullable="false" />
@@ -322,7 +322,7 @@
           <Property Name="SearchCriteria_Id" Type="Int32" Nullable="false" />
           <Property Name="DepartureDate" Type="DateTime" Precision="3" />
           <Property Name="Currency_Id" Type="Int32" Nullable="false" />
-          <Property Name="Price" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="10" Scale="3" />
           <Property Name="SearchDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Created" Type="DateTime" Precision="3" />
           <Property Name="IsDirect" Type="Boolean" Nullable="false" />

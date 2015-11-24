@@ -140,9 +140,7 @@ namespace Flights.FlightsControllers
                 _flightWebsite = _flightWebsiteQuery.GetFlightWebsiteByType(FlightWebsite.WizzAir);
 
             List<Flight> result = new List<Flight>();
-
-            return result;
-
+            
             if (searchCriteria.FlightWebsite.Id != _flightWebsite.Id)
                 return result;
 
@@ -180,7 +178,7 @@ namespace Flights.FlightsControllers
             
             var dateWebElement = webElement.FindElement(By.CssSelector("div[class='flight-data flight-date']"));
 
-            if (dateWebElement.GetAttribute("innerHTML") == "Wylot i przylot")
+            if (dateWebElement.Text == "Wylot i przylot")
                 return null;
 
             if (dateWebElement.GetAttribute("class") == "flight-row disabled")
@@ -192,8 +190,7 @@ namespace Flights.FlightsControllers
             result.DepartureTime = DateTime.Parse(dateLong);
                 
             var priceSlide = webElement.FindElement(By.CssSelector("label[class='flight flight-data flight-fare flight-radio flight-fare-type--basic flight-fare--active']"));
-            string priceValue = priceSlide.GetAttribute("innerHTML");
-            priceValue = priceValue.Remove(0, priceValue.LastIndexOf(">") + 1);
+            string priceValue = priceSlide.Text;
                 
             AddCurrency(ref result, priceValue);
             result.Carrier = _carrierCommand.Merge("WizzAir");
@@ -205,12 +202,13 @@ namespace Flights.FlightsControllers
         {
             price = price.Trim('\r', '\n', ' ');
             string[] priceArray = price.Split(new[] { "&nbsp;", " " }, StringSplitOptions.RemoveEmptyEntries);
+            string valueToParse = string.Join("", priceArray.Reverse().Skip(1).Reverse());
 
             flightToAddCurrency.Currency = _currienciesCommand.Merge(new Currency()
             {
                 Name = priceArray.Last()
             });
-            flightToAddCurrency.Price = int.Parse(string.Join("", priceArray.Reverse().Skip(1).Reverse()), NumberStyles.Currency);
+            flightToAddCurrency.Price = decimal.Parse(valueToParse, NumberStyles.Currency);
         }
 
         private void ClickWebElement(IWebElement webElement)

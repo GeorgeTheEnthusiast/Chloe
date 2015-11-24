@@ -18,7 +18,7 @@ namespace Flights.Client.Domain
         public int SearchCriteria_Id { get; set; }
         public Nullable<System.DateTime> DepartureDate { get; set; }
         public int Currency_Id { get; set; }
-        public int Price { get; set; }
+        public decimal Price { get; set; }
         public System.DateTime SearchDate { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
         public bool IsDirect { get; set; }

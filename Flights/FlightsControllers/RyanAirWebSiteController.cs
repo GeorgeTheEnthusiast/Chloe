@@ -24,7 +24,7 @@ namespace Flights.FlightsControllers
         private readonly ICarrierCommand _carrierCommand;
         private Flights.Dto.FlightWebsite _flightWebsite;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
-        private readonly string FlightIsNotAvailableOnThisDay = "W&nbsp;tym dniu nie ma żadnych lotów";
+        private readonly string FlightIsNotAvailableOnThisDay = "W tym dniu nie ma żadnych lotów";
         private readonly string FlightIsAvailable = "OK";
         //private readonly string FlightDepartureDateIsRequired = "Wymagana jest data wylotu.";
         private WebDriverWait _webDriverWait;
@@ -180,7 +180,7 @@ namespace Flights.FlightsControllers
                 return FlightIsAvailable;
             }
 
-            return errorWebElement.FindElement(By.TagName("span")).GetAttribute("innerHTML");
+            return errorWebElement.FindElement(By.TagName("span")).Text;
         }
 
         public List<Flight> GetFlights(SearchCriteria searchCriteria)
@@ -189,9 +189,7 @@ namespace Flights.FlightsControllers
                 _flightWebsite = _flightWebsiteQuery.GetFlightWebsiteByType(FlightWebsite.RyanAir);
 
             List<Flight> result = new List<Flight>();
-
-            return result;
-
+            
             if (searchCriteria.FlightWebsite.Id != _flightWebsite.Id)
                 return result;
 
@@ -384,7 +382,7 @@ namespace Flights.FlightsControllers
             decimal parsedPrice = 0;
             if (decimal.TryParse(joinedPriceValue, out parsedPrice))
             {
-                flightToAddCurrency.Price = (int)parsedPrice;
+                flightToAddCurrency.Price = parsedPrice;
             }
             else
             {

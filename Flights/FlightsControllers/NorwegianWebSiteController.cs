@@ -273,12 +273,12 @@ namespace Flights.FlightsControllers
             return DateTime.ParseExact(dateString, "ddyyyyMM", CultureInfo.InvariantCulture);
         }
 
-        private int GetPriceFromCarousel(string text)
+        private decimal GetPriceFromCarousel(string text)
         {
             int indexFrom = FindIndexOfNthOccurence(text, "'", 3);
             int indexTo = FindIndexOfNthOccurence(text, "'", 4);
             string price = text.Substring(indexFrom + 1, indexTo - indexFrom - 1);
-            return int.Parse(price);
+            return decimal.Parse(price);
         }
 
         private int FindIndexOfNthOccurence(string text, string textToSearch, int nthOccurence)

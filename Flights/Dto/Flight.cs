@@ -16,7 +16,7 @@ namespace Flights.Dto
 
         public Currency Currency { get; set; }
 
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         public DateTime SearchDate { get; set; }
 

@@ -55,7 +55,8 @@ namespace Flights
                     MailAddress mailAddressFrom = new MailAddress("flights.adam.kwiat@gmail.com", "Wyszukiwarka lotów GK");
                     MailAddress mailAddressTo = new MailAddress(receiver.NotificationReceiver.Email);
                     MailMessage mailMessage = new MailMessage(mailAddressFrom, mailAddressTo);
-                    mailMessage.Subject = "Najtańsze loty na dzień " + DateTime.Now;
+                    mailMessage.Subject = string.Format("Najtańsze loty na dzień {0} z grupy [{1}]", DateTime.Now, nrg.Key.Name);
+                    mailMessage.Body = "Loty są sortowane wg waluty, a następnie po cenie.";
                     mailMessage.Attachments.Add(new Attachment(pdfFileName));
                     SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
                     smtpClient.EnableSsl = true;
@@ -69,7 +70,7 @@ namespace Flights
         private string CreatePdf(ReceiverGroup receiverGroup)
         {
             Document doc = new Document();
-            string fileName = string.Format("cheapest_flights_{0}.pdf", DateTime.Now.ToString("yyyy-MM-dd_HHmmss"));
+            string fileName = string.Format("cheapest_flights_{0}_{1}.pdf", receiverGroup.Name, DateTime.Now.ToString("yyyy-MM-dd_HHmmss"));
             var flightsToSend = _flightsQuery.GetFlightsByReceiverGroup(receiverGroup);
 
             if (!flightsToSend.Any())
@@ -91,7 +92,8 @@ namespace Flights
                 {
                     var flightsFromCountry = flightsToSend
                         .Where(x => x.SearchCriteria.DepartureDate == group.Key)
-                        .OrderBy(x => x.Price);
+                        .OrderBy(x => x.Currency.Name)
+                        .ThenBy(x => x.Price);
 
                     if (!flightsFromCountry.Any())
                         continue;
@@ -99,7 +101,7 @@ namespace Flights
                     doc.Add(new Phrase(string.Format("Loty blisko {0}", group.Key.Date.ToShortDateString()), fontHeader));
 
                     PdfPTable table = new PdfPTable(8);
-                    float[] cellWidths = new float[] {32f, 32f, 28f, 10f, 10f, 20f, 10f, 28f};
+                    float[] cellWidths = new float[] {32f, 32f, 28f, 14f, 8f, 18f, 10f, 28f};
                     table.SetWidths(cellWidths);
 
                     table.AddCell(new Phrase("Od", fontBold));

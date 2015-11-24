@@ -71,6 +71,7 @@ namespace Flights
                     catch (Exception ex)
                     {
                         _logger.Error("I have to repeat search criteria with id [{0}]", criteria.Id);
+                        _logger.Error(ex);
 
                         if (criteriasToRepeat.Where(x => x.Id == criteria.Id).Count() == 0)
                             criteriasToRepeat.Add(criteria);

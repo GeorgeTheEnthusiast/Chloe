@@ -17,8 +17,8 @@ namespace Flights.Domain.Dto
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Carriers()
         {
-            this.Net = new HashSet<Net>();
             this.Flights = new HashSet<Flights>();
+            this.Net = new HashSet<Net>();
         }
     
         public int Id { get; set; }
@@ -26,8 +26,8 @@ namespace Flights.Domain.Dto
         public Nullable<System.DateTime> Created { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Net> Net { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Flights> Flights { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Net> Net { get; set; }
     }
 }

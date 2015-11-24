@@ -114,6 +114,9 @@ namespace Flights.FlightsControllers
                 c.Name = cityWebElement.GetAttribute("innerHTML")
                     .Replace("<strong>", "")
                     .Replace("</strong>", "");
+
+                c.Alias = c.Name.Substring(c.Name.IndexOf('(') + 1, 3);
+
                 c.Name = c.Name.Substring(0, c.Name.IndexOf('('))
                     .Trim();
 

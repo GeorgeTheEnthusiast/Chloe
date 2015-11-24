@@ -1804,7 +1804,7 @@ namespace Flights.Client {
                 base.Columns.Add(this.columnDepartureDate);
                 this.columnCurrency_Id = new global::System.Data.DataColumn("Currency_Id", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCurrency_Id);
-                this.columnPrice = new global::System.Data.DataColumn("Price", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columnPrice = new global::System.Data.DataColumn("Price", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnPrice);
                 this.columnSearchDate = new global::System.Data.DataColumn("SearchDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSearchDate);
@@ -4294,9 +4294,9 @@ namespace Flights.Client {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int Price {
+            public decimal Price {
                 get {
-                    return ((int)(this[this.tableFlights.PriceColumn]));
+                    return ((decimal)(this[this.tableFlights.PriceColumn]));
                 }
                 set {
                     this[this.tableFlights.PriceColumn] = value;

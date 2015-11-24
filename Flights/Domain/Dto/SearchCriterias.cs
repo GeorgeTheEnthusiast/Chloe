@@ -24,15 +24,15 @@ namespace Flights.Domain.Dto
         public int CityFrom_Id { get; set; }
         public int CityTo_Id { get; set; }
         public System.DateTime DepartureDate { get; set; }
+        public int FlightWebsite_Id { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
         public int ReceiverGroups_Id { get; set; }
-        public int FlightWebsite_Id { get; set; }
     
-        public virtual Cities CityFrom { get; set; }
-        public virtual Cities CityTo { get; set; }
+        public virtual Cities CitiesFrom { get; set; }
+        public virtual Cities CitiesTo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Flights> Flights { get; set; }
-        public virtual ReceiverGroups ReceiverGroups { get; set; }
         public virtual FlightWebsites FlightWebsites { get; set; }
+        public virtual ReceiverGroups ReceiverGroups { get; set; }
     }
 }

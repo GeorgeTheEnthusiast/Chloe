@@ -27,7 +27,7 @@ namespace Flights.Domain.Query
 
             using (var flightDataModel = new FlightsDomain.FlightsEntities())
             {
-                var notificationReceiversDomain = flightDataModel.NotificationReceiversSet.ToList();
+                var notificationReceiversDomain = flightDataModel.NotificationReceivers.ToList();
                 result = _notificationReceiversConverter.Convert(notificationReceiversDomain);
             }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
@@ -39,31 +40,33 @@ namespace Flights.FlightsControllers
 
         public void CreateNet()
         {
-//            NavigateToUrl();
-//
-//            ExpandCitiesDropDownList();
-//            
-//            List<City> cities = GetAllCities();
-//            List<City> citiesToRepeat = new List<City>();
-//
-//            while (cities.Count > 0)
-//            {
-//                foreach (var city in cities)
-//                {
-//                    try
-//                    {
-//                        FillCityFrom(city.Name);
-//                        CreateNet(city);
-//                        citiesToRepeat.Remove(city);
-//                    }
-//                    catch (Exception)
-//                    {
-//                        citiesToRepeat.Add(city);
-//                    }
-//                }
-//
-//                cities = citiesToRepeat.ToList();
-//            }
+            return;
+            
+            NavigateToUrl();
+
+            ExpandCitiesDropDownList();
+            
+            List<City> cities = GetAllCities();
+            List<City> citiesToRepeat = new List<City>();
+
+            while (cities.Count > 0)
+            {
+                foreach (var city in cities)
+                {
+                    try
+                    {
+                        FillCityFrom(city.Name);
+                        //CreateNet(city);
+                        citiesToRepeat.Remove(city);
+                    }
+                    catch (Exception)
+                    {
+                        citiesToRepeat.Add(city);
+                    }
+                }
+
+                cities = citiesToRepeat.ToList();
+            }
         }
 
         private void NavigateToUrl()
@@ -99,6 +102,9 @@ namespace Flights.FlightsControllers
                 c.Name = cityWebElement
                     .FindElement(By.TagName("strong"))
                     .Text;
+
+                c.Alias = c.Name.Substring(c.Name.IndexOf('(') + 1, 3);
+
                 c.Name = c.Name.Substring(0, c.Name.IndexOf('('))
                     .Trim();
 

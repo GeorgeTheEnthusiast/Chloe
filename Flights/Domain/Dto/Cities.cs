@@ -17,10 +17,10 @@ namespace Flights.Domain.Dto
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Cities()
         {
-            this.SearchCriterias_Fk_CityFrom = new HashSet<SearchCriterias>();
-            this.SearchCriterias_Fk_CityTo = new HashSet<SearchCriterias>();
-            this.Net_Fk_CityFrom = new HashSet<Net>();
-            this.Net_Fk_CityTo = new HashSet<Net>();
+            this.Net = new HashSet<Net>();
+            this.Net1 = new HashSet<Net>();
+            this.SearchCriterias = new HashSet<SearchCriterias>();
+            this.SearchCriterias1 = new HashSet<SearchCriterias>();
         }
     
         public int Id { get; set; }
@@ -29,12 +29,12 @@ namespace Flights.Domain.Dto
         public string Alias { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SearchCriterias> SearchCriterias_Fk_CityFrom { get; set; }
+        public virtual ICollection<Net> Net { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SearchCriterias> SearchCriterias_Fk_CityTo { get; set; }
+        public virtual ICollection<Net> Net1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Net> Net_Fk_CityFrom { get; set; }
+        public virtual ICollection<SearchCriterias> SearchCriterias { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Net> Net_Fk_CityTo { get; set; }
+        public virtual ICollection<SearchCriterias> SearchCriterias1 { get; set; }
     }
 }

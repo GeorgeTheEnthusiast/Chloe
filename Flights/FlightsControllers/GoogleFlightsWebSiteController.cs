@@ -4,6 +4,7 @@ using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
+using Flights.Exceptions;
 using NLog;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
@@ -89,12 +90,18 @@ namespace Flights.FlightsControllers
         {
             try
             {
+//                var flightIsNotAvailableWebElement =
+//                _driver.FindElement(
+//                    By.XPath(
+//                        "/html/body/div[1]/div[3]/table/tbody/tr[2]/td/table/tbody/tr/td[2]/div/div/div[3]/div[1]/div/div[2]/div[2]/div[2]/div[1]/div"));
+
                 var flightIsNotAvailableWebElement =
-                _driver.FindElement(
-                    By.XPath(
-                        "/html/body/div[1]/div[3]/table/tbody/tr[2]/td/table/tbody/tr/td[2]/div/div/div[3]/div[1]/div/div[2]/div[2]/div[2]/div[1]/div"));
-                if (flightIsNotAvailableWebElement.Text == "Nie udało się znaleźć takich lotów.")
-                    return null;
+                    _driver.FindElement(By.CssSelector("div[value='Nie udało się znaleźć takich lotów.']"));
+
+                return null;
+//
+//                if (flightIsNotAvailableWebElement.Text == "Nie udało się znaleźć takich lotów.")
+//                    return null;
             }
             catch (Exception ex)
             {
@@ -132,20 +139,29 @@ namespace Flights.FlightsControllers
             var priceWebElement = flightWebElement.FindElement(By.XPath("div[1]"));
             var carrierWebElement = flightWebElement.FindElement(By.XPath("div[2]"));
             var isDirectWebElement = flightWebElement.FindElement(By.XPath("div[4]"));
-            
+
+            result.IsDirect = IsFlightDirect(isDirectWebElement);
             result.Price = GetPrice(priceWebElement);
             result.Carrier = GetCarrier(carrierWebElement);
             result.DepartureTime = GetDepartureDate(carrierWebElement, departureDate);
-            result.IsDirect = IsFlightDirect(isDirectWebElement);
             result.Currency = GetCurrency();
 
             return result;
         }
 
-        private int GetPrice(IWebElement webElement)
+        private decimal GetPrice(IWebElement webElement)
         {
             var priceElement = webElement.FindElement(By.XPath("div[1]/div[1]"));
-            return int.Parse(priceElement.Text.Replace("zł", ""));
+            string valueToParse = priceElement.Text
+                .Replace("zł", "")
+                .Replace(" ", "");
+            decimal result = 0;
+            if (!decimal.TryParse(valueToParse, out result))
+            {
+                _logger.Info("Could not parse price value: " + valueToParse);
+                throw new PriceIsEmptyException();
+            }
+            return result;
         }
 
         private DateTime GetDepartureDate(IWebElement webElement, DateTime departureDate)
@@ -170,7 +186,14 @@ namespace Flights.FlightsControllers
         private Carrier GetCarrier(IWebElement webElement)
         {
             var carrierElement = webElement.FindElement(By.XPath("div[2]/span[1]"));
-            var result = _carrierCommand.Merge(carrierElement.Text);
+            string carrierToMerge = carrierElement.Text;
+
+            if (carrierToMerge.Contains(","))
+            {
+                carrierToMerge = carrierToMerge.Substring(0, carrierToMerge.IndexOf(','));
+            }
+
+            var result = _carrierCommand.Merge(carrierToMerge);
 
             return result;
         }
@@ -190,19 +213,19 @@ namespace Flights.FlightsControllers
 
             if (searchCriteria.FlightWebsite.Id != _flightWebsite.Id)
                 return result;
-
-            NavigateToUrl();
-
-            MakeFlightOneWay();
-
-            FillCityFrom(searchCriteria.CityFrom.Alias);
-
-            FillCityTo(searchCriteria.CityTo.Alias);
-
+            
             for (DateTime day = searchCriteria.DepartureDate.AddDays(-2);
                 DateTime.Compare(day, searchCriteria.DepartureDate.AddDays(2)) != 0;
                 day = day.AddDays(1))
             {
+                NavigateToUrl();
+
+                MakeFlightOneWay();
+
+                FillCityFrom(searchCriteria.CityFrom.Alias);
+
+                FillCityTo(searchCriteria.CityTo.Alias);
+
                 FillDate(day);
                 
                 var flight = GetTheBestFlight(searchCriteria, day);
