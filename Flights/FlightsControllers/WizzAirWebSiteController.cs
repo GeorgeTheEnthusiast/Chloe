@@ -49,8 +49,8 @@ namespace Flights.FlightsControllers
         {
             _driver.Manage().Cookies.DeleteAllCookies();
             _driver.Manage().Window.Maximize();
-            _driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(4));
-            _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+            _driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(6));
+            _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(12));
             _driver.Navigate().GoToUrl(_flightWebsite.Website);
         }
 

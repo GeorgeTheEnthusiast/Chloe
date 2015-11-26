@@ -233,6 +233,7 @@
     <Compile Include="Dto\ReceiverGroup.cs" />
     <Compile Include="Dto\NotificationReceiver.cs" />
     <Compile Include="Dto\SearchCriteria.cs" />
+    <Compile Include="Exceptions\SearchDepartureDateIsIncorrectException.cs" />
     <Compile Include="Exceptions\PriceIsEmptyException.cs" />
     <Compile Include="Exceptions\NoAvailableDatesException.cs" />
     <Compile Include="Exceptions\DependenciesAlreadyRegisteredException.cs" />

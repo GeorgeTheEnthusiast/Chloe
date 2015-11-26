@@ -113,14 +113,27 @@ namespace Flights.FlightsControllers
 
         private void FillDate(DateTime departureDate)
         {
-            IWebElement datePickerWebElement = _driver.FindElement(By.ClassName("date-input"));
-            IWebElement dayPickerWebElement = datePickerWebElement.FindElement(By.ClassName("dd"));
-            IWebElement monthPickerWebElement = datePickerWebElement.FindElement(By.ClassName("mm"));
-            IWebElement yearPickerWebElement = datePickerWebElement.FindElement(By.ClassName("yyyy"));
-
+            IWebElement dayPickerWebElement = _driver.FindElement(By.Name("dateInput0"));
+            IWebElement monthPickerWebElement = _driver.FindElement(By.Name("dateInput1"));
+            IWebElement yearPickerWebElement = _driver.FindElement(By.Name("dateInput2"));
+            
             SetDatePickerDigital(dayPickerWebElement, departureDate.Day.ToString("00"));
             SetDatePickerDigital(monthPickerWebElement, departureDate.Month.ToString("00"));
             SetDatePickerDigital(yearPickerWebElement, departureDate.Year.ToString("0000"));
+        }
+
+        private bool IsDateWasTypedCorrectly(DateTime departureDate)
+        {
+            string day = _driver.FindElement(By.Name("dateInput0"))
+                .GetAttribute("value");
+            string month = _driver.FindElement(By.Name("dateInput1"))
+                .GetAttribute("value");
+            string year = _driver.FindElement(By.Name("dateInput2"))
+                .GetAttribute("value");
+            
+            return (day == departureDate.Day.ToString("00")
+                && month == departureDate.Month.ToString("00")
+                && year == departureDate.Year.ToString("0000"));
         }
 
         private void SetDatePickerDigital(IWebElement webElement, string value)
@@ -135,10 +148,12 @@ namespace Flights.FlightsControllers
             actions.Click();
 
             for (int i = 0; i <= maxDigitals; i++)
-                actions.SendKeys(Keys.Backspace);
+                actions.SendKeys(Keys.ArrowRight);
 
             for (int i = 0; i <= maxDigitals; i++)
-                actions.SendKeys(Keys.Delete);
+                actions.SendKeys(Keys.Backspace);
+
+            actions.Build().Perform();
 
             actions.SendKeys(value);
             actions.Build().Perform();
@@ -209,6 +224,12 @@ namespace Flights.FlightsControllers
             while (retryCount != 0)
             {
                 FillDate(departureDate);
+                
+                if (IsDateWasTypedCorrectly(departureDate) == false)
+                {
+                    _logger.Info("Dates are not equal, trying again...");
+                    continue;
+                }
 
                 string errorText = GetInputValidationState();
 
@@ -236,15 +257,19 @@ namespace Flights.FlightsControllers
 
             if (DateTime.Compare(activeSlideDateTime.Date, searchCriteria.DepartureDate.Date) != 0)
             {
-                //
+                if (DateTime.Compare(searchCriteria.DepartureDate.AddMonths(-1).Date, activeSlideDateTime.Date) == 1
+                    || DateTime.Compare(searchCriteria.DepartureDate.AddMonths(1).Date, activeSlideDateTime.Date) == -1)
+                    throw new SearchDepartureDateIsIncorrectException();
+
                 try
                 {
                     DateTime slideDateTime = new DateTime();
                     bool goForward = false;
                     bool stopTheCarousel = false;
                     int daysToAdd;
+                    retryCount = 10;
 
-                    while (true)
+                    while (retryCount != 0)
                     {
                         if (goForward)
                             daysToAdd = -1;
@@ -271,11 +296,16 @@ namespace Flights.FlightsControllers
                             else
                                 stopTheCarousel = true;
                         }
+
+                        retryCount--;
                     }
                 }
                 catch (Exception ex)
                 {
                 }
+
+                if (retryCount == 0)
+                    throw new SearchDepartureDateIsIncorrectException();
             }
             
             Thread.Sleep(TimeSpan.FromSeconds(3));
