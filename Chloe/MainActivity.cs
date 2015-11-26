@@ -23,8 +23,14 @@ namespace Chloe
             // Get our button from the layout resource,
             // and attach an event to it
             Button button = FindViewById<Button>(Resource.Id.MyButton);
+            Button buttonChromeDriver = FindViewById<Button>(Resource.Id.buttonChromeDriver);
+            TextView infoTextView = FindViewById<TextView>(Resource.Id.textViewInfo);
 
             button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
+            buttonChromeDriver.Click += delegate
+            {
+                
+            };
         }
     }
 }
