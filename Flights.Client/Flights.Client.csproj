@@ -57,76 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddNewSearchCriteriaForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AddNewSearchCriteriaForm.Designer.cs">
-      <DependentUpon>AddNewSearchCriteriaForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Carriers.cs">
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Cities.cs">
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Currencies.cs">
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Flights.cs">
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\FlightsDataModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FlightsDataModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\FlightsDataModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\FlightsDataModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FlightsDataModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Net.cs">
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\NotificationReceivers.cs">
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\NotificationReceiversGroups.cs">
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\ReceiverGroups.cs">
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\SearchCriterias.cs">
-      <DependentUpon>FlightsDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="FlightsDataSet.cs">
-      <DependentUpon>FlightsDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="FlightsDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FlightsDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="SearchCriteriaForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SearchCriteriaForm.Designer.cs">
-      <DependentUpon>SearchCriteriaForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AddNewSearchCriteriaForm.resx">
-      <DependentUpon>AddNewSearchCriteriaForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SearchCriteriaForm.resx">
-      <DependentUpon>SearchCriteriaForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -136,24 +68,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EntityDeploy Include="Domain\FlightsDataModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>FlightsDataModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Domain\FlightsDataModel.edmx.diagram">
-      <DependentUpon>FlightsDataModel.edmx</DependentUpon>
-    </None>
-    <None Include="FlightsDataSet.xsc">
-      <DependentUpon>FlightsDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="FlightsDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>FlightsDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="FlightsDataSet.xss">
-      <DependentUpon>FlightsDataSet.xsd</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -169,20 +83,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Domain\FlightsDataModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FlightsDataModel.edmx</DependentUpon>
-      <LastGenOutput>FlightsDataModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Domain\FlightsDataModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FlightsDataModel.edmx</DependentUpon>
-      <LastGenOutput>FlightsDataModel.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Domain\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

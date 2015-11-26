@@ -202,13 +202,14 @@ namespace Flights.FlightsControllers
         {
             price = price.Trim('\r', '\n', ' ');
             string[] priceArray = price.Split(new[] { "&nbsp;", " " }, StringSplitOptions.RemoveEmptyEntries);
-            string valueToParse = string.Join("", priceArray.Reverse().Skip(1).Reverse());
+            string valueToParse = string.Join("", priceArray.Reverse().Skip(1).Reverse())
+                .Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
 
             flightToAddCurrency.Currency = _currienciesCommand.Merge(new Currency()
             {
                 Name = priceArray.Last()
             });
-            flightToAddCurrency.Price = decimal.Parse(valueToParse, NumberStyles.Currency);
+            flightToAddCurrency.Price = decimal.Parse(valueToParse, NumberStyles.Currency, CultureInfo.InvariantCulture);
         }
 
         private void ClickWebElement(IWebElement webElement)

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flights", "Flights\Flights.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flights.Client", "Flights.Client\Flights.Client.csproj", "{58B2BED9-CD04-4697-BBD0-B40B2B0E3398}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chloe", "Chloe\Chloe.csproj", "{658F70FC-4418-4B87-AFDE-3C63D9746D0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,12 @@ Global
 		{58B2BED9-CD04-4697-BBD0-B40B2B0E3398}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58B2BED9-CD04-4697-BBD0-B40B2B0E3398}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58B2BED9-CD04-4697-BBD0-B40B2B0E3398}.Release|Any CPU.Build.0 = Release|Any CPU
+		{658F70FC-4418-4B87-AFDE-3C63D9746D0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{658F70FC-4418-4B87-AFDE-3C63D9746D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{658F70FC-4418-4B87-AFDE-3C63D9746D0F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{658F70FC-4418-4B87-AFDE-3C63D9746D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{658F70FC-4418-4B87-AFDE-3C63D9746D0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{658F70FC-4418-4B87-AFDE-3C63D9746D0F}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

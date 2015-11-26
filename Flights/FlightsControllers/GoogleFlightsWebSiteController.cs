@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
@@ -154,9 +155,11 @@ namespace Flights.FlightsControllers
             var priceElement = webElement.FindElement(By.XPath("div[1]/div[1]"));
             string valueToParse = priceElement.Text
                 .Replace("zł", "")
-                .Replace(" ", "");
+                .Replace(" ", "")
+                .Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+
             decimal result = 0;
-            if (!decimal.TryParse(valueToParse, out result))
+            if (!decimal.TryParse(valueToParse, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
             {
                 _logger.Info("Could not parse price value: " + valueToParse);
                 throw new PriceIsEmptyException();

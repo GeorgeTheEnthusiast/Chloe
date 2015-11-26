@@ -16,7 +16,7 @@ namespace Flights.Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SearchCriteriaForm());
+            //Application.Run(new SearchCriteriaForm());
         }
     }
 }

@@ -277,8 +277,9 @@ namespace Flights.FlightsControllers
         {
             int indexFrom = FindIndexOfNthOccurence(text, "'", 3);
             int indexTo = FindIndexOfNthOccurence(text, "'", 4);
-            string price = text.Substring(indexFrom + 1, indexTo - indexFrom - 1);
-            return decimal.Parse(price);
+            string price = text.Substring(indexFrom + 1, indexTo - indexFrom - 1)
+                .Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+            return decimal.Parse(price, NumberStyles.Any, CultureInfo.InvariantCulture);
         }
 
         private int FindIndexOfNthOccurence(string text, string textToSearch, int nthOccurence)

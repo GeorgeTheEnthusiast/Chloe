@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Flights.Converters;
@@ -408,9 +409,12 @@ namespace Flights.FlightsControllers
                 Name = priceArray.Last()
             });
 
-            string joinedPriceValue = string.Join("", priceArray.Reverse().Skip(1).Reverse());
+            string joinedPriceValue = string.Join("", priceArray.Reverse().Skip(1).Reverse())
+                .Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+
             decimal parsedPrice = 0;
-            if (decimal.TryParse(joinedPriceValue, out parsedPrice))
+
+            if (decimal.TryParse(joinedPriceValue, NumberStyles.Number, CultureInfo.InvariantCulture, out parsedPrice))
             {
                 flightToAddCurrency.Price = parsedPrice;
             }

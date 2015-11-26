@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="FlightsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="FlightsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Carriers">
           <Key>
             <PropertyRef Name="Id" />
@@ -326,8 +326,7 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
             <End Role="SearchCriterias" EntitySet="SearchCriterias" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FlightsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -371,7 +370,6 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
           <Property Name="SearchCriteria_Id" Type="Int32" Nullable="false" />
           <Property Name="DepartureDate" Type="DateTime" Precision="3" />
           <Property Name="Currency_Id" Type="Int32" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="10" Scale="3" />
           <Property Name="SearchDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Created" Type="DateTime" Precision="3" />
           <Property Name="IsDirect" Type="Boolean" Nullable="false" />
@@ -379,6 +377,7 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
           <NavigationProperty Name="Carriers" Relationship="Self.FK_Flights_Carriers" FromRole="Flights" ToRole="Carriers" />
           <NavigationProperty Name="Currencies" Relationship="Self.FK_Flight_Currency" FromRole="Flights" ToRole="Currencies" />
           <NavigationProperty Name="SearchCriterias" Relationship="Self.FK_Flight_SearchCriteria" FromRole="Flights" ToRole="SearchCriterias" />
+          <Property Name="Price" Type="Decimal" Nullable="false" />
         </EntityType>
         <EntityType Name="FlightWebsites">
           <Key>
@@ -703,11 +702,11 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
           <EntitySetMapping Name="Flights">
             <EntityTypeMapping TypeName="FlightsModel.Flights">
               <MappingFragment StoreEntitySet="Flights">
+                <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="SearchCriteria_Id" ColumnName="SearchCriteria_Id" />
                 <ScalarProperty Name="DepartureDate" ColumnName="DepartureDate" />
                 <ScalarProperty Name="Currency_Id" ColumnName="Currency_Id" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="SearchDate" ColumnName="SearchDate" />
                 <ScalarProperty Name="Created" ColumnName="Created" />
                 <ScalarProperty Name="IsDirect" ColumnName="IsDirect" />
