@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 
 namespace Flights.FlightsControllers
 {
@@ -15,14 +17,17 @@ namespace Flights.FlightsControllers
         private readonly ICityQuery _cityQuery;
         private readonly INetCommand _netCommand;
         private readonly IFlightWebsiteQuery _flightWebsiteQuery;
+        private readonly ICarrierQuery _carrierQuery;
         private Flights.Dto.FlightWebsite _flightWebsite;
+        private Flights.Dto.Carrier _carrier;
 
         public NorwegianFlightsNetController(
             IWebDriver driver, 
             ICitiesCommand citiesCommand,
             ICityQuery cityQuery,
             INetCommand netCommand,
-            IFlightWebsiteQuery flightWebsiteQuery
+            IFlightWebsiteQuery flightWebsiteQuery,
+            ICarrierQuery carrierQuery
             )
         {
             if (driver == null) throw new ArgumentNullException("driver");
@@ -30,17 +35,19 @@ namespace Flights.FlightsControllers
             if (cityQuery == null) throw new ArgumentNullException("cityQuery");
             if (netCommand == null) throw new ArgumentNullException("netCommand");
             if (flightWebsiteQuery == null) throw new ArgumentNullException("flightWebsiteQuery");
+            if (carrierQuery == null) throw new ArgumentNullException("carrierQuery");
 
             _driver = driver;
             _citiesCommand = citiesCommand;
             _cityQuery = cityQuery;
             _netCommand = netCommand;
             _flightWebsiteQuery = flightWebsiteQuery;
+            _carrierQuery = carrierQuery;
         }
 
         public void CreateNet()
         {
-            return;
+            //return;
             
             NavigateToUrl();
 
@@ -48,7 +55,7 @@ namespace Flights.FlightsControllers
             
             List<City> cities = GetAllCities();
             List<City> citiesToRepeat = new List<City>();
-
+            
             while (cities.Count > 0)
             {
                 foreach (var city in cities)
@@ -56,11 +63,13 @@ namespace Flights.FlightsControllers
                     try
                     {
                         FillCityFrom(city.Name);
-                        //CreateNet(city);
+                        CreateNet(city);
                         citiesToRepeat.Remove(city);
+                        CloseCityToDropDownList();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        CloseCityToDropDownList();
                         citiesToRepeat.Add(city);
                     }
                 }
@@ -73,6 +82,9 @@ namespace Flights.FlightsControllers
         {
             if (_flightWebsite == null)
                 _flightWebsite = _flightWebsiteQuery.GetFlightWebsiteByType(Dto.Enums.FlightWebsite.Norwegian);
+
+            if (_carrier == null)
+                _carrier = _carrierQuery.GetCarrierByName("Norwegian");
 
             _driver.Manage().Cookies.DeleteAllCookies();
             _driver.Manage().Window.Maximize();
@@ -121,18 +133,61 @@ namespace Flights.FlightsControllers
             IWebElement fromCityWebElement = _driver.FindElement(By.CssSelector("input[placeholder='Twój punkt wyjścia']"));
 
             fromCityWebElement.Click();
-            fromCityWebElement.SendKeys(Keys.Backspace);
+
+            for (int i = 0; i < 40; i++)
+            {
+                fromCityWebElement.SendKeys(Keys.Backspace);
+            }
+
             fromCityWebElement.SendKeys(cityName);
             fromCityWebElement.SendKeys(Keys.Tab);
         }
+        
+        private void CreateNet(City cityFrom)
+        {
+            Thread.Sleep(TimeSpan.FromSeconds(1));
 
-        private void FillCityTo(string cityName)
+            IWebElement toCityWebElement =
+                _driver.FindElements(By.CssSelector("section[class='form-split__item']"))[1];
+
+            var toCitiesWebElements = toCityWebElement.FindElements(By.TagName("li"));
+
+            foreach (var cityWebElement in toCitiesWebElements)
+            {
+                string cityToName = cityWebElement
+                    .FindElement(By.TagName("strong"))
+                    .Text;
+
+                if (cityToName.Contains("("))
+                    cityToName = cityToName.Substring(0, cityToName.IndexOf('('))
+                        .Trim();
+                else
+                {
+                    
+                }
+                
+                City cityTo = _cityQuery.GetCityByName(cityToName);
+                Net net = new Net()
+                {
+                    Carrier = _carrier,
+                    CityFrom = cityFrom,
+                    CityTo = cityTo
+                };
+
+                _netCommand.Merge(net);
+            }
+        }
+
+        private void CloseCityToDropDownList()
         {
             IWebElement toCityWebElement = _driver.FindElement(By.CssSelector("input[placeholder='Dokąd chcesz się wybrać?']"));
+            toCityWebElement.Click();
 
-            //toCityWebElement.Click();
-            toCityWebElement.SendKeys(cityName);
-            toCityWebElement.SendKeys(Keys.Enter);
+            Actions actions = new Actions(_driver);
+            actions.MoveToElement(toCityWebElement)
+                .MoveByOffset(0, -100)
+                .Click();
+            actions.Build().Perform();
         }
     }
 }

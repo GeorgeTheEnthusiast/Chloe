@@ -50,18 +50,30 @@ namespace Flights
             sched.JobFactory = Bootstrapper.Container.Resolve<IJobFactory>();
             sched.Start();
                 
-            IJobDetail job = JobBuilder.Create<SearchFlightsJob>()
+            IJobDetail searchJob = JobBuilder.Create<FlightsNetJob>()
                 .WithIdentity("searchJob")
                 .Build();
 
-            ITrigger trigger = TriggerBuilder.Create()
+            ITrigger searchTrigger = TriggerBuilder.Create()
                 .WithIdentity("daily_3am_and_5pm_Trigger")
                 .StartNow()
                 //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(17, 00))
                 //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(03, 00))
                 .Build();
 
-            sched.ScheduleJob(job, trigger);
+            //sched.ScheduleJob(searchJob, searchTrigger);
+
+            IJobDetail netjob = JobBuilder.Create<FlightsNetJob>()
+                .WithIdentity("searchJob")
+                .Build();
+
+            ITrigger netTrigger = TriggerBuilder.Create()
+                .WithIdentity("one_a_week_Trigger")
+                .StartNow()
+                //.WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 17, 00))
+                .Build();
+
+            sched.ScheduleJob(netjob, netTrigger);
         }
     }
 }
