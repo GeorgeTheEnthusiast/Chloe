@@ -19,6 +19,7 @@ namespace Flights
         private readonly IFlightsQuery _flightsQuery;
         private readonly ICommonConverters _commonConverters;
         private readonly INotificationReceiversGroupsQuery _notificationReceiversGroupsQuery;
+        private Dictionary<string, List<string>> receiversDictionary = new Dictionary<string, List<string>>(); 
 
         public FlightMailingService(IFlightsQuery flightsQuery, 
             ICommonConverters commonConverters,
@@ -52,19 +53,15 @@ namespace Flights
 
                 foreach (var receiver in mailReceivers)
                 {
-                    MailAddress mailAddressFrom = new MailAddress("flights.adam.kwiat@gmail.com", "Wyszukiwarka lotów GK");
-                    MailAddress mailAddressTo = new MailAddress(receiver.NotificationReceiver.Email);
-                    MailMessage mailMessage = new MailMessage(mailAddressFrom, mailAddressTo);
-                    mailMessage.Subject = string.Format("Najtańsze loty na dzień {0} z grupy [{1}]", DateTime.Now, nrg.Key.Name);
-                    mailMessage.Body = "Loty są sortowane wg waluty, a następnie po cenie.";
-                    mailMessage.Attachments.Add(new Attachment(pdfFileName));
-                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-                    smtpClient.EnableSsl = true;
-                    smtpClient.UseDefaultCredentials = false;
-                    smtpClient.Credentials = new NetworkCredential("flights.adam.kwiat", "ToJest1KontoPocztowe");
-                    smtpClient.Send(mailMessage);
+                    if (receiversDictionary.ContainsKey(receiver.NotificationReceiver.Email) == false)
+                        receiversDictionary[receiver.NotificationReceiver.Email] = new List<string>();
+
+                    if (receiversDictionary[receiver.NotificationReceiver.Email].Contains(pdfFileName) == false)
+                        receiversDictionary[receiver.NotificationReceiver.Email].Add(pdfFileName);
                 }
             }
+
+            SendMails();
         }
 
         private string CreatePdf(ReceiverGroup receiverGroup)
@@ -137,6 +134,27 @@ namespace Flights
             return fileName;
         }
 
+        private void SendMails()
+        {
+            foreach (var receiver in receiversDictionary)
+            {
+                MailAddress mailAddressFrom = new MailAddress("flights.adam.kwiat@gmail.com", "Wyszukiwarka lotów GK");
+                MailAddress mailAddressTo = new MailAddress(receiver.Key);
+                MailMessage mailMessage = new MailMessage(mailAddressFrom, mailAddressTo);
+                mailMessage.Subject = string.Format("Najtańsze loty na dzień {0}", DateTime.Now);
+                mailMessage.Body = "Loty są sortowane wg waluty, a następnie po cenie.";
 
+                foreach (var pdf in receiver.Value)
+                {
+                    mailMessage.Attachments.Add(new Attachment(pdf));
+                }
+                
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                smtpClient.EnableSsl = true;
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = new NetworkCredential("flights.adam.kwiat", "ToJest1KontoPocztowe");
+                smtpClient.Send(mailMessage);
+            }
+        }
     }
 }

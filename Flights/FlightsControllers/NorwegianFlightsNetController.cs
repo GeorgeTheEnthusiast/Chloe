@@ -47,7 +47,7 @@ namespace Flights.FlightsControllers
 
         public void CreateNet()
         {
-            //return;
+            return;
             
             NavigateToUrl();
 
