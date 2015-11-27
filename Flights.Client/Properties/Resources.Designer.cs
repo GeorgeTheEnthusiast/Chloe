@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Flights.Client.Properties
-{
-
-
+namespace Flights.Client.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -22,49 +22,104 @@ namespace Flights.Client.Properties
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources
-    {
-
+    internal class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if ((resourceMan == null))
-                {
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Flights.Client.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Musisz zaznaczyć przynajmniej jeden e-mail!.
+        /// </summary>
+        internal static string GroupsForm_AtLeastOneEmailIsRequired {
+            get {
+                return ResourceManager.GetString("GroupsForm_AtLeastOneEmailIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Musisz zaznaczyć przynajmniej jedną grupę!.
+        /// </summary>
+        internal static string GroupsForm_OneGroupMustBeSelected {
+            get {
+                return ResourceManager.GetString("GroupsForm_OneGroupMustBeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zakończono dodawanie nowego kryterium szukania..
+        /// </summary>
+        internal static string SearchCriteriaForm_AddingNewSearchCriteriaCompleted {
+            get {
+                return ResourceManager.GetString("SearchCriteriaForm_AddingNewSearchCriteriaCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Musisz zaznaczyć przynajmniej jedno miasto-od!.
+        /// </summary>
+        internal static string SearchCriteriaForm_AtLeastOneCityFromMustBeChecked {
+            get {
+                return ResourceManager.GetString("SearchCriteriaForm_AtLeastOneCityFromMustBeChecked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Musisz zaznaczyć przynajmniej jedno miasto-do!.
+        /// </summary>
+        internal static string SearchCriteriaForm_AtLeastOneCityToMustBeChecked {
+            get {
+                return ResourceManager.GetString("SearchCriteriaForm_AtLeastOneCityToMustBeChecked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Musisz zaznaczyć przynajmniej jedną stronę, z której chcesz pobierać wyniki zapytań!.
+        /// </summary>
+        internal static string SearchCriteriaForm_buttonAddSearchCriteria_AtLeastOneFlightWebsiteMustBeChecked {
+            get {
+                return ResourceManager.GetString("SearchCriteriaForm_buttonAddSearchCriteria_AtLeastOneFlightWebsiteMustBeChecked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Musisz zaznaczyć grupę odbiorców!.
+        /// </summary>
+        internal static string SearchCriteriaForm_ReceiverGroupMustBeSelected {
+            get {
+                return ResourceManager.GetString("SearchCriteriaForm_ReceiverGroupMustBeSelected", resourceCulture);
             }
         }
     }
