@@ -23,6 +23,7 @@ namespace Flights.FlightsControllers
         private Flights.Dto.FlightWebsite _flightWebsite;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
         private WebDriverWait _webDriverWait;
+        private readonly string ThisCityIsNotAvailable = "This city is not available";
 
         public WizzAirWebSiteController(IWebDriver driver,
             ICurrienciesCommand currienciesCommand,
@@ -70,6 +71,25 @@ namespace Flights.FlightsControllers
             toCityWebElement.Click();
             toCityWebElement.SendKeys(searchCriteria.CityTo.Name);
             toCityWebElement.SendKeys(Keys.Enter);
+        }
+
+        private bool IsCityToIsAvailable(string cityFrom, string cityTo)
+        {
+            try
+            {
+                string cityToDropDownListText = _driver
+                    .FindElements(By.CssSelector("div[class='box-autocomplete inHeader']"))[1]
+                    .FindElement(By.ClassName("wrap"))
+                    .Text;
+
+                _logger.Warn("Connection [{0}] --> [{1}] is not available", cityFrom, cityTo);
+            }
+            catch
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void FillDate(SearchCriteria searchCriteria)
@@ -140,7 +160,9 @@ namespace Flights.FlightsControllers
                 _flightWebsite = _flightWebsiteQuery.GetFlightWebsiteByType(FlightWebsite.WizzAir);
 
             List<Flight> result = new List<Flight>();
-            
+
+            //return result;
+
             if (searchCriteria.FlightWebsite.Id != _flightWebsite.Id)
                 return result;
 
@@ -149,6 +171,9 @@ namespace Flights.FlightsControllers
             FillCityFrom(searchCriteria);
 
             FillCityTo(searchCriteria);
+
+            if (IsCityToIsAvailable(searchCriteria.CityFrom.Name, searchCriteria.CityTo.Name) == false)
+                return result;
 
             FillDate(searchCriteria);
 

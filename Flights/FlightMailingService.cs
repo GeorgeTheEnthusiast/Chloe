@@ -167,9 +167,7 @@ namespace Flights
             foreach (var flight in flights)
             {
                 decimal sellRate = _currencySellRate.GetSellRate(flight.Currency);
-                _logger.Info("Price before: " + flight.Price + flight.Currency.Name);
                 flight.Price = flight.Price * sellRate;
-                _logger.Info("Price after: " + flight.Price + flight.Currency.Name);
             }
         } 
     }

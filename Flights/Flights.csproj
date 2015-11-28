@@ -240,7 +240,6 @@
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Exceptions\FlightsPageIsNotLoadedCorrectlyException.cs" />
     <Compile Include="Exceptions\InputWasNotFilledCorrectlyException.cs" />
-    <Compile Include="Extensions\WebElementExtensions.cs" />
     <Compile Include="FlightMailingService.cs" />
     <Compile Include="Flights.NtService.cs">
       <SubType>Component</SubType>

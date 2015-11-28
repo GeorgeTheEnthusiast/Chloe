@@ -12,6 +12,7 @@ using NLog;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using Quartz.Util;
 using FlightWebsite = Flights.Dto.Enums.FlightWebsite;
 
 namespace Flights.FlightsControllers
@@ -206,6 +207,8 @@ namespace Flights.FlightsControllers
 
             List<Flight> result = new List<Flight>();
             
+            //return result;
+
             if (searchCriteria.FlightWebsite.Id != _flightWebsite.Id)
                 return result;
 
@@ -218,11 +221,11 @@ namespace Flights.FlightsControllers
             FillCityTo(searchCriteria.CityTo.Name);
 
             ProceedToDatesForm();
-
-            int retryCount = 5;
+            
             DateTime departureDate = searchCriteria.DepartureDate.Date;
+            int daysToAdd = 1;
 
-            while (retryCount != 0)
+            while (true)
             {
                 FillDate(departureDate);
                 
@@ -235,15 +238,15 @@ namespace Flights.FlightsControllers
                 string errorText = GetInputValidationState();
 
                 if (errorText == FlightIsNotAvailableOnThisDay)
-                    departureDate = departureDate.AddDays(1);
+                    departureDate = departureDate.AddDays(daysToAdd);
                 else if (errorText == FlightIsAvailable)
                     break;
 
-                retryCount--;
+                if (DateTime.Compare(departureDate.Date, searchCriteria.DepartureDate.AddDays(2).Date) == 0)
+                    daysToAdd = -1;
+                else if (DateTime.Compare(departureDate.Date, searchCriteria.DepartureDate.AddDays(-2).Date) == 0)
+                    return result;
             }
-
-            if (retryCount == 0)
-                return result;
 
             GoToFlightsPage();
             
@@ -252,72 +255,7 @@ namespace Flights.FlightsControllers
                 throw new FlightsPageIsNotLoadedCorrectlyException();
             }
             
-            var flightSlides = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElements(By.ClassName("slide")));
-            var slideActive = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElement(By.CssSelector("div[class='slide active']")));
-            DateTime activeSlideDateTime = GetDateFromCarousel(slideActive, searchCriteria.DepartureDate.Date);
-
-            if (DateTime.Compare(activeSlideDateTime.Date, searchCriteria.DepartureDate.Date) != 0)
-            {
-                if (DateTime.Compare(searchCriteria.DepartureDate.AddMonths(-1).Date, activeSlideDateTime.Date) == 1
-                    || DateTime.Compare(searchCriteria.DepartureDate.AddMonths(1).Date, activeSlideDateTime.Date) == -1)
-                    throw new SearchDepartureDateIsIncorrectException();
-
-                try
-                {
-                    DateTime slideDateTime = new DateTime();
-                    bool goForward = false;
-                    bool stopTheCarousel = false;
-                    int daysToAdd;
-                    retryCount = 10;
-
-                    while (retryCount != 0)
-                    {
-                        if (goForward)
-                            daysToAdd = -1;
-                        else
-                            daysToAdd = 1;
-
-                        foreach (var slide in flightSlides)
-                        {
-                            slideDateTime = GetDateFromCarousel(slide, activeSlideDateTime.Date);
-                            if (DateTime.Compare(slideDateTime.Date.AddDays(daysToAdd), activeSlideDateTime.Date) == 0)
-                            {
-                                slide.Click();
-                                activeSlideDateTime = slideDateTime.Date;
-                                break;
-                            }
-                        }
-
-                        if (DateTime.Compare(activeSlideDateTime.Date.AddDays(2), searchCriteria.DepartureDate.Date) == 0)
-                            goForward = true;
-                        else if (DateTime.Compare(activeSlideDateTime.Date, searchCriteria.DepartureDate.Date) == 0)
-                        {
-                            if (stopTheCarousel)
-                                break;
-                            else
-                                stopTheCarousel = true;
-                        }
-
-                        retryCount--;
-                    }
-                }
-                catch (Exception ex)
-                {
-                }
-
-                if (retryCount == 0)
-                    throw new SearchDepartureDateIsIncorrectException();
-            }
-            
-            Thread.Sleep(TimeSpan.FromSeconds(3));
-
-            foreach (var slide in flightSlides)
-            {
-                var flight = GetOneItemFromCarousel(slide, searchCriteria);
-
-                if (flight != null)
-                    result.Add(flight);
-            }
+            result = CollectFlights(searchCriteria);
             
             return result;
         } 
@@ -345,8 +283,10 @@ namespace Flights.FlightsControllers
             return webElement.GetAttribute("value") == text;
         }
 
-        private Flight GetOneItemFromCarousel(IWebElement webElement, SearchCriteria searchCriteria)
+        private Flight GetOneItemFromCarousel(IWebElement webElement, SearchCriteria searchCriteria, DateTime departureDate)
         {
+            Thread.Sleep(TimeSpan.FromMilliseconds(500));
+
             Flight result = new Flight()
             {
                 SearchDate = DateTime.Now,
@@ -354,13 +294,9 @@ namespace Flights.FlightsControllers
                 IsDirect = true
             };
             
-            string dateLong = webElement.FindElement(By.ClassName("date")).GetAttribute("innerHTML");
-            result.DepartureTime = _ryanAirDateConverter.Convert(searchCriteria.DepartureDate, dateLong);
+            string dateLong =  webElement.FindElement(By.ClassName("date")).GetAttribute("innerHTML");
+            result.DepartureTime = _ryanAirDateConverter.Convert(departureDate, dateLong);
             
-            if (DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(-2)) < 0 ||
-                DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(2)) > 0)
-                return null;
-
             var className = webElement
                 .FindElement(By.ClassName("carousel-item"))
                 .GetAttribute("class");
@@ -379,6 +315,7 @@ namespace Flights.FlightsControllers
                 throw new PriceIsEmptyException();
             }
 
+            result.DepartureTime = addTimeToDepartureDate(result.DepartureTime);
             AddCurrency(ref result, price);
             result.Carrier = _carrierCommand.Merge("RyanAir");
 
@@ -423,6 +360,152 @@ namespace Flights.FlightsControllers
                 _logger.Error("Could not parse price value: [{0}]", joinedPriceValue);
                 throw new FormatException("Price is invalid!");
             }
+        }
+
+        private List<Flight> CollectFlights(SearchCriteria searchCriteria)
+        {
+            var flightSlides = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElements(By.ClassName("slide")));
+            var slideActive = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElement(By.CssSelector("div[class='slide active']")));
+            DateTime activeSlideDateTime = GetDateFromCarousel(slideActive, searchCriteria.DepartureDate.Date);
+            Dictionary<IWebElement, DateTime> slideDatesDictionary = new Dictionary<IWebElement, DateTime>();
+            Dictionary<IWebElement, DateTime> slideDatesDictionaryLoop = new Dictionary<IWebElement, DateTime>();
+            bool newYear = false;
+            List<Flight> result = new List<Flight>();
+
+            foreach (var slide in flightSlides)
+            {
+                slideDatesDictionary[slide] = GetDateFromCarousel(slide, searchCriteria.DepartureDate);
+            }
+            slideDatesDictionaryLoop = slideDatesDictionary.ToDictionary(pair => pair.Key, pair => pair.Value);
+
+            newYear = slideDatesDictionary.Any(x => x.Value.Month == 12)
+                    && slideDatesDictionary.Any(x => x.Value.Month == 1);
+
+            if (newYear)
+            {
+                foreach (var slide in slideDatesDictionaryLoop)
+                {
+                    if (searchCriteria.DepartureDate.Month == 12)
+                    {
+                        if (slide.Value.Month == 1)
+                        {
+                            slideDatesDictionary[slide.Key] = slide.Value.AddYears(1);
+                        }
+                    }
+                    else
+                    {
+                        if (slide.Value.Month == 12)
+                        {
+                            slideDatesDictionary[slide.Key] = slide.Value.AddYears(-1);
+                        }
+                    }
+                }
+
+                if (searchCriteria.DepartureDate.Month == 12)
+                {
+                    if (activeSlideDateTime.Month == 1)
+                    {
+                        activeSlideDateTime = activeSlideDateTime.AddYears(1);
+                    }
+                }
+                else
+                {
+                    if (activeSlideDateTime.Month == 12)
+                    {
+                        activeSlideDateTime = activeSlideDateTime.AddYears(-1);
+                    }
+                }
+            }
+
+            slideDatesDictionary =
+                slideDatesDictionary.Where(x => DateTime.Compare(x.Value.Date, searchCriteria.DepartureDate.AddDays(2).Date) <= 0
+                && DateTime.Compare(x.Value.Date, searchCriteria.DepartureDate.AddDays(-2).Date) >= 0)
+                    .ToDictionary(pair => pair.Key, pair => pair.Value);
+            
+            if (DateTime.Compare(searchCriteria.DepartureDate.AddMonths(-1).Date, activeSlideDateTime.Date) == 1
+                || DateTime.Compare(searchCriteria.DepartureDate.AddMonths(1).Date, activeSlideDateTime.Date) == -1)
+                throw new SearchDepartureDateIsIncorrectException();
+
+
+            var firstSlide = slideDatesDictionary
+                .FirstOrDefault(x => DateTime.Compare(x.Value.Date, searchCriteria.DepartureDate.AddDays(-2).Date) == 0);
+            var lastSlide = slideDatesDictionary
+                .FirstOrDefault(x => DateTime.Compare(x.Value.Date, searchCriteria.DepartureDate.AddDays(2).Date) == 0);
+            var middleSlide = slideDatesDictionary
+                .FirstOrDefault(x => DateTime.Compare(x.Value.Date, searchCriteria.DepartureDate.Date) == 0);
+            var activeSlide = new KeyValuePair<IWebElement, DateTime>();
+            bool moveRight;
+
+            if (firstSlide.Key.Displayed == true)
+            {
+                firstSlide.Key.Click();
+                activeSlide = firstSlide;
+                moveRight = true;
+            }
+            else
+            {
+                lastSlide.Key.Click();
+                activeSlide = lastSlide;
+                moveRight = false;
+            }
+
+            var flight = new Flight();
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (i != 0)
+                {
+                    if (moveRight)
+                        activeSlide = MoveCarouselRight(slideDatesDictionary, activeSlide.Key, activeSlide.Value);
+                    else
+                        activeSlide = MoveCarouselLeft(slideDatesDictionary, activeSlide.Key, activeSlide.Value);
+                }
+
+                flight = GetOneItemFromCarousel(activeSlide.Key, searchCriteria, activeSlide.Value);
+
+                if (flight != null)
+                    result.Add(flight);
+            }
+
+            middleSlide.Key.Click();
+
+            return result;
+        }
+
+        private KeyValuePair<IWebElement, DateTime> MoveCarouselLeft(Dictionary<IWebElement, DateTime> slideDates, IWebElement activeSlide, DateTime activeSlideDate)
+        {
+            var previousSlide = slideDates
+                .FirstOrDefault(x => DateTime.Compare(x.Value.Date, activeSlideDate.AddDays(-1).Date) == 0);
+
+            previousSlide.Key.Click();
+            return previousSlide;
+        }
+
+        private KeyValuePair<IWebElement, DateTime> MoveCarouselRight(Dictionary<IWebElement, DateTime> slideDates, IWebElement activeSlide, DateTime activeSlideDate)
+        {
+            var nextSlide = slideDates
+                .FirstOrDefault(x => DateTime.Compare(x.Value.Date, activeSlideDate.AddDays(1).Date) == 0);
+
+            nextSlide.Key.Click();
+            return nextSlide;
+        }
+
+        private DateTime addTimeToDepartureDate(DateTime departureDate)
+        {
+            var departureTimeHolderElement =
+                _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='flight-holder']")));
+            var departureTimeElement = departureTimeHolderElement
+                .FindElement(By.ClassName("starting-point"))
+                .FindElement(By.ClassName("time"));
+            TimeSpan time = TimeSpan.Parse(departureTimeElement.Text);
+
+            return new DateTime(
+                departureDate.Year,
+                departureDate.Month,
+                departureDate.Day,
+                time.Hours,
+                time.Minutes,
+                0);
         }
     }
 }
