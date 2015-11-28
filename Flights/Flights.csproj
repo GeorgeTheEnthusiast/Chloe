@@ -256,6 +256,7 @@
     <Compile Include="NBPCurrency\LastA.cs" />
     <Compile Include="NBPCurrency\XmlDownloader.cs" />
     <Compile Include="NBPCurrency\XmlParser.cs" />
+    <Compile Include="Quartz\NBPCurrencyDownloaderJob.cs" />
     <Compile Include="Quartz\FlightsNetJob.cs" />
     <Compile Include="FlightsControllers\NorwegianFlightsNetController.cs" />
     <Compile Include="FlightsControllers\WizzAirFlightsNetController.cs" />
