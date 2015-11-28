@@ -12,6 +12,7 @@ using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
+using Flights.NBPCurrency;
 using NLog;
 using NLog.Common;
 using OpenQA.Selenium.Interactions;

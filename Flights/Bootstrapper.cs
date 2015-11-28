@@ -11,6 +11,7 @@ using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Exceptions;
 using Flights.FlightsControllers;
+using Flights.NBPCurrency;
 using Flights.Quartz;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -73,7 +74,10 @@ namespace Flights
                 Component.For<INotificationReceiversGroupsConverter>().ImplementedBy(typeof(NotificationReceiversGroupsConverter)),
                 Component.For<ICarrierCommand>().ImplementedBy(typeof(CarrierCommand)),
                 Component.For<ICarrierConverter>().ImplementedBy(typeof(CarrierConverter)),
-                Component.For<ICarrierQuery>().ImplementedBy(typeof(CarrierQuery))
+                Component.For<ICarrierQuery>().ImplementedBy(typeof(CarrierQuery)),
+                Component.For<IXmlParser>().ImplementedBy(typeof(XmlParser)),
+                Component.For<IXmlDownloader>().ImplementedBy(typeof(XmlDownloader)),
+                Component.For<ICurrencySellRate>().ImplementedBy(typeof(CurrencySellRate))
                 );
         }
     }

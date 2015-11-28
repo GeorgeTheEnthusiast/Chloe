@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,8 +10,10 @@ using Flights.Domain.Query;
 using System.Net.Mail;
 using Flights.Converters;
 using Flights.Dto;
+using Flights.NBPCurrency;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using NLog;
 
 namespace Flights
 {
@@ -19,20 +22,25 @@ namespace Flights
         private readonly IFlightsQuery _flightsQuery;
         private readonly ICommonConverters _commonConverters;
         private readonly INotificationReceiversGroupsQuery _notificationReceiversGroupsQuery;
-        private Dictionary<string, List<string>> receiversDictionary = new Dictionary<string, List<string>>(); 
+        private readonly ICurrencySellRate _currencySellRate;
+        private Dictionary<string, List<string>> receiversDictionary = new Dictionary<string, List<string>>();
+        private Logger _logger = LogManager.GetCurrentClassLogger();
 
         public FlightMailingService(IFlightsQuery flightsQuery, 
             ICommonConverters commonConverters,
-            INotificationReceiversGroupsQuery notificationReceiversGroupsQuery)
+            INotificationReceiversGroupsQuery notificationReceiversGroupsQuery,
+            ICurrencySellRate currencySellRate)
         {
             if (flightsQuery == null) throw new ArgumentNullException("flightsQuery");
             if (commonConverters == null) throw new ArgumentNullException("commonConverters");
             if (notificationReceiversGroupsQuery == null)
                 throw new ArgumentNullException("notificationReceiversGroupsQuery");
+            if (currencySellRate == null) throw new ArgumentNullException("currencySellRate");
 
             _flightsQuery = flightsQuery;
             _commonConverters = commonConverters;
             _notificationReceiversGroupsQuery = notificationReceiversGroupsQuery;
+            _currencySellRate = currencySellRate;
         }
 
         public void SendResults()
@@ -73,6 +81,7 @@ namespace Flights
             if (!flightsToSend.Any())
                 return null;
 
+            ConvertPricesToPLN(ref flightsToSend);
             var searchGroups = flightsToSend.GroupBy(x => x.SearchCriteria.DepartureDate);
             var fontBold = FontFactory.GetFont(BaseFont.TIMES_BOLD, BaseFont.CP1257, 8, Font.BOLD);
             var fontNormal = FontFactory.GetFont(BaseFont.COURIER, BaseFont.CP1257, 8, Font.NORMAL);
@@ -84,28 +93,25 @@ namespace Flights
                 doc.SetPageSize(PageSize.A4.Rotate());
                 doc.Open();
                 
-
                 foreach (var group in searchGroups)
                 {
                     var flightsFromCountry = flightsToSend
                         .Where(x => x.SearchCriteria.DepartureDate == group.Key)
-                        .OrderBy(x => x.Currency.Name)
-                        .ThenBy(x => x.Price);
+                        .OrderBy(x => x.Price);
 
                     if (!flightsFromCountry.Any())
                         continue;
                     
                     doc.Add(new Phrase(string.Format("Loty blisko {0}", group.Key.Date.ToShortDateString()), fontHeader));
 
-                    PdfPTable table = new PdfPTable(8);
-                    float[] cellWidths = new float[] {32f, 32f, 28f, 14f, 8f, 18f, 10f, 28f};
+                    PdfPTable table = new PdfPTable(7);
+                    float[] cellWidths = new float[] {32f, 32f, 28f, 14f, 18f, 10f, 28f};
                     table.SetWidths(cellWidths);
 
                     table.AddCell(new Phrase("Od", fontBold));
                     table.AddCell(new Phrase("Do", fontBold));
                     table.AddCell(new Phrase("Data wylotu", fontBold));
-                    table.AddCell(new Phrase("Cena", fontBold));
-                    table.AddCell(new Phrase("Waluta", fontBold));
+                    table.AddCell(new Phrase("Cena [zł]", fontBold));
                     table.AddCell(new Phrase("Przewoźnik", fontBold));
                     table.AddCell(new Phrase("Lot bezpośredni", fontBold));
                     table.AddCell(new Phrase("Dane z dnia", fontBold));
@@ -114,9 +120,8 @@ namespace Flights
                     {
                         table.AddCell(new Phrase(flight.SearchCriteria.CityFrom.Name, fontNormal));
                         table.AddCell(new Phrase(flight.SearchCriteria.CityTo.Name, fontNormal));
-                        table.AddCell(new Phrase(flight.DepartureTime.ToShortDateString(), fontNormal));
-                        table.AddCell(new Phrase(flight.Price.ToString(), fontNormal));
-                        table.AddCell(new Phrase(flight.Currency.Name, fontNormal));
+                        table.AddCell(new Phrase(flight.DepartureTime.ToString(), fontNormal));
+                        table.AddCell(new Phrase(Math.Round(flight.Price).ToString(), fontNormal));
                         table.AddCell(new Phrase(flight.Carrier.Name, fontNormal));
 
                         string isDirect = _commonConverters.ConvertBoolToYesNo(flight.IsDirect);
@@ -156,5 +161,16 @@ namespace Flights
                 smtpClient.Send(mailMessage);
             }
         }
+
+        private void ConvertPricesToPLN(ref IEnumerable<Flight> flights)
+        {
+            foreach (var flight in flights)
+            {
+                decimal sellRate = _currencySellRate.GetSellRate(flight.Currency);
+                _logger.Info("Price before: " + flight.Price + flight.Currency.Name);
+                flight.Price = flight.Price * sellRate;
+                _logger.Info("Price after: " + flight.Price + flight.Currency.Name);
+            }
+        } 
     }
 }

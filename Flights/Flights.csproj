@@ -249,6 +249,13 @@
       <DependentUpon>Flights.NtService.cs</DependentUpon>
     </Compile>
     <Compile Include="FlightSearchController.cs" />
+    <Compile Include="NBPCurrency\CurrencySellRate.cs" />
+    <Compile Include="NBPCurrency\ICurrencySellRate.cs" />
+    <Compile Include="NBPCurrency\IXmlDownloader.cs" />
+    <Compile Include="NBPCurrency\IXmlParser.cs" />
+    <Compile Include="NBPCurrency\LastA.cs" />
+    <Compile Include="NBPCurrency\XmlDownloader.cs" />
+    <Compile Include="NBPCurrency\XmlParser.cs" />
     <Compile Include="Quartz\FlightsNetJob.cs" />
     <Compile Include="FlightsControllers\NorwegianFlightsNetController.cs" />
     <Compile Include="FlightsControllers\WizzAirFlightsNetController.cs" />
