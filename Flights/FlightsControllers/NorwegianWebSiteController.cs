@@ -251,11 +251,13 @@ namespace Flights.FlightsControllers
                 return null;
             else if (flightType == "fareCalNoFlight")
                 return null;
+            else if (flightType == "fareCalSoldOut")
+                return null;
 
             string onClickValue = flightWebElement.GetAttribute("onclick");
-
-            result.Price = GetPriceFromCarousel(onClickValue);
+            
             result.DepartureTime = GetDateFromCarousel(onClickValue);
+            result.Price = GetPriceFromCarousel(onClickValue);
 
             if (DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(-2)) < 0 ||
                 DateTime.Compare(result.DepartureTime, searchCriteria.DepartureDate.AddDays(2)) > 0)

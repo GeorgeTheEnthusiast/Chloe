@@ -32,7 +32,7 @@ namespace Flights.Quartz
         {
             try
             {
-                //_flightSearchController.StartSearch();
+                _flightSearchController.StartSearch();
 
                 ISchedulerFactory schedFact = new StdSchedulerFactory();
 
@@ -53,6 +53,7 @@ namespace Flights.Quartz
             }
             catch (Exception ex)
             {
+                _logger.Info("Error searching the flights!");
                 _logger.Error(ex);
             }
         }

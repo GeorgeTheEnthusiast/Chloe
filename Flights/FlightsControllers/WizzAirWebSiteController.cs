@@ -55,21 +55,21 @@ namespace Flights.FlightsControllers
             _driver.Navigate().GoToUrl(_flightWebsite.Website);
         }
 
-        private void FillCityFrom(SearchCriteria searchCriteria)
+        private void FillCityFrom(string cityName)
         {
             IWebElement fromCityWebElement = _driver.FindElement(By.ClassName("city-from"));
 
             fromCityWebElement.Click();
-            fromCityWebElement.SendKeys(searchCriteria.CityFrom.Name);
+            fromCityWebElement.SendKeys(cityName);
             fromCityWebElement.SendKeys(Keys.Enter);
         }
 
-        private void FillCityTo(SearchCriteria searchCriteria)
+        private void FillCityTo(string cityName)
         {
             IWebElement toCityWebElement = _driver.FindElement(By.ClassName("city-to"));
             
             toCityWebElement.Click();
-            toCityWebElement.SendKeys(searchCriteria.CityTo.Name);
+            toCityWebElement.SendKeys(cityName);
             toCityWebElement.SendKeys(Keys.Enter);
         }
 
@@ -82,21 +82,25 @@ namespace Flights.FlightsControllers
                     .FindElement(By.ClassName("wrap"))
                     .Text;
 
-                _logger.Warn("Connection [{0}] --> [{1}] is not available", cityFrom, cityTo);
+                if (cityToDropDownListText == ThisCityIsNotAvailable)
+                {
+                    _logger.Warn("Connection [{0}] --> [{1}] is not available", cityFrom, cityTo);
+                    return false;
+                }
             }
             catch
             {
                 return true;
             }
 
-            return false;
+            return true;
         }
 
         private void FillDate(SearchCriteria searchCriteria)
         {
             IWebElement datePickerWebElement = _driver.FindElement(By.CssSelector("div[id='ui-datepicker-div']"));
 
-            ClickWebElement(datePickerWebElement);
+            //ClickWebElement(datePickerWebElement);
 
             SetCalendar(searchCriteria);
         }
@@ -168,9 +172,9 @@ namespace Flights.FlightsControllers
 
             NavigateToUrl();
 
-            FillCityFrom(searchCriteria);
+            FillCityFrom(searchCriteria.CityFrom.Name);
 
-            FillCityTo(searchCriteria);
+            FillCityTo(searchCriteria.CityTo.Name);
 
             if (IsCityToIsAvailable(searchCriteria.CityFrom.Name, searchCriteria.CityTo.Name) == false)
                 return result;

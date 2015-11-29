@@ -37,6 +37,7 @@ namespace Flights.Quartz
             }
             catch (Exception ex)
             {
+                _logger.Info("Error sending the e-mails!");
                 _logger.Error(ex);
             }
         }

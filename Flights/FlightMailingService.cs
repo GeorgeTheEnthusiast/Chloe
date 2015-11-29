@@ -45,6 +45,7 @@ namespace Flights
 
         public void SendResults()
         {
+            DeleteOldPdfs();
             var notificationReceiversGroups = _notificationReceiversGroupsQuery.GetAllNotificationReceiversGroups();
 
             foreach (var nrg in notificationReceiversGroups.GroupBy(x => x.ReceiverGroup))
@@ -169,6 +170,15 @@ namespace Flights
                 decimal sellRate = _currencySellRate.GetSellRate(flight.Currency);
                 flight.Price = flight.Price * sellRate;
             }
-        } 
+        }
+
+        private void DeleteOldPdfs()
+        {
+            var pdfFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.pdf");
+            foreach (var pdf in pdfFiles)
+            {
+                File.Delete(pdf);
+            }
+        }
     }
 }
