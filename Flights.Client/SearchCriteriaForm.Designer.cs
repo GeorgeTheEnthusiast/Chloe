@@ -56,6 +56,7 @@ namespace Flights.Client
             this.searchCriteriasBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.searchCriteriasTableAdapter = new Flights.Client.FlightsDataSetTableAdapters.SearchCriteriasTableAdapter();
             this.buttonSetAllToDefaults = new System.Windows.Forms.Button();
+            this.checkBoxFlightsChange = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.receiverGroupsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.flightsDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.notificationReceiversBindingSource)).BeginInit();
@@ -179,7 +180,7 @@ namespace Flights.Client
             // 
             // buttonAddSearchCriteria
             // 
-            this.buttonAddSearchCriteria.Location = new System.Drawing.Point(151, 402);
+            this.buttonAddSearchCriteria.Location = new System.Drawing.Point(151, 426);
             this.buttonAddSearchCriteria.Name = "buttonAddSearchCriteria";
             this.buttonAddSearchCriteria.Size = new System.Drawing.Size(75, 23);
             this.buttonAddSearchCriteria.TabIndex = 6;
@@ -225,7 +226,7 @@ namespace Flights.Client
             // 
             // buttonSetAllToDefaults
             // 
-            this.buttonSetAllToDefaults.Location = new System.Drawing.Point(45, 402);
+            this.buttonSetAllToDefaults.Location = new System.Drawing.Point(45, 426);
             this.buttonSetAllToDefaults.Name = "buttonSetAllToDefaults";
             this.buttonSetAllToDefaults.Size = new System.Drawing.Size(75, 23);
             this.buttonSetAllToDefaults.TabIndex = 5;
@@ -233,11 +234,22 @@ namespace Flights.Client
             this.buttonSetAllToDefaults.UseVisualStyleBackColor = true;
             this.buttonSetAllToDefaults.Click += new System.EventHandler(this.buttonSetAllToDefaults_Click);
             // 
+            // checkBoxFlightsChange
+            // 
+            this.checkBoxFlightsChange.AutoSize = true;
+            this.checkBoxFlightsChange.Location = new System.Drawing.Point(15, 394);
+            this.checkBoxFlightsChange.Name = "checkBoxFlightsChange";
+            this.checkBoxFlightsChange.Size = new System.Drawing.Size(140, 17);
+            this.checkBoxFlightsChange.TabIndex = 9;
+            this.checkBoxFlightsChange.Text = "Uwzględnij 1 przesiadkę";
+            this.checkBoxFlightsChange.UseVisualStyleBackColor = true;
+            // 
             // SearchCriteriaForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(287, 437);
+            this.ClientSize = new System.Drawing.Size(287, 461);
+            this.Controls.Add(this.checkBoxFlightsChange);
             this.Controls.Add(this.buttonSetAllToDefaults);
             this.Controls.Add(this.buttonAddSearchCriteria);
             this.Controls.Add(this.checkedListBoxFlightWebsites);
@@ -293,5 +305,6 @@ namespace Flights.Client
         private System.Windows.Forms.BindingSource searchCriteriasBindingSource;
         private FlightsDataSetTableAdapters.SearchCriteriasTableAdapter searchCriteriasTableAdapter;
         private System.Windows.Forms.Button buttonSetAllToDefaults;
+        private System.Windows.Forms.CheckBox checkBoxFlightsChange;
     }
 }

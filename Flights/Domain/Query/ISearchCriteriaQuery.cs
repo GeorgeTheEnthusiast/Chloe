@@ -10,5 +10,7 @@ namespace Flights.Domain.Query
     public interface ISearchCriteriaQuery
     {
         IEnumerable<SearchCriteria> GetAllSearchCriterias();
+
+        IEnumerable<SearchCriteria> GetSearchCriteriasByReceiverGroupId(int receiverGroupId);
     }
 }

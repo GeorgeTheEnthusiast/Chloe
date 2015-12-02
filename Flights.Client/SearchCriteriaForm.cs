@@ -102,41 +102,96 @@ namespace Flights.Client
             foreach (var flightWebsite in flightWebsites)
             {
                 var carrier = FlightWebsiteConverter.Convert(flightWebsite);
-                var availableNet = from n in flightsDataSet.Net
-                    .Where(x => x.Carrier_Id == carrier.Id
-                                && citiesFrom.Any(y => y.Id == x.CityFrom_Id)
-                                && citiesTo.Any(z => z.Id == x.CityTo_Id))
-                                join c1 in citiesFrom on n.CityFrom_Id equals c1.Id
-                                join c2 in citiesTo on n.CityTo_Id equals c2.Id
-                    select new {
-                        CityFrom_Id = n.CityFrom_Id,
-                        CityTo_Id = n.CityTo_Id,
-                        CityFrom = c1.Name,
-                        CityTo = c2.Name
-                        };
 
-                foreach (var searchCriteria in availableNet)
+                foreach (var cityA in citiesFrom)
                 {
-                    bool existed = flightsDataSet.SearchCriterias
-                        .Any(x => x.FlightWebsite_Id == flightWebsite.Id
-                                && x.ReceiverGroups_Id == receiverGroup.Id
-                                && DateTime.Compare(x.DepartureDate.Date, dateTimePickerDepartureDate.Value.Date) == 0
-                                && x.CityFrom_Id == searchCriteria.CityFrom_Id
-                                && x.CityTo_Id == searchCriteria.CityTo_Id);
+                    var flightChangeA = from n in flightsDataSet.Net
+                                        where n.Carrier_Id == carrier.Id
+                                              && n.CityFrom_Id == cityA.Id
+                                        select n;
 
-                    if (existed == false)
+                    if (flightChangeA.Any() == false)
+                        continue;
+
+                    foreach (var cityB in citiesTo)
                     {
-                        searchCriteriasTableAdapter.Insert(
-                            searchCriteria.CityFrom_Id,
-                            searchCriteria.CityTo_Id,
-                            dateTimePickerDepartureDate.Value,
-                            flightWebsite.Id,
-                            null,
-                            receiverGroup.Id);
+                        var flightChangeB = from n in flightsDataSet.Net
+                                            where n.Carrier_Id == carrier.Id
+                                                  && n.CityTo_Id == cityB.Id
+                                            select n;
 
-                        MessageBox.Show(string.Format("Dodano połączenie {0} - {1}", searchCriteria.CityFrom, searchCriteria.CityTo));
+                        if (flightChangeB.Any() == false)
+                            continue;
+
+                        var flightChangeCommon1 = flightChangeA
+                            .Where(x => flightChangeB.Any(y => y.CityFrom_Id == x.CityTo_Id));
+                        var flightChangeCommon2 = flightChangeB
+                            .Where(x => flightChangeA.Any(y => y.CityTo_Id == x.CityFrom_Id));
+                        var joinedFlightChanges = (from f1 in flightChangeCommon1
+                            join f2 in flightChangeCommon2 on f1.CityTo_Id equals f2.CityFrom_Id
+                            select new
+                            {
+                                CityA = f1.CitiesRowByFK_Net_CitiesFrom.Name,
+                                CityB = f1.CitiesRowByFK_Net_CitiesTo.Name,
+                                CityC = f2.CitiesRowByFK_Net_CitiesTo.Name
+                            })
+                            .ToList();
                     }
+
+
                 }
+
+
+//                var flightChangeA = from n in flightsDataSet.Net
+//                    .Where(x => x.Carrier_Id == carrier.Id
+//                                && citiesFrom.Any(y => y.Id == x.CityFrom_Id))
+//                    select n;
+//                var flightChangeB = from n in flightsDataSet.Net
+//                    .Where(x => x.Carrier_Id == carrier.Id
+//                                && citiesTo.Any(y => y.Id == x.CityTo_Id))
+//                                           select n;
+//
+//                var flightChangeCommon = flightChangeA
+//                    .Where(x => flightChangeB.Any(y => y.CityFrom_Id == x.CityTo_Id))
+//                    .ToList();
+
+               
+
+//                        var availableNet = from n in flightsDataSet.Net
+//                    .Where(x => x.Carrier_Id == carrier.Id
+//                                && citiesFrom.Any(y => y.Id == x.CityFrom_Id)
+//                                && citiesTo.Any(z => z.Id == x.CityTo_Id))
+//                                join c1 in citiesFrom on n.CityFrom_Id equals c1.Id
+//                                join c2 in citiesTo on n.CityTo_Id equals c2.Id
+//                    select new {
+//                        CityFrom_Id = n.CityFrom_Id,
+//                        CityTo_Id = n.CityTo_Id,
+//                        CityFrom = c1.Name,
+//                        CityTo = c2.Name
+//                        };
+//
+//                foreach (var searchCriteria in availableNet)
+//                {
+//                    bool existed = flightsDataSet.SearchCriterias
+//                        .Any(x => x.FlightWebsite_Id == flightWebsite.Id
+//                                && x.ReceiverGroups_Id == receiverGroup.Id
+//                                && DateTime.Compare(x.DepartureDate.Date, dateTimePickerDepartureDate.Value.Date) == 0
+//                                && x.CityFrom_Id == searchCriteria.CityFrom_Id
+//                                && x.CityTo_Id == searchCriteria.CityTo_Id);
+//
+//                    if (existed == false)
+//                    {
+//                        searchCriteriasTableAdapter.Insert(
+//                            searchCriteria.CityFrom_Id,
+//                            searchCriteria.CityTo_Id,
+//                            dateTimePickerDepartureDate.Value,
+//                            flightWebsite.Id,
+//                            null,
+//                            receiverGroup.Id);
+//
+//                        MessageBox.Show(string.Format("Dodano połączenie {0} - {1}", searchCriteria.CityFrom, searchCriteria.CityTo));
+//                    }
+//                }
             }
 
             MessageBox.Show(Resources.SearchCriteriaForm_AddingNewSearchCriteriaCompleted);

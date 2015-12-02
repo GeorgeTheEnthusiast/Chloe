@@ -36,7 +36,7 @@ namespace Flights
             if (notificationReceiversGroupsQuery == null)
                 throw new ArgumentNullException("notificationReceiversGroupsQuery");
             if (currencySellRate == null) throw new ArgumentNullException("currencySellRate");
-
+            
             _flightsQuery = flightsQuery;
             _commonConverters = commonConverters;
             _notificationReceiversGroupsQuery = notificationReceiversGroupsQuery;
@@ -148,7 +148,6 @@ namespace Flights
                 MailAddress mailAddressTo = new MailAddress(receiver.Key);
                 MailMessage mailMessage = new MailMessage(mailAddressFrom, mailAddressTo);
                 mailMessage.Subject = string.Format("Najtańsze loty na dzień {0}", DateTime.Now);
-                mailMessage.Body = "Loty są sortowane wg waluty, a następnie po cenie.";
 
                 foreach (var pdf in receiver.Value)
                 {

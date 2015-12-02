@@ -171,8 +171,8 @@ namespace Flights.FlightsControllers
 
         private void MakeTicketOneWay()
         {
-            IWebElement oneWayTicketWebElement = _driver.FindElement(By.Id("tripType"))
-                .FindElements(By.TagName("label"))[1];
+            IWebElement oneWayTicketWebElement = _driver.FindElement(By.Id("radio_11")).FindElement(By.XPath(".."));
+
             oneWayTicketWebElement.Click();
         }
 
@@ -223,8 +223,8 @@ namespace Flights.FlightsControllers
 
         private void GoToTheCheapestPricesCalendar()
         {
-            IWebElement oneWayTicketWebElement = _driver.FindElement(By.CssSelector("div[data-model='model.request.resultType']"))
-                .FindElements(By.TagName("label"))[1];
+            IWebElement oneWayTicketWebElement = _driver.FindElement(By.Id("radio_21")).FindElement(By.XPath(".."));
+
             oneWayTicketWebElement.Click();
         }
 
@@ -238,22 +238,27 @@ namespace Flights.FlightsControllers
             
             var flightWebElement = webElement.FindElement(By.TagName("div"));
             string flightType = flightWebElement.GetAttribute("class");
-                
-            if (flightType == "fareCalDayDirect")
-                result.IsDirect = true;
-            else if (flightType == "fareCalDayDirectLowest")
-                result.IsDirect = true;
-            else if (flightType == "fareCalDayTransit")
-                result.IsDirect = false;
-            else if (flightType == "fareCalDayTransitLowest")
-                result.IsDirect = false;
-            else if (flightType == "fareCalNoDay")
-                return null;
-            else if (flightType == "fareCalNoFlight")
-                return null;
-            else if (flightType == "fareCalSoldOut")
-                return null;
 
+            switch (flightType)
+            {
+                case "fareCalDayDirect":
+                case "fareCalDayDirectLowest":
+                    result.IsDirect = true;
+                    break;
+                case "fareCalDayTransit":
+                case "fareCalDayTransitSelected":
+                case "fareCalDayTransitLowest":
+                    result.IsDirect = false;
+                    break;
+                case "fareCalNoDay":
+                case "fareCalNoFlight":
+                case "fareCalSoldOut":
+                case "fareCalHistory":
+                    return null;
+                default:
+                    throw new NotSupportedException("This type of day is not supported!");
+            }
+            
             string onClickValue = flightWebElement.GetAttribute("onclick");
             
             result.DepartureTime = GetDateFromCarousel(onClickValue);

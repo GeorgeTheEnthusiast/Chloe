@@ -6,6 +6,7 @@ using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
+using Flights.Exceptions;
 using NLog;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -107,9 +108,15 @@ namespace Flights.FlightsControllers
 
         private void SetCalendar(SearchCriteria searchCriteria)
         {
+            System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(500));
+
             SetCalendarYear(searchCriteria);
 
+            System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(500));
+
             SetCalendarMonth(searchCriteria);
+
+            System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(500));
 
             SetCalendarDay(searchCriteria);
         }
@@ -145,9 +152,14 @@ namespace Flights.FlightsControllers
         private void SetCalendarDay(SearchCriteria searchCriteria)
         {
             var calendarTableWebElement = _driver.FindElement(By.ClassName("ui-datepicker-calendar"));
-            var daysInTableWebElement = calendarTableWebElement.FindElements(By.TagName("td"));
-            var daysInTableWIthCorrectValue = daysInTableWebElement.Where(x => x.FindElement(By.TagName("a")).Text == searchCriteria.DepartureDate.Day.ToString());
-            var correctDayWebElement = daysInTableWIthCorrectValue.First(x => x.GetAttribute("class") != " ui-datepicker-other-month ");
+            //var daysInTableWebElement = calendarTableWebElement.FindElements(By.TagName("td"));
+            var daysInTableWebElement = calendarTableWebElement.FindElements(By.CssSelector("a[class='ui-state-default']"));
+
+            var daysInTableWIthCorrectValue = daysInTableWebElement.Where(x => x.Text == searchCriteria.DepartureDate.Day.ToString());
+            var correctDayWebElement = daysInTableWIthCorrectValue.FirstOrDefault(x => x.GetAttribute("class").Contains("ui-datepicker-other-month") == false);
+
+            if (correctDayWebElement == null)
+                throw new NoAvailableDatesException();
 
             correctDayWebElement.Click();
         }

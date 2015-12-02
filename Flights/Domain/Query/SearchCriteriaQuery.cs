@@ -33,5 +33,20 @@ namespace Flights.Domain.Query
 
             return result;
         }
+
+        public IEnumerable<FlightDto.SearchCriteria> GetSearchCriteriasByReceiverGroupId(int receiverGroupId)
+        {
+            IEnumerable<FlightDto.SearchCriteria> result;
+
+            using (FlightDataModel.FlightsEntities flightDataModel = new FlightDataModel.FlightsEntities())
+            {
+                var domainModel = flightDataModel.SearchCriterias
+                    .Where(x => x.ReceiverGroups_Id == receiverGroupId)
+                    .ToList();
+                result = _searchCriteriaConverter.Convert(domainModel);
+            }
+
+            return result;
+        }
     }
 }
