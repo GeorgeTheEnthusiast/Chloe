@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flights.Controllers.FlightsControllers;
 using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
 using Flights.Dto.Enums;
-using Flights.FlightsControllers;
 using NLog;
 using OpenQA.Selenium;
 
@@ -39,11 +39,13 @@ namespace Flights
             _logger.Info("Searching for the cheapest prices...");
 
             IEnumerable<SearchCriteria> criterias = _searchCriteriaQuery.GetAllSearchCriterias();
-            List<SearchCriteria> criteriasToRepeat = criterias.ToList();
+            //List<SearchCriteria> criteriasToRepeat = criterias.ToList();
+            Dictionary<SearchCriteria, int> criteriasDictionary = criterias.ToDictionary(x => x, x => 1);
+            Dictionary<SearchCriteria, int> criteriasToRepeatDictionary = criterias.ToDictionary(x => x, x => 1);
 
-            while (criterias.Any())
+            while (criteriasDictionary.Any())
             {
-                foreach (var criteria in criterias)
+                foreach (var criteria in criteriasDictionary.Keys)
                 {
                     try
                     {
@@ -51,7 +53,7 @@ namespace Flights
 
                         if (DateTime.Compare(criteria.DepartureDate, DateTime.Now) <= 0)
                         {
-                            criteriasToRepeat.RemoveAll(x => x.Id == criteria.Id);
+                            criteriasToRepeatDictionary.Remove(criteria);
                             continue;
                         }
 
@@ -64,7 +66,7 @@ namespace Flights
                             _flightsCommand.AddRange(flights);
                         }
 
-                        criteriasToRepeat.RemoveAll(x => x.Id == criteria.Id);
+                        criteriasToRepeatDictionary.Remove(criteria);
 
                         _logger.Info("Searching for flights completed without errors.");
                     }
@@ -72,14 +74,19 @@ namespace Flights
                     {
                         _logger.Error("I have to repeat search criteria with id [{0}]", criteria.Id);
                         _logger.Error(ex);
+                        
 
-                        if (criteriasToRepeat.Where(x => x.Id == criteria.Id).Count() == 0)
-                            criteriasToRepeat.Add(criteria);
+                        criteriasToRepeatDictionary[criteria] = criteriasToRepeatDictionary[criteria] + 1;
+                        if (criteriasToRepeatDictionary[criteria] == 5)
+                        {
+                            criteriasToRepeatDictionary.Remove(criteria);
+                            _logger.Warn("Retry count exceeded, skipping this search criteria...");
+                        }
                     }
                 }
 
-                criterias = criteriasToRepeat.ToList();
-                _logger.Info("Search criterias left: [{0}]", criterias.Count());
+                criteriasDictionary = criteriasToRepeatDictionary.ToDictionary(x => x.Key, x => x.Value);
+                _logger.Info("Search criterias left: [{0}]", criteriasDictionary.Count());
             }
             
             _logger.Info("Searching for the cheapest prices completed.");

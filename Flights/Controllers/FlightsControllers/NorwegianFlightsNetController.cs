@@ -8,7 +8,7 @@ using Flights.Dto;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 
-namespace Flights.FlightsControllers
+namespace Flights.Controllers.FlightsControllers
 {
     public class NorwegianFlightsNetController : IFlightsNetController
     {

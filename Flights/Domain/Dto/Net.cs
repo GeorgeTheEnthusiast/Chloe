@@ -21,7 +21,7 @@ namespace Flights.Domain.Dto
         public Nullable<System.DateTime> Created { get; set; }
     
         public virtual Carriers Carriers { get; set; }
-        public virtual Cities Cities { get; set; }
-        public virtual Cities Cities1 { get; set; }
+        public virtual Cities CitiesFrom { get; set; }
+        public virtual Cities CitiesTo { get; set; }
     }
 }

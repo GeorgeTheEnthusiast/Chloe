@@ -12,7 +12,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using FlightWebsite = Flights.Dto.Enums.FlightWebsite;
 
-namespace Flights.FlightsControllers
+namespace Flights.Controllers.FlightsControllers
 {
     public class WizzAirWebSiteController : IWebSiteController
     {

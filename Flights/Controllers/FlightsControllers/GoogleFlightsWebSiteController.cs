@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Dto;
 using Flights.Exceptions;
 using NLog;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 
-namespace Flights.FlightsControllers
+namespace Flights.Controllers.FlightsControllers
 {
     public class GoogleFlightsWebSiteController : IWebSiteController
     {

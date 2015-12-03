@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using Flights.Controllers.FlightsControllers;
+using Flights.Controllers.TimeTableComtrollers;
 using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using Flights.Exceptions;
-using Flights.FlightsControllers;
 using Flights.NBPCurrency;
 using Flights.Quartz;
 using OpenQA.Selenium;
@@ -59,6 +60,7 @@ namespace Flights
                 Component.For<IJob>().ImplementedBy(typeof(FlightMailingJob)),
                 Component.For<IJob>().ImplementedBy(typeof(FlightsNetJob)),
                 Component.For<IJob>().ImplementedBy(typeof(NBPCurrencyDownloaderJob)),
+                Component.For<IJob>().ImplementedBy(typeof(CreateTimeTableJob)),
                 Component.For<IJobFactory>().ImplementedBy(typeof(WindsorJobFactory)),
                 Component.For<IFlightMailingService>().ImplementedBy(typeof(FlightMailingService)),
                 Component.For<IFlightsNetController>().ImplementedBy(typeof(RyanAirFlightsNetController)),
@@ -78,7 +80,10 @@ namespace Flights
                 Component.For<ICarrierQuery>().ImplementedBy(typeof(CarrierQuery)),
                 Component.For<IXmlParser>().ImplementedBy(typeof(XmlParser)),
                 Component.For<IXmlDownloader>().ImplementedBy(typeof(XmlDownloader)),
-                Component.For<ICurrencySellRate>().ImplementedBy(typeof(CurrencySellRate))
+                Component.For<ICurrencySellRate>().ImplementedBy(typeof(CurrencySellRate)),
+                Component.For<ITimeTableConverter>().ImplementedBy(typeof(TimeTableConverter)),
+                Component.For<ITimeTableCommand>().ImplementedBy(typeof(TimeTableCommand)),
+                Component.For<ITimeTableController>().ImplementedBy(typeof(KrakowAirportTimeTableController))
                 );
         }
     }

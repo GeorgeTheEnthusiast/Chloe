@@ -12,10 +12,9 @@ using NLog;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
-using Quartz.Util;
 using FlightWebsite = Flights.Dto.Enums.FlightWebsite;
 
-namespace Flights.FlightsControllers
+namespace Flights.Controllers.FlightsControllers
 {
     public class RyanAirWebSiteController : IWebSiteController
     {

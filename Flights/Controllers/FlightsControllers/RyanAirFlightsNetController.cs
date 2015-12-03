@@ -9,7 +9,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 
-namespace Flights.FlightsControllers
+namespace Flights.Controllers.FlightsControllers
 {
     public class RyanAirFlightsNetController : IFlightsNetController
     {

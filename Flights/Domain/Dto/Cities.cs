@@ -17,10 +17,12 @@ namespace Flights.Domain.Dto
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Cities()
         {
-            this.Net = new HashSet<Net>();
-            this.Net1 = new HashSet<Net>();
-            this.SearchCriterias = new HashSet<SearchCriterias>();
-            this.SearchCriterias1 = new HashSet<SearchCriterias>();
+            this.Fk_Net_CityFrom = new HashSet<Net>();
+            this.Fk_Net_CityTo = new HashSet<Net>();
+            this.Fk_SearchCriterias_CityFrom = new HashSet<SearchCriterias>();
+            this.Fk_SearchCriterias_CityTo = new HashSet<SearchCriterias>();
+            this.Fk_TimeTable_CityFrom = new HashSet<TimeTable>();
+            this.Fk_TimeTable_CityTo = new HashSet<TimeTable>();
         }
     
         public int Id { get; set; }
@@ -29,12 +31,16 @@ namespace Flights.Domain.Dto
         public string Alias { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Net> Net { get; set; }
+        public virtual ICollection<Net> Fk_Net_CityFrom { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Net> Net1 { get; set; }
+        public virtual ICollection<Net> Fk_Net_CityTo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SearchCriterias> SearchCriterias { get; set; }
+        public virtual ICollection<SearchCriterias> Fk_SearchCriterias_CityFrom { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SearchCriterias> SearchCriterias1 { get; set; }
+        public virtual ICollection<SearchCriterias> Fk_SearchCriterias_CityTo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TimeTable> Fk_TimeTable_CityFrom { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TimeTable> Fk_TimeTable_CityTo { get; set; }
     }
 }
