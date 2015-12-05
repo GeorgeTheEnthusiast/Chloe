@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Flights.Controllers.FlightsControllers;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
+using Flights.Dto;
 using NLog;
 using OpenQA.Selenium;
 using Quartz;
@@ -18,44 +20,117 @@ namespace Flights.Quartz
     [DisallowConcurrentExecution]
     public class SearchFlightsJob : IJob
     {
-        private readonly IFlightSearchController _flightSearchController;
+        private readonly IFlightsCommand _flightsCommand;
+        private readonly ISearchCriteriaQuery _searchCriteriaQuery;
+        private IWebSiteController[] _webSiteControllers;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public SearchFlightsJob(IFlightSearchController flightSearchController)
+        public SearchFlightsJob(IFlightsCommand flightsCommand,
+            ISearchCriteriaQuery searchCriteriaQuery)
         {
-            if (flightSearchController == null) throw new ArgumentNullException("flightSearchController");
+            if (flightsCommand == null) throw new ArgumentNullException("flightsCommand");
+            if (searchCriteriaQuery == null) throw new ArgumentNullException("searchCriteriaQuery");
 
-            _flightSearchController = flightSearchController;
+            _flightsCommand = flightsCommand;
+            _searchCriteriaQuery = searchCriteriaQuery;
+            _webSiteControllers = Bootstrapper.Container.ResolveAll<IWebSiteController>();
         }
 
         public void Execute(IJobExecutionContext context)
         {
             try
             {
-                _flightSearchController.StartSearch();
+                _logger.Info("Searching for the cheapest prices...");
 
-                ISchedulerFactory schedFact = new StdSchedulerFactory();
+                IEnumerable<SearchCriteria> criterias = _searchCriteriaQuery.GetAllSearchCriterias();
+                //List<SearchCriteria> criteriasToRepeat = criterias.ToList();
+                Dictionary<SearchCriteria, int> criteriasDictionary = criterias.ToDictionary(x => x, x => 1);
+                Dictionary<SearchCriteria, int> criteriasToRepeatDictionary = criterias.ToDictionary(x => x, x => 1);
 
-                IScheduler sched = schedFact.GetScheduler();
-                sched.JobFactory = Bootstrapper.Container.Resolve<IJobFactory>();
-                sched.Start();
+                while (criteriasDictionary.Any())
+                {
+                    foreach (var criteria in criteriasDictionary.Keys)
+                    {
+                        try
+                        {
+                            _logger.Info("Searching on {0} flights with departure day {1} from {2} to {3}...", criteria.FlightWebsite.Name, criteria.DepartureDate.ToShortDateString(), criteria.CityFrom.Name, criteria.CityTo.Name);
 
-                IJobDetail job = JobBuilder.Create<FlightMailingJob>()
-                    .WithIdentity("mailingJob")
-                    .Build();
+                            if (DateTime.Compare(criteria.DepartureDate, DateTime.Now) <= 0)
+                            {
+                                criteriasToRepeatDictionary.Remove(criteria);
+                                continue;
+                            }
 
-                ITrigger trigger = TriggerBuilder.Create()
-                    .WithIdentity("start_now_Trigger")
-                    .StartNow()
-                    .Build();
+                            List<Flight> flights = new List<Flight>();
 
-                sched.ScheduleJob(job, trigger);
+                            foreach (var webSiteController in _webSiteControllers)
+                            {
+                                flights.AddRange(webSiteController.GetFlights(criteria));
+                            }
+
+                            DeleteOldFlights(criteria);
+                            _flightsCommand.AddRange(flights);
+                            criteriasToRepeatDictionary.Remove(criteria);
+
+                            _logger.Info("Searching for flights completed without errors.");
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error("I have to repeat search criteria with id [{0}]", criteria.Id);
+                            _logger.Error(ex);
+
+
+                            criteriasToRepeatDictionary[criteria] = criteriasToRepeatDictionary[criteria] + 1;
+                            if (criteriasToRepeatDictionary[criteria] == 5)
+                            {
+                                criteriasToRepeatDictionary.Remove(criteria);
+                                _logger.Warn("Retry count exceeded, skipping this search criteria...");
+                            }
+                        }
+                    }
+
+                    criteriasDictionary = criteriasToRepeatDictionary.ToDictionary(x => x.Key, x => x.Value);
+                    _logger.Info("Search criterias left: [{0}]", criteriasDictionary.Count());
+                }
+
+                _logger.Info("Searching for the cheapest prices completed.");
+                
+                StartMailJob();
             }
             catch (Exception ex)
             {
                 _logger.Info("Error searching the flights!");
                 _logger.Error(ex);
             }
+        }
+
+        private void StartMailJob()
+        {
+            ISchedulerFactory schedFact = new StdSchedulerFactory();
+
+            IScheduler sched = schedFact.GetScheduler();
+            sched.JobFactory = Bootstrapper.Container.Resolve<IJobFactory>();
+            sched.Start();
+
+            IJobDetail job = JobBuilder.Create<FlightMailingJob>()
+                .WithIdentity("mailingJob")
+                .Build();
+
+            ITrigger trigger = TriggerBuilder.Create()
+                .WithIdentity("start_now_Trigger")
+                .StartNow()
+                .Build();
+
+            sched.ScheduleJob(job, trigger);
+        }
+
+        private void DeleteOldFlights(SearchCriteria searchCriteria)
+        {
+            _logger.Debug("Deleting old records from today for search criteria id [{0}]...", searchCriteria.Id);
+
+            _flightsCommand.DeleteFlightsBySearchCriteria(searchCriteria);
+
+            _logger.Debug("Deleting old records from today for search criteria id [{0}] completed...", searchCriteria.Id);
         }
     }
 }

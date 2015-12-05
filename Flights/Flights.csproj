@@ -124,8 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Controllers\TimeTableComtrollers\ITimeTableController.cs" />
-    <Compile Include="Controllers\TimeTableComtrollers\KrakowAirportTimeTableController.cs" />
+    <Compile Include="Controllers\TimeTableControllers\ITimeTableController.cs" />
+    <Compile Include="Controllers\TimeTableControllers\KrakowAirportTimeTableController.cs" />
     <Compile Include="Converters\CarrierConverter.cs" />
     <Compile Include="Converters\FlightWebsiteConverter.cs" />
     <Compile Include="Converters\CommonConverters.cs" />
@@ -250,14 +250,12 @@
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Exceptions\FlightsPageIsNotLoadedCorrectlyException.cs" />
     <Compile Include="Exceptions\InputWasNotFilledCorrectlyException.cs" />
-    <Compile Include="FlightMailingService.cs" />
     <Compile Include="Flights.NtService.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Flights.NtService.Designer.cs">
       <DependentUpon>Flights.NtService.cs</DependentUpon>
     </Compile>
-    <Compile Include="FlightSearchController.cs" />
     <Compile Include="NBPCurrency\CurrencySellRate.cs" />
     <Compile Include="NBPCurrency\ICurrencySellRate.cs" />
     <Compile Include="NBPCurrency\IXmlDownloader.cs" />
@@ -270,8 +268,6 @@
     <Compile Include="Controllers\FlightsControllers\NorwegianFlightsNetController.cs" />
     <Compile Include="Controllers\FlightsControllers\WizzAirFlightsNetController.cs" />
     <Compile Include="Controllers\FlightsControllers\RyanAirFlightsNetController.cs" />
-    <Compile Include="IFlightMailingService.cs" />
-    <Compile Include="IFlightSearchController.cs" />
     <Compile Include="Controllers\FlightsControllers\IFlightsNetController.cs" />
     <Compile Include="Controllers\FlightsControllers\IWebSiteController.cs" />
     <Compile Include="Program.cs" />

@@ -241,12 +241,15 @@ namespace Flights.Controllers.FlightsControllers
             switch (flightType)
             {
                 case "fareCalDayDirect":
+                case "fareCalDayDirectSelected":
                 case "fareCalDayDirectLowest":
+                case "fareCalDayDirectLowestSelected":
                     result.IsDirect = true;
                     break;
                 case "fareCalDayTransit":
                 case "fareCalDayTransitSelected":
                 case "fareCalDayTransitLowest":
+                case "fareCalDayTransitLowestSelected":
                     result.IsDirect = false;
                     break;
                 case "fareCalNoDay":
@@ -255,7 +258,7 @@ namespace Flights.Controllers.FlightsControllers
                 case "fareCalHistory":
                     return null;
                 default:
-                    throw new NotSupportedException("This type of day is not supported!");
+                    throw new NotSupportedException(string.Format("This type of day [{0}] is not supported!", flightType));
             }
             
             string onClickValue = flightWebElement.GetAttribute("onclick");

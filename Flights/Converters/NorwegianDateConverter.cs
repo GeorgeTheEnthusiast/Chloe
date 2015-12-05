@@ -50,7 +50,7 @@ namespace Flights.Converters
                 case "grudnia":
                     return 12;
                 default:
-                    throw new NotSupportedException("This date is not suppported!");
+                    throw new NotSupportedException(string.Format("This date [{0}] is not suppported!", text));
             }
         }
     }

@@ -40,14 +40,14 @@ namespace Flights.NBPCurrency
                     currencyCode = "EUR";
                     break;
                 default:
-                    throw new NotSupportedException("Ta waluta nie jest obsługiwana!");
+                    throw new NotSupportedException(string.Format("This currency [{0}] is not supported!", currency.Name));
             }
 
             var nok = tabelaKursow.pozycja
                         .FirstOrDefault(x => x.kod_waluty.Trim() == currencyCode);
 
             if (nok == null)
-                throw new NotSupportedException("Ta waluta nie znajduje się w danych od NBP!");
+                throw new NotSupportedException(string.Format("This currency [{0}] is not present in the NBP data!", currencyCode));
 
             nok.kurs_sredni = nok.kurs_sredni.Replace(',', '.');
             nok.przelicznik = nok.przelicznik.Replace(',', '.');

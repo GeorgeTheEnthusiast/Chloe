@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Flights.Controllers.TimeTableComtrollers;
+using Flights.Controllers.TimeTableControllers;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
 using NLog;

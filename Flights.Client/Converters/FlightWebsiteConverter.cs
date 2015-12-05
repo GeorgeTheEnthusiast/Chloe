@@ -23,7 +23,7 @@ namespace Flights.Client.Converters
                 case 3:
                     return flightDataSet.Carriers.Where(x => x.Id == 106).FirstOrDefault();
                 default:
-                    throw new NotSupportedException("This flight website is not supported!");
+                    throw new NotSupportedException(string.Format("This flight website [{0}] is not supported!", websitesRow.Id));
             }
         }
     }

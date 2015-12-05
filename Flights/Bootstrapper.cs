@@ -7,7 +7,7 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Flights.Controllers.FlightsControllers;
-using Flights.Controllers.TimeTableComtrollers;
+using Flights.Controllers.TimeTableControllers;
 using Flights.Converters;
 using Flights.Domain.Command;
 using Flights.Domain.Query;
@@ -55,14 +55,12 @@ namespace Flights
                 Component.For<IWizzAirCalendarConverter>().ImplementedBy(typeof(WizzAirCalendarConverter)),
                 Component.For<IFlightsQuery>().ImplementedBy(typeof(FlightsQuery)),
                 Component.For<INotificationReceiversConverter>().ImplementedBy(typeof(NotificationReceiversConverter)),
-                Component.For<IFlightSearchController>().ImplementedBy(typeof(FlightSearchController)),
                 Component.For<IJob>().ImplementedBy(typeof(SearchFlightsJob)),
                 Component.For<IJob>().ImplementedBy(typeof(FlightMailingJob)),
                 Component.For<IJob>().ImplementedBy(typeof(FlightsNetJob)),
                 Component.For<IJob>().ImplementedBy(typeof(NBPCurrencyDownloaderJob)),
                 Component.For<IJob>().ImplementedBy(typeof(CreateTimeTableJob)),
                 Component.For<IJobFactory>().ImplementedBy(typeof(WindsorJobFactory)),
-                Component.For<IFlightMailingService>().ImplementedBy(typeof(FlightMailingService)),
                 Component.For<IFlightsNetController>().ImplementedBy(typeof(RyanAirFlightsNetController)),
                 Component.For<INetCommand>().ImplementedBy(typeof(NetCommand)),
                 Component.For<INetConverter>().ImplementedBy(typeof(NetConverter)),

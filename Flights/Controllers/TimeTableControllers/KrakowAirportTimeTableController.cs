@@ -12,7 +12,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using FlightWebsite = Flights.Dto.Enums.FlightWebsite;
 
-namespace Flights.Controllers.TimeTableComtrollers
+namespace Flights.Controllers.TimeTableControllers
 {
     public class KrakowAirportTimeTableController : ITimeTableController
     {

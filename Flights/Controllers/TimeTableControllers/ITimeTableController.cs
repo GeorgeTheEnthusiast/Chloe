@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Flights.Dto;
 
-namespace Flights.Controllers.TimeTableComtrollers
+namespace Flights.Controllers.TimeTableControllers
 {
     public interface ITimeTableController
     {
