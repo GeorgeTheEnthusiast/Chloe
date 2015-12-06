@@ -18,14 +18,14 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.Carriers, FlightsDto.Carrier>();
         }
         
-        public FlightsDomain.Carriers Convert(FlightsDto.Carrier carrier)
+        public FlightsDomain.Carriers Convert(FlightsDto.Carrier input)
         {
-            return Mapper.Map<FlightsDomain.Carriers>(carrier);
+            return Mapper.Map<FlightsDomain.Carriers>(input);
         }
 
-        public FlightsDto.Carrier Convert(FlightsDomain.Carriers carriers)
+        public FlightsDto.Carrier Convert(FlightsDomain.Carriers input)
         {
-            return Mapper.Map<FlightsDto.Carrier>(carriers);
+            return Mapper.Map<FlightsDto.Carrier>(input);
         }
     }
 }

@@ -28,6 +28,10 @@
         <AssociationConnector Association="FlightsModel.FK_NotificationReceiversGroups_NotificationReceivers" ManuallyRouted="false" />
         <AssociationConnector Association="FlightsModel.FK_NotificationReceiversGroups_ReceiverGroups" ManuallyRouted="false" />
         <AssociationConnector Association="FlightsModel.FK_SearchCriterias_ReceiverGroups" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="FlightsModel.TimeTable" Width="1.5" PointX="9.375" PointY="0.625" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTable_Carriers" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTable_CitiesFrom" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTable_CitiesTo" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

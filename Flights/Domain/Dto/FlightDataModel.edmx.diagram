@@ -15,7 +15,6 @@
         <EntityTypeShape EntityType="FlightsModel.NotificationReceiversGroups" Width="1.5" PointX="3.625" PointY="7" IsExpanded="true" />
         <EntityTypeShape EntityType="FlightsModel.ReceiverGroups" Width="1.5" PointX="3.625" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="FlightsModel.SearchCriterias" Width="1.5" PointX="6" PointY="4.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="FlightsModel.SearchCriteria_View" Width="1.5" PointX="0.75" PointY="8" IsExpanded="true" />
         <AssociationConnector Association="FlightsModel.FK_Flights_Carriers" ManuallyRouted="false" />
         <AssociationConnector Association="FlightsModel.FK_Net_Carriers" ManuallyRouted="false" />
         <AssociationConnector Association="FlightsModel.FK_Net_CitiesFrom" ManuallyRouted="false" />
@@ -32,6 +31,7 @@
         <AssociationConnector Association="FlightsModel.FK_TimeTable_Carriers" />
         <AssociationConnector Association="FlightsModel.FK_TimeTable_CitiesFrom" />
         <AssociationConnector Association="FlightsModel.FK_TimeTable_CitiesTo" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTable_FlightWebsites" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

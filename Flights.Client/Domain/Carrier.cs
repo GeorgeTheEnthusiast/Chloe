@@ -19,6 +19,7 @@ namespace Flights.Client.Domain
         {
             this.Flights = new HashSet<Flight>();
             this.Nets = new HashSet<Net>();
+            this.TimeTables = new HashSet<TimeTable>();
         }
     
         public int Id { get; set; }
@@ -29,5 +30,7 @@ namespace Flights.Client.Domain
         public virtual ICollection<Flight> Flights { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Net> Nets { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TimeTable> TimeTables { get; set; }
     }
 }

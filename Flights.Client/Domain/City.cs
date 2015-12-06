@@ -21,6 +21,8 @@ namespace Flights.Client.Domain
             this.Nets1 = new HashSet<Net>();
             this.SearchCriterias = new HashSet<SearchCriteria>();
             this.SearchCriterias1 = new HashSet<SearchCriteria>();
+            this.TimeTables = new HashSet<TimeTable>();
+            this.TimeTables1 = new HashSet<TimeTable>();
         }
     
         public int Id { get; set; }
@@ -36,5 +38,9 @@ namespace Flights.Client.Domain
         public virtual ICollection<SearchCriteria> SearchCriterias { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SearchCriteria> SearchCriterias1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TimeTable> TimeTables { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TimeTable> TimeTables1 { get; set; }
     }
 }

@@ -14,10 +14,10 @@ namespace Flights.Client.Domain
     
     public partial class SearchCriteria_View
     {
-        public System.DateTime Data_wylotu { get; set; }
         public string Nazwa { get; set; }
         public string Do { get; set; }
         public string Od { get; set; }
-        public string Przewoźnik { get; set; }
+        public System.DateTime DataWylotu { get; set; }
+        public string Strona { get; set; }
     }
 }

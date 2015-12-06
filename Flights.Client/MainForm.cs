@@ -19,8 +19,8 @@ namespace Flights.Client
 
         private void buttonSearchCriterias_Click(object sender, EventArgs e)
         {
-            SearchCriteriaForm searchCriteriaForm = new SearchCriteriaForm();
-            searchCriteriaForm.ShowDialog();
+            SearchCriteriaListForm form = new SearchCriteriaListForm();
+            form.ShowDialog();
         }
     }
 }

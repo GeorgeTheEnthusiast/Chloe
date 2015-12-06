@@ -10,8 +10,8 @@ namespace Flights.Converters
 {
     public interface ICityConverter
     {
-        FlightsDomain.Cities Convert(FlightsDto.City currency);
+        FlightsDomain.Cities Convert(FlightsDto.City input);
 
-        FlightsDto.City Convert(FlightsDomain.Cities currency);
+        FlightsDto.City Convert(FlightsDomain.Cities input);
     }
 }

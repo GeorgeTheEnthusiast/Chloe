@@ -10,10 +10,10 @@ namespace Flights.Converters
 {
     public class NorwegianDateConverter : INorwegianDateConverter
     {
-        public DateTime Convert(string norwegianPrintedDate)
+        public DateTime Convert(string input)
         {
-            norwegianPrintedDate = norwegianPrintedDate.Trim();
-            string[] dateSplitted = norwegianPrintedDate.Split(' ');
+            input = input.Trim();
+            string[] dateSplitted = input.Split(' ');
 
             int year = int.Parse(dateSplitted[1]);
             int month = ConvertMonth(dateSplitted[0]);
@@ -21,9 +21,9 @@ namespace Flights.Converters
             return new DateTime(year, month, 01);
         }
 
-        private int ConvertMonth(string text)
+        private int ConvertMonth(string input)
         {
-            switch (text)
+            switch (input)
             {
                 case "stycznia":
                     return 1;
@@ -50,7 +50,7 @@ namespace Flights.Converters
                 case "grudnia":
                     return 12;
                 default:
-                    throw new NotSupportedException(string.Format("This date [{0}] is not suppported!", text));
+                    throw new NotSupportedException(string.Format("This date [{0}] is not suppported!", input));
             }
         }
     }

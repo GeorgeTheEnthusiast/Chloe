@@ -81,7 +81,9 @@ namespace Flights
                 Component.For<ICurrencySellRate>().ImplementedBy(typeof(CurrencySellRate)),
                 Component.For<ITimeTableConverter>().ImplementedBy(typeof(TimeTableConverter)),
                 Component.For<ITimeTableCommand>().ImplementedBy(typeof(TimeTableCommand)),
-                Component.For<ITimeTableController>().ImplementedBy(typeof(KrakowAirportTimeTableController))
+                //Component.For<ITimeTableController>().ImplementedBy(typeof(KrakowAirportTimeTableController)),
+                Component.For<ITimeTablePeriodConverter>().ImplementedBy(typeof(TimeTablePeriodConverter)),
+                Component.For<ITimeTableController>().ImplementedBy(typeof(WizzAirTimeTableController))
                 );
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Flights.Client
 {
-    partial class SearchCriteriaForm
+    partial class SearchCriteriaAddForm
     {
         /// <summary>
         /// Required designer variable.

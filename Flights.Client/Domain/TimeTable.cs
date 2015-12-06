@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Flights.Domain.Dto
+namespace Flights.Client.Domain
 {
     using System;
     using System.Collections.Generic;
@@ -20,11 +20,9 @@ namespace Flights.Domain.Dto
         public int CityFrom_Id { get; set; }
         public int CityTo_Id { get; set; }
         public System.DateTime ArrivalDate { get; set; }
-        public int FlightWebsites_Id { get; set; }
     
-        public virtual Carriers Carriers { get; set; }
-        public virtual Cities CitiesFrom { get; set; }
-        public virtual Cities CitiesTo { get; set; }
-        public virtual FlightWebsites FlightWebsites { get; set; }
+        public virtual Carrier Carrier { get; set; }
+        public virtual City City { get; set; }
+        public virtual City City1 { get; set; }
     }
 }

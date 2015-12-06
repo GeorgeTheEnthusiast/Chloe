@@ -8,9 +8,9 @@ namespace Flights.Converters
 {
     public class CommonConverters : ICommonConverters
     {
-        public string ConvertBoolToYesNo(bool value)
+        public string ConvertBoolToYesNo(bool input)
         {
-            if (value)
+            if (input)
                 return "Tak";
             else
                 return "Nie";

@@ -125,16 +125,19 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controllers\TimeTableControllers\ITimeTableController.cs" />
+    <Compile Include="Controllers\TimeTableControllers\WizzAirTimeTableController.cs" />
     <Compile Include="Controllers\TimeTableControllers\KrakowAirportTimeTableController.cs" />
     <Compile Include="Converters\CarrierConverter.cs" />
     <Compile Include="Converters\FlightWebsiteConverter.cs" />
     <Compile Include="Converters\CommonConverters.cs" />
     <Compile Include="Converters\ICarrierConverter.cs" />
     <Compile Include="Converters\ICommonConverters.cs" />
+    <Compile Include="Converters\ITimeTablePeriodConverter.cs" />
     <Compile Include="Converters\ITimeTableConverter.cs" />
     <Compile Include="Converters\INetConverter.cs" />
     <Compile Include="Converters\INorwegianDateConverter.cs" />
     <Compile Include="Converters\INotificationReceiversGroupsConverter.cs" />
+    <Compile Include="Converters\TimeTablePeriodConverter.cs" />
     <Compile Include="Converters\TimeTableConverter.cs" />
     <Compile Include="Converters\NetConverter.cs" />
     <Compile Include="Converters\CityConverter.cs" />
@@ -209,9 +212,6 @@
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Domain\Dto\SearchCriterias.cs">
-      <DependentUpon>FlightDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Domain\Dto\SearchCriteria_View.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Domain\Dto\TimeTable.cs">

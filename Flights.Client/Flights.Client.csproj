@@ -110,6 +110,9 @@
     <Compile Include="Domain\SearchCriteria_View.cs">
       <DependentUpon>FlightDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Domain\TimeTable.cs">
+      <DependentUpon>FlightDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="FlightsDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -129,11 +132,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchCriteriaForm.cs">
+    <Compile Include="SearchCriteriaAddForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SearchCriteriaForm.Designer.cs">
-      <DependentUpon>SearchCriteriaForm.cs</DependentUpon>
+    <Compile Include="SearchCriteriaAddForm.Designer.cs">
+      <DependentUpon>SearchCriteriaAddForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchCriteriaListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchCriteriaListForm.Designer.cs">
+      <DependentUpon>SearchCriteriaListForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="GroupsForm.resx">
       <DependentUpon>GroupsForm.cs</DependentUpon>
@@ -151,8 +160,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SearchCriteriaForm.resx">
-      <DependentUpon>SearchCriteriaForm.cs</DependentUpon>
+    <EmbeddedResource Include="SearchCriteriaAddForm.resx">
+      <DependentUpon>SearchCriteriaAddForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchCriteriaListForm.resx">
+      <DependentUpon>SearchCriteriaListForm.cs</DependentUpon>
     </EmbeddedResource>
     <EntityDeploy Include="Domain\FlightDataModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>

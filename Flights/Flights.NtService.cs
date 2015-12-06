@@ -60,7 +60,7 @@ namespace Flights
                 //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(15, 00))
                 .Build();
             
-            sched.ScheduleJob(searchJob, searchTrigger);
+            //sched.ScheduleJob(searchJob, searchTrigger);
             
             IJobDetail netjob = JobBuilder.Create<FlightsNetJob>()
                 .WithIdentity("FlightsNetJob")
@@ -84,19 +84,19 @@ namespace Flights
                 //.WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 16, 00))
                 .Build();
             
-            sched.ScheduleJob(nbpCurrencyjob, nbpCurrencyTrigger);
+            //sched.ScheduleJob(nbpCurrencyjob, nbpCurrencyTrigger);
 
-            //                        IJobDetail timeTableJob = JobBuilder.Create<CreateTimeTableJob>()
-            //                            .WithIdentity("CreateTimeTableJob")
-            //                            .Build();
-            //            
-            //                        ITrigger timeTableTrigger = TriggerBuilder.Create()
-            //                            .WithIdentity("monthly_3pm_Trigger")
-            //                            .StartNow()
-            //                            //.WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(01, 00, 00))
-            //                            .Build();
-            //            
-            //                        sched.ScheduleJob(timeTableJob, timeTableTrigger);
+            IJobDetail timeTableJob = JobBuilder.Create<CreateTimeTableJob>()
+                .WithIdentity("CreateTimeTableJob")
+                .Build();
+                        
+            ITrigger timeTableTrigger = TriggerBuilder.Create()
+                .WithIdentity("monthly_3pm_Trigger")
+                .StartNow()
+                //.WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(01, 00, 00))
+                .Build();
+                        
+            sched.ScheduleJob(timeTableJob, timeTableTrigger);
         }
     }
 }

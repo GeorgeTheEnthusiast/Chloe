@@ -9,6 +9,6 @@ namespace Flights.Domain.Command
 {
     public interface ICitiesCommand
     {
-        FlightsDto.City Merge(FlightsDto.City currency);
+        FlightsDto.City Merge(FlightsDto.City city);
     }
 }

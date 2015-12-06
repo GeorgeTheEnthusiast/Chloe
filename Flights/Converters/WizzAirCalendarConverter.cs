@@ -8,9 +8,9 @@ namespace Flights.Converters
 {
     public class WizzAirCalendarConverter : IWizzAirCalendarConverter
     {
-        public int ConvertMonth(string text)
+        public int ConvertMonth(string input)
         {
-            switch (text)
+            switch (input)
             {
                 case "Styczeń":
                     return 1;
@@ -37,7 +37,7 @@ namespace Flights.Converters
                 case "Grudzień":
                     return 12;
                 default:
-                    throw new NotSupportedException();
+                    throw new NotSupportedException(string.Format("This month [{0}] is not supported!", input));
             }
         }
     }

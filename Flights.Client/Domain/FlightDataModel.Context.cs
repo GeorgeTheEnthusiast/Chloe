@@ -36,5 +36,6 @@ namespace Flights.Client.Domain
         public virtual DbSet<ReceiverGroup> ReceiverGroups { get; set; }
         public virtual DbSet<SearchCriteria> SearchCriterias { get; set; }
         public virtual DbSet<SearchCriteria_View> SearchCriteria_View { get; set; }
+        public virtual DbSet<TimeTable> TimeTables { get; set; }
     }
 }

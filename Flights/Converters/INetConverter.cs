@@ -10,8 +10,8 @@ namespace Flights.Converters
 {
     public interface INetConverter
     {
-        FlightsDomain.Net Convert(FlightsDto.Net net);
+        FlightsDomain.Net Convert(FlightsDto.Net input);
 
-        FlightsDto.Net Convert(FlightsDomain.Net net);
+        FlightsDto.Net Convert(FlightsDomain.Net input);
     }
 }

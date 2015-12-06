@@ -8,10 +8,8 @@ using FlightsDto = Flights.Dto;
 
 namespace Flights.Converters
 {
-    public interface ICarrierConverter
+    public interface ITimeTablePeriodConverter
     {
-        FlightsDomain.Carriers Convert(FlightsDto.Carrier input);
-
-        FlightsDto.Carrier Convert(FlightsDomain.Carriers input);
+        IEnumerable<DateTime> Convert(IEnumerable<int> daysInWeek, DateTime dateFrom, DateTime dateTo);
     }
 }

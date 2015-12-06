@@ -9,6 +9,6 @@ namespace Flights.Converters
 {
     public interface IRyanAirDateConverter
     {
-        DateTime Convert(DateTime dateToMergeWith, string ryanAirDate);
+        DateTime Convert(DateTime dateToMergeWith, string input);
     }
 }

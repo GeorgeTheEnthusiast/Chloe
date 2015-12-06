@@ -26,10 +26,16 @@ namespace Flights.Domain.Command
 
             using (FlightsDomain.FlightsEntities flightsEntities = new FlightsDomain.FlightsEntities())
             {
-                FlightsDomain.TimeTable domainTimeTable = _timeTableConverter.Convert(timeTable);
-
                 var existedTimeTable = flightsEntities.TimeTable
-                    .Where(x => CompareDtoToDomain(timeTable, x))
+                    .Where(x => timeTable.Carrier.Id == x.Carrier_Id
+                   && timeTable.CityFrom.Id == x.CityFrom_Id
+                   && timeTable.CityTo.Id == x.CityTo_Id
+                   && timeTable.DepartureDate.Year == x.DepartureDate.Year
+                   && timeTable.DepartureDate.Month == x.DepartureDate.Month
+                   && timeTable.DepartureDate.Day == x.DepartureDate.Day
+                   && timeTable.DepartureDate.Hour == x.DepartureDate.Hour
+                   && timeTable.DepartureDate.Minute == x.DepartureDate.Minute
+                   && timeTable.DepartureDate.Second == x.DepartureDate.Second)
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
 
@@ -39,17 +45,24 @@ namespace Flights.Domain.Command
 
                     return result;
                 }
-                
-                domainTimeTable = flightsEntities.TimeTable.Add(domainTimeTable);
+
+                FlightsDomain.TimeTable domainTimeTable = _timeTableConverter.Convert(timeTable);
+                flightsEntities.TimeTable.Add(domainTimeTable);
                 flightsEntities.SaveChanges();
             }
 
             using (FlightsDomain.FlightsEntities flightsEntities = new FlightsDomain.FlightsEntities())
             {
-                FlightsDomain.TimeTable domainTimeTable = _timeTableConverter.Convert(timeTable);
-
                 var existedTimeTable = flightsEntities.TimeTable
-                    .Where(x => CompareDtoToDomain(timeTable, x))
+                    .Where(x => timeTable.Carrier.Id == x.Carrier_Id
+                   && timeTable.CityFrom.Id == x.CityFrom_Id
+                   && timeTable.CityTo.Id == x.CityTo_Id
+                   && timeTable.DepartureDate.Year == x.DepartureDate.Year
+                   && timeTable.DepartureDate.Month == x.DepartureDate.Month
+                   && timeTable.DepartureDate.Day == x.DepartureDate.Day
+                   && timeTable.DepartureDate.Hour == x.DepartureDate.Hour
+                   && timeTable.DepartureDate.Minute == x.DepartureDate.Minute
+                   && timeTable.DepartureDate.Second == x.DepartureDate.Second)
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
 
@@ -58,19 +71,6 @@ namespace Flights.Domain.Command
 
                 return result;
             }
-        }
-
-        private bool CompareDtoToDomain(FlightsDto.TimeTable dtoTimeTable, FlightsDomain.TimeTable domainTimeTable)
-        {
-            return dtoTimeTable.Carrier.Id == domainTimeTable.Carrier_Id
-                   && dtoTimeTable.CityFrom.Id == domainTimeTable.CityFrom_Id
-                   && dtoTimeTable.CityTo.Id == domainTimeTable.CityTo_Id
-                   && dtoTimeTable.DepartureDate.Year == domainTimeTable.DepartureDate.Year
-                   && dtoTimeTable.DepartureDate.Month == domainTimeTable.DepartureDate.Month
-                   && dtoTimeTable.DepartureDate.Day == domainTimeTable.DepartureDate.Day
-                   && dtoTimeTable.DepartureDate.Hour == domainTimeTable.DepartureDate.Hour
-                   && dtoTimeTable.DepartureDate.Minute == domainTimeTable.DepartureDate.Minute
-                   && dtoTimeTable.DepartureDate.Second == domainTimeTable.DepartureDate.Second;
         }
     }
 }

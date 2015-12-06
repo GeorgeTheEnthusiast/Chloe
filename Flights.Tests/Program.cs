@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flights.Converters
+namespace Flights.Tests
 {
-    public interface IWizzAirCalendarConverter
+    static class Program
     {
-        int ConvertMonth(string input);
+        private static void Main()
+        {
+        }
     }
 }

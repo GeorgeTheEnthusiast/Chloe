@@ -10,8 +10,8 @@ namespace Flights.Converters
 {
     public interface ISearchCriteriaConverter
     {
-        FlightDto.SearchCriteria Convert(FlightDomain.SearchCriterias searchCriteria);
+        FlightDto.SearchCriteria Convert(FlightDomain.SearchCriterias input);
 
-        IEnumerable<FlightDto.SearchCriteria> Convert(IEnumerable<FlightDomain.SearchCriterias> searchCriteria);
+        IEnumerable<FlightDto.SearchCriteria> Convert(IEnumerable<FlightDomain.SearchCriterias> input);
     }
 }

@@ -18,14 +18,14 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.Net, FlightsDto.Net>();
         }
         
-        public FlightsDomain.Net Convert(FlightsDto.Net net)
+        public FlightsDomain.Net Convert(FlightsDto.Net input)
         {
-            return Mapper.Map<FlightsDomain.Net>(net);
+            return Mapper.Map<FlightsDomain.Net>(input);
         }
 
-        public FlightsDto.Net Convert(FlightsDomain.Net net)
+        public FlightsDto.Net Convert(FlightsDomain.Net input)
         {
-            return Mapper.Map<FlightsDto.Net>(net);
+            return Mapper.Map<FlightsDto.Net>(input);
         }
     }
 }

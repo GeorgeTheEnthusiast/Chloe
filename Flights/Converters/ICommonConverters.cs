@@ -10,6 +10,6 @@ namespace Flights.Converters
 {
     public interface ICommonConverters
     {
-        string ConvertBoolToYesNo(bool value);
+        string ConvertBoolToYesNo(bool input);
     }
 }

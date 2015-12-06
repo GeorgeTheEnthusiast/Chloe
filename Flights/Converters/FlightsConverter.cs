@@ -48,24 +48,24 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.FlightWebsites, FlightsDto.FlightWebsite>();
         }
 
-        public FlightsDomain.Flights Convert(FlightsDto.Flight flight)
+        public FlightsDomain.Flights Convert(FlightsDto.Flight input)
         {
-            return Mapper.Map<FlightsDomain.Flights>(flight);
+            return Mapper.Map<FlightsDomain.Flights>(input);
         }
 
-        public IEnumerable<FlightsDto.Flight> Convert(IEnumerable<FlightsDomain.Flights> flights)
+        public IEnumerable<FlightsDto.Flight> Convert(IEnumerable<FlightsDomain.Flights> input)
         {
-            return Mapper.Map<IEnumerable<FlightsDto.Flight>>(flights);
+            return Mapper.Map<IEnumerable<FlightsDto.Flight>>(input);
         }
 
-        public IEnumerable<FlightsDomain.Flights> Convert(IEnumerable<FlightsDto.Flight> flights)
+        public IEnumerable<FlightsDomain.Flights> Convert(IEnumerable<FlightsDto.Flight> input)
         {
-            return Mapper.Map<IEnumerable<FlightsDomain.Flights>>(flights);
+            return Mapper.Map<IEnumerable<FlightsDomain.Flights>>(input);
         }
 
-        public IEnumerable<FlightsDto.Flight> Convert(DbSet<FlightsDomain.Flights> flights)
+        public IEnumerable<FlightsDto.Flight> Convert(DbSet<FlightsDomain.Flights> input)
         {
-            return Mapper.Map<DbSet<FlightsDto.Flight>>(flights);
+            return Mapper.Map<DbSet<FlightsDto.Flight>>(input);
         }
     }
 }

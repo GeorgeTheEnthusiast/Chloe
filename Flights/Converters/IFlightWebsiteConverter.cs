@@ -11,12 +11,12 @@ namespace Flights.Converters
 {
     public interface IFlightWebsiteConverter
     {
-        FlightsDomain.FlightWebsites Convert(FlightsDto.FlightWebsite flightWebsite);
+        FlightsDomain.FlightWebsites Convert(FlightsDto.FlightWebsite input);
 
-        FlightsDto.FlightWebsite Convert(FlightsDomain.FlightWebsites flightWebsites);
+        FlightsDto.FlightWebsite Convert(FlightsDomain.FlightWebsites input);
 
-        IEnumerable<FlightsDto.FlightWebsite> Convert(IEnumerable<FlightsDomain.FlightWebsites> flightWebsites);
+        IEnumerable<FlightsDto.FlightWebsite> Convert(IEnumerable<FlightsDomain.FlightWebsites> input);
 
-        IEnumerable<FlightsDto.FlightWebsite> Convert(DbSet<FlightsDomain.FlightWebsites> flightWebsites);
+        IEnumerable<FlightsDto.FlightWebsite> Convert(DbSet<FlightsDomain.FlightWebsites> input);
     }
 }

@@ -13,15 +13,13 @@ namespace Flights.Converters
     {
         public TimeTableConverter()
         {
-            Mapper.CreateMap<FlightsDto.TimeTable, FlightsDomain.TimeTable>()
-                .ForMember(x => x.Carriers, expression => expression.MapFrom(src => src.Carrier))
-                .ForMember(x => x.CitiesFrom, expression => expression.MapFrom(src => src.CityFrom))
-                .ForMember(x => x.CitiesTo, expression => expression.MapFrom(src => src.CityTo));
+            Mapper.CreateMap<FlightsDto.TimeTable, FlightsDomain.TimeTable>();
 
             Mapper.CreateMap<FlightsDomain.TimeTable, FlightsDto.TimeTable>()
                 .ForMember(x => x.Carrier, expression => expression.MapFrom(src => src.Carriers))
                 .ForMember(x => x.CityFrom, expression => expression.MapFrom(src => src.CitiesFrom))
-                .ForMember(x => x.CityTo, expression => expression.MapFrom(src => src.CitiesTo));
+                .ForMember(x => x.CityTo, expression => expression.MapFrom(src => src.CitiesTo))
+                .ForMember(x => x.FlightWebsite, expression => expression.MapFrom(src => src.FlightWebsites));
 
             Mapper.CreateMap<FlightsDto.Carrier, FlightsDomain.Carriers>();
 
@@ -30,16 +28,20 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDto.City, FlightsDomain.Cities>();
 
             Mapper.CreateMap<FlightsDomain.Cities, FlightsDto.City>();
+
+            Mapper.CreateMap<FlightsDto.FlightWebsite, FlightsDomain.FlightWebsites>();
+
+            Mapper.CreateMap<FlightsDomain.FlightWebsites, FlightsDto.FlightWebsite>();
         }
         
-        public FlightsDomain.TimeTable Convert(FlightsDto.TimeTable timeTable)
+        public FlightsDomain.TimeTable Convert(FlightsDto.TimeTable input)
         {
-            return Mapper.Map<FlightsDomain.TimeTable>(timeTable);
+            return Mapper.Map<FlightsDomain.TimeTable>(input);
         }
 
-        public FlightsDto.TimeTable Convert(FlightsDomain.TimeTable timeTable)
+        public FlightsDto.TimeTable Convert(FlightsDomain.TimeTable input)
         {
-            return Mapper.Map<FlightsDto.TimeTable>(timeTable);
+            return Mapper.Map<FlightsDto.TimeTable>(input);
         }
     }
 }

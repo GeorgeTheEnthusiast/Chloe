@@ -18,14 +18,14 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.Currencies, FlightsDto.Currency>();
         }
 
-        public FlightsDomain.Currencies Convert(FlightsDto.Currency currency)
+        public FlightsDomain.Currencies Convert(FlightsDto.Currency input)
         {
-            return Mapper.Map<FlightsDomain.Currencies>(currency);
+            return Mapper.Map<FlightsDomain.Currencies>(input);
         }
 
-        public FlightsDto.Currency Convert(FlightsDomain.Currencies currency)
+        public FlightsDto.Currency Convert(FlightsDomain.Currencies input)
         {
-            return Mapper.Map<FlightsDto.Currency>(currency);
+            return Mapper.Map<FlightsDto.Currency>(input);
         }
     }
 }

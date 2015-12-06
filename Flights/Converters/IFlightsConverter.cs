@@ -11,12 +11,12 @@ namespace Flights.Converters
 {
     public interface IFlightsConverter
     {
-        FlightsDomain.Flights Convert(FlightsDto.Flight flight);
+        FlightsDomain.Flights Convert(FlightsDto.Flight input);
 
-        IEnumerable<FlightsDto.Flight> Convert(IEnumerable<FlightsDomain.Flights> flight);
+        IEnumerable<FlightsDto.Flight> Convert(IEnumerable<FlightsDomain.Flights> input);
 
-        IEnumerable<FlightsDomain.Flights> Convert(IEnumerable<FlightsDto.Flight> flight);
+        IEnumerable<FlightsDomain.Flights> Convert(IEnumerable<FlightsDto.Flight> input);
 
-        IEnumerable<FlightsDto.Flight> Convert(DbSet<FlightsDomain.Flights> flights);
+        IEnumerable<FlightsDto.Flight> Convert(DbSet<FlightsDomain.Flights> input);
     }
 }

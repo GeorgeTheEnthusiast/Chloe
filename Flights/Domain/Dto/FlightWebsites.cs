@@ -18,6 +18,7 @@ namespace Flights.Domain.Dto
         public FlightWebsites()
         {
             this.SearchCriterias = new HashSet<SearchCriterias>();
+            this.TimeTable = new HashSet<TimeTable>();
         }
     
         public int Id { get; set; }
@@ -27,5 +28,7 @@ namespace Flights.Domain.Dto
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SearchCriterias> SearchCriterias { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TimeTable> TimeTable { get; set; }
     }
 }

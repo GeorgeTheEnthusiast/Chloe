@@ -641,7 +641,7 @@ SELECT Id, CityFrom_Id, CityTo_Id, DepartureDate, FlightWebsite_Id, Created, Rec
               <DbSource ConnectionRef="FlightsConnectionString (Settings)" DbObjectName="Flights.dbo.SearchCriteria_View" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT [Data wylotu], Nazwa, Do, Od, Przewoźnik FROM dbo.SearchCriteria_View</CommandText>
+                    <CommandText>SELECT Id, Nazwa, DataWylotu, Od, Do, Strona FROM dbo.SearchCriteria_View ORDER BY [Nazwa], [DataWylotu], [Od], [Do]</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>

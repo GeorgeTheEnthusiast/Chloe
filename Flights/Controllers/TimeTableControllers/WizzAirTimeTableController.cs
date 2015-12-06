@@ -10,12 +10,13 @@ using Flights.Dto;
 using Flights.Exceptions;
 using NLog;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using FlightWebsite = Flights.Dto.Enums.FlightWebsite;
 
 namespace Flights.Controllers.TimeTableControllers
 {
-    public class KrakowAirportTimeTableController : ITimeTableController
+    public class WizzAirTimeTableController : ITimeTableController
     {
         private readonly ITimeTableCommand _timeTableCommand;
         private readonly ICitiesCommand _citiesCommand;
@@ -27,9 +28,8 @@ namespace Flights.Controllers.TimeTableControllers
         private Flights.Dto.FlightWebsite _flightWebsite;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
         private WebDriverWait _webDriverWait;
-        private City _cityFrom;
 
-        public KrakowAirportTimeTableController(IWebDriver driver,
+        public WizzAirTimeTableController(IWebDriver driver,
             ITimeTableCommand timeTableCommand,
             ICitiesCommand citiesCommand,
             IFlightWebsiteQuery flightWebsiteQuery,
@@ -54,8 +54,7 @@ namespace Flights.Controllers.TimeTableControllers
             _cityQuery = cityQuery;
             _carrierCommand = carrierCommand;
             _webDriverWait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            _flightWebsite = _flightWebsiteQuery.GetFlightWebsiteByType(FlightWebsite.KrakowAirport);
-            _cityFrom = _cityQuery.GetCityByName("Kraków");
+            _flightWebsite = _flightWebsiteQuery.GetFlightWebsiteByType(FlightWebsite.WizzAir);
         }
 
         private void NavigateToUrl()
@@ -172,7 +171,7 @@ namespace Flights.Controllers.TimeTableControllers
                         {
                             FlightWebsite = _flightWebsite,
                             Carrier = carrier,
-                            CityFrom = _cityFrom,
+                            //CityFrom = _cityFrom,
                             CityTo = cityTo,
                             DepartureDate = date.AddMinutes(departureTime.TotalMinutes)
                         };
@@ -272,6 +271,17 @@ namespace Flights.Controllers.TimeTableControllers
             result = _citiesCommand.Merge(result);
 
             return result;
+        }
+
+        private void ScrollPageDown()
+        {
+            try
+            {
+                _driver.ExecuteJavaScript<IWebElement>("scroll(0, 2000)");
+            }
+            catch
+            {
+            }
         }
     }
 }

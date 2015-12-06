@@ -19,5 +19,7 @@ namespace Flights.Dto
         public DateTime DepartureDate { get; set; }
 
         public DateTime ArrivalDate { get; set; }
+
+        public FlightWebsite FlightWebsite { get; set; }
     }
 }

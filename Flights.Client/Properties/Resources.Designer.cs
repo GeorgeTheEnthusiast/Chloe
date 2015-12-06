@@ -122,5 +122,41 @@ namespace Flights.Client.Properties {
                 return ResourceManager.GetString("SearchCriteriaForm_ReceiverGroupMustBeSelected", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potwierdź wybór.
+        /// </summary>
+        internal static string SearchCriteriaListForm_AcceptChanges {
+            get {
+                return ResourceManager.GetString("SearchCriteriaListForm_AcceptChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy napewno chcesz usunąć te wyszukiwania oraz wyniki?.
+        /// </summary>
+        internal static string SearchCriteriaListForm_AreYouSureToDeleteSearchCriteriaAndFlights {
+            get {
+                return ResourceManager.GetString("SearchCriteriaListForm_AreYouSureToDeleteSearchCriteriaAndFlights", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usunięto dane pomyślnie..
+        /// </summary>
+        internal static string SearchCriteriaListForm_DeleteRowsSuccessfull {
+            get {
+                return ResourceManager.GetString("SearchCriteriaListForm_DeleteRowsSuccessfull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Musisz zaznaczyć przynajmniej jeden wiersz!.
+        /// </summary>
+        internal static string SearchCriteriaListForm_YouHaveToSelectAtLeastOneRow {
+            get {
+                return ResourceManager.GetString("SearchCriteriaListForm_YouHaveToSelectAtLeastOneRow", resourceCulture);
+            }
+        }
     }
 }

@@ -8,9 +8,9 @@ namespace Flights.Converters
 {
     public class RyanAirDateConverter : IRyanAirDateConverter
     {
-        public DateTime Convert(DateTime dateToMergeWith, string ryanAirDate)
+        public DateTime Convert(DateTime dateToMergeWith, string input)
         {
-            string[] splitted = ryanAirDate.Split(' ');
+            string[] splitted = input.Split(' ');
             int year = dateToMergeWith.Year;
             int month = GetMonth(splitted[2]);
             int day = int.Parse(splitted[1]);
@@ -18,9 +18,9 @@ namespace Flights.Converters
             return new DateTime(year, month, day, dateToMergeWith.Hour, dateToMergeWith.Minute, dateToMergeWith.Second);
         }
 
-        private int GetMonth(string month)
+        private int GetMonth(string input)
         {
-            switch (month)
+            switch (input)
             {
                 case "sty":
                     return 1;
@@ -47,7 +47,7 @@ namespace Flights.Converters
                 case "gru":
                     return 12;
                 default:
-                    throw new NotSupportedException();
+                    throw new NotSupportedException(string.Format("This month [{0}] is not supported!", input));
             }
         }
     }

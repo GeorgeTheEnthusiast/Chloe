@@ -10,6 +10,6 @@ namespace Flights.Converters
 {
     public interface INotificationReceiversConverter
     {
-        IEnumerable<FlightDto.NotificationReceiver> Convert(IEnumerable<FlightDomain.NotificationReceivers> notificationsReceivers);
+        IEnumerable<FlightDto.NotificationReceiver> Convert(IEnumerable<FlightDomain.NotificationReceivers> input);
     }
 }

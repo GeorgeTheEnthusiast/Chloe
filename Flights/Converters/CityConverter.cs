@@ -18,14 +18,14 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.Cities, FlightsDto.City>();
         }
         
-        public FlightsDomain.Cities Convert(FlightsDto.City city)
+        public FlightsDomain.Cities Convert(FlightsDto.City input)
         {
-            return Mapper.Map<FlightsDomain.Cities>(city);
+            return Mapper.Map<FlightsDomain.Cities>(input);
         }
 
-        public FlightsDto.City Convert(FlightsDomain.Cities city)
+        public FlightsDto.City Convert(FlightsDomain.Cities input)
         {
-            return Mapper.Map<FlightsDto.City>(city);
+            return Mapper.Map<FlightsDto.City>(input);
         }
     }
 }

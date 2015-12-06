@@ -10,8 +10,8 @@ namespace Flights.Converters
 {
     public interface ICurrencyConverter
     {
-        FlightsDomain.Currencies Convert(FlightsDto.Currency currency);
+        FlightsDomain.Currencies Convert(FlightsDto.Currency input);
 
-        FlightsDto.Currency Convert(FlightsDomain.Currencies currency);
+        FlightsDto.Currency Convert(FlightsDomain.Currencies input);
     }
 }

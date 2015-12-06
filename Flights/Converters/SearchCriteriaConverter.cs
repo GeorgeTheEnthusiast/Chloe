@@ -29,14 +29,14 @@ namespace Flights.Converters
             Mapper.CreateMap<FlightsDomain.FlightWebsites, FlightsDto.FlightWebsite>();
         }
 
-        public FlightsDto.SearchCriteria Convert(FlightsDomain.SearchCriterias searchCriteria)
+        public FlightsDto.SearchCriteria Convert(FlightsDomain.SearchCriterias input)
         {
-            return Mapper.Map<FlightsDto.SearchCriteria>(searchCriteria);
+            return Mapper.Map<FlightsDto.SearchCriteria>(input);
         }
 
-        public IEnumerable<FlightsDto.SearchCriteria> Convert(IEnumerable<FlightsDomain.SearchCriterias> searchCriteria)
+        public IEnumerable<FlightsDto.SearchCriteria> Convert(IEnumerable<FlightsDomain.SearchCriterias> input)
         {
-            return Mapper.Map<IEnumerable<FlightsDto.SearchCriteria>>(searchCriteria);
+            return Mapper.Map<IEnumerable<FlightsDto.SearchCriteria>>(input);
         }
     }
 }

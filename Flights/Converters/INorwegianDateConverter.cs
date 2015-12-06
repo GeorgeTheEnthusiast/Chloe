@@ -9,6 +9,6 @@ namespace Flights.Converters
 {
     public interface INorwegianDateConverter
     {
-        DateTime Convert(string norwegianPrintedDate);
+        DateTime Convert(string input);
     }
 }

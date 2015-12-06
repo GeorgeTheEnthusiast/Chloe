@@ -10,8 +10,8 @@ namespace Flights.Converters
 {
     public interface ITimeTableConverter
     {
-        FlightsDomain.TimeTable Convert(FlightsDto.TimeTable timeTable);
+        FlightsDomain.TimeTable Convert(FlightsDto.TimeTable input);
 
-        FlightsDto.TimeTable Convert(FlightsDomain.TimeTable timeTable);
+        FlightsDto.TimeTable Convert(FlightsDomain.TimeTable input);
     }
 }

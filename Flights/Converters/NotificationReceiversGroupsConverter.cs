@@ -24,9 +24,9 @@ namespace Flights.Converters
                 .ForMember(x => x.Email, expression => expression.ResolveUsing(receivers => receivers.Email.Trim()));
         }
         
-        public IEnumerable<FlightsDto.NotificationReceiverGroup> Convert(IEnumerable<FlightsDomain.NotificationReceiversGroups> notificationReceiversGroups)
+        public IEnumerable<FlightsDto.NotificationReceiverGroup> Convert(IEnumerable<FlightsDomain.NotificationReceiversGroups> input)
         {
-            return Mapper.Map<IEnumerable<FlightsDto.NotificationReceiverGroup>>(notificationReceiversGroups);
+            return Mapper.Map<IEnumerable<FlightsDto.NotificationReceiverGroup>>(input);
         }
     }
 }

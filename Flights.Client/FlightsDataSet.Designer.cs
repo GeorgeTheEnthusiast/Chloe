@@ -9574,7 +9574,8 @@ SELECT Id, CityFrom_Id, CityTo_Id, DepartureDate, FlightWebsite_Id, Created, Rec
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT [Data wylotu], Nazwa, Do, Od, Przewoźnik FROM dbo.SearchCriteria_View";
+            this._commandCollection[0].CommandText = "SELECT Id, Nazwa, DataWylotu, Od, Do, Strona FROM dbo.SearchCriteria_View ORDER B" +
+                "Y [Nazwa], [DataWylotu], [Od], [Do]";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
