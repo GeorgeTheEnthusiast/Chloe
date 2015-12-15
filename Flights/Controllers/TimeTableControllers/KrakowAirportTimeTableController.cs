@@ -29,7 +29,7 @@ namespace Flights.Controllers.TimeTableControllers
         private Flights.Dto.FlightWebsite _flightWebsite;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
         private WebDriverWait _webDriverWait;
-        private City _cityFrom;
+        private City _airportCity;
 
         public KrakowAirportTimeTableController(IWebDriver driver,
             ITimeTableCommand timeTableCommand,
@@ -63,7 +63,7 @@ namespace Flights.Controllers.TimeTableControllers
             _timeTableStatusQuery = timeTableStatusQuery;
             _webDriverWait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _flightWebsite = _flightWebsiteQuery.GetFlightWebsiteByType(FlightWebsite.KrakowAirport);
-            _cityFrom = _cityQuery.GetCityByName("Kraków");
+            _airportCity = _cityQuery.GetCityByName("Kraków");
         }
 
         private void NavigateToUrl()
@@ -83,10 +83,12 @@ namespace Flights.Controllers.TimeTableControllers
             ExpandAllTimeTables();
 
             Thread.Sleep(TimeSpan.FromSeconds(3));
+            
+            CreateArrivals();
 
-            SelectDepartures();
+            Thread.Sleep(TimeSpan.FromSeconds(3));
 
-            Create();
+            CreateDepartures();
         }
 
         private void GoToTimeTableSite()
@@ -113,8 +115,10 @@ namespace Flights.Controllers.TimeTableControllers
             tab.Click();
         }
 
-        private void Create()
+        private void CreateDepartures()
         {
+            SelectDepartures();
+
             var table = _webDriverWait.Until(x => x.FindElements(By.CssSelector("table[class='default-table']"))[1]);
             var trElements = table.FindElements(By.XPath("tbody/tr"));
             City cityTo = new City();
@@ -126,7 +130,7 @@ namespace Flights.Controllers.TimeTableControllers
                 try
                 {
                     var cityToElement = tr.FindElement(By.TagName("div"));
-                    cityTo = GetCityTo(cityToElement);
+                    cityTo = GetCity(cityToElement);
                 }
                 catch (NoSuchElementException)
                 {
@@ -181,12 +185,12 @@ namespace Flights.Controllers.TimeTableControllers
                         TimeTableStatus timeTableStatus = new TimeTableStatus()
                         {
                             FlightWebsite = _flightWebsite,
-                            CityFrom = _cityFrom,
+                            CityFrom = _airportCity,
                             CityTo = cityTo,
                             SearchDate = DateTime.Now
                         };
 
-                        if (tableStatuses.Any(x => x.CityFrom.Id == _cityFrom.Id
+                        if (tableStatuses.Any(x => x.CityFrom.Id == _airportCity.Id
                                                        && x.CityTo.Id == cityTo.Id
                                                        && x.FlightWebsite.Id == _flightWebsite.Id
                                                        && x.SearchDate != null
@@ -201,7 +205,7 @@ namespace Flights.Controllers.TimeTableControllers
                         {
                             FlightWebsite = _flightWebsite,
                             Carrier = carrier,
-                            CityFrom = _cityFrom,
+                            CityFrom = _airportCity,
                             CityTo = cityTo,
                             DepartureDate = date.AddMinutes(departureTime.TotalMinutes)
                         };
@@ -225,6 +229,126 @@ namespace Flights.Controllers.TimeTableControllers
 
                 i++;
             }
+        }
+
+        private void CreateArrivals()
+        {
+            var table = _webDriverWait.Until(x => x.FindElements(By.CssSelector("table[class='default-table']"))[0]);
+            var trElements = table.FindElements(By.XPath("tbody/tr"));
+            City cityFrom = new City();
+            int i = 0;
+            var timeTableStatuses = _timeTableStatusQuery.GetTimeTableStatusesByWebSiteId(_flightWebsite.Id);
+
+            foreach (var tr in trElements)
+            {
+                try
+                {
+                    var cityToElement = tr.FindElement(By.TagName("div"));
+                    cityFrom = GetCity(cityToElement);
+                }
+                catch (NoSuchElementException)
+                {
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error("Error reading tr element:");
+                    _logger.Error(tr.GetAttribute("innerHTML"));
+                    _logger.Error(ex);
+                }
+
+                var tableStatuses = timeTableStatuses as IList<TimeTableStatus> ?? timeTableStatuses.ToList();
+                try
+                {
+                    var daysInWeekTable = tr.FindElement(By.TagName("table"));
+                    List<int> daysInWeek = GetWeekDays(daysInWeekTable);
+
+                    var departureDateElement = tr.FindElements(By.ClassName("col4"))[0];
+                    TimeSpan departureTime = GetDepartureTime(departureDateElement);
+
+                    var arrivalDateElement = tr.FindElements(By.ClassName("col4"))[1];
+                    TimeSpan arrivalTime = GetArrivalTime(arrivalDateElement);
+
+                    TimeSpan timeDifference;
+                    if (TimeSpan.Compare(departureTime, arrivalTime) == -1)
+                    {
+                        timeDifference = arrivalTime.Subtract(departureTime);
+                    }
+                    else
+                    {
+                        timeDifference = new TimeSpan(0, 0, 0);
+                        TimeSpan timeToMidnight = (new TimeSpan(24, 0, 0)).Subtract(departureTime);
+                        TimeSpan timeFromMidnight = arrivalTime;
+                        timeDifference = timeDifference.Add(timeToMidnight);
+                        timeDifference = timeDifference.Add(timeFromMidnight);
+                    }
+
+                    var carrierElement = tr.FindElement(By.ClassName("col6"));
+                    Carrier carrier = GetCarrier(carrierElement);
+
+                    var periodElement = tr.FindElement(By.ClassName("col8"));
+                    DateTime dateFrom;
+                    DateTime dateTo;
+                    GetTimeTablePeriod(periodElement, out dateFrom, out dateTo);
+
+                    IEnumerable<DateTime> timeTableDates = _timeTablePeriodConverter.Convert(daysInWeek, dateFrom,
+                        dateTo);
+
+                    foreach (var date in timeTableDates)
+                    {
+                        TimeTableStatus timeTableStatus = new TimeTableStatus()
+                        {
+                            FlightWebsite = _flightWebsite,
+                            CityFrom = cityFrom,
+                            CityTo = _airportCity,
+                            SearchDate = DateTime.Now
+                        };
+
+                        if (tableStatuses.Any(x => x.CityFrom.Id == cityFrom.Id
+                                                       && x.CityTo.Id == _airportCity.Id
+                                                       && x.FlightWebsite.Id == _flightWebsite.Id
+                                                       && x.SearchDate != null
+                                                       &&
+                                                       DateTime.Compare(x.SearchDate.Value.Date,
+                                                           DateTime.Now.AddMonths(-3).Date) == 1))
+                        {
+                            continue;
+                        }
+
+                        TimeTable timeTable = new TimeTable()
+                        {
+                            FlightWebsite = _flightWebsite,
+                            Carrier = carrier,
+                            CityFrom = cityFrom,
+                            CityTo = _airportCity,
+                            DepartureDate = date.AddMinutes(departureTime.TotalMinutes)
+                        };
+                        timeTable.ArrivalDate = timeTable.DepartureDate.AddMinutes(timeDifference.TotalMinutes);
+
+                        _logger.Info("Adding new timeTable data [{0}/{1}]...", i, trElements.Count);
+                        _timeTableStatusCommand.Merge(timeTableStatus);
+                        _timeTableCommand.Merge(timeTable);
+                    }
+                }
+                catch (NoSuchElementException)
+                {
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error("Error reading tr element:");
+                    _logger.Error(tr.GetAttribute("innerHTML"));
+                    _logger.Error(ex);
+                }
+
+                i++;
+            }
+        }
+
+
+        private void AddData()
+        {
+            
         }
 
         private List<int> GetWeekDays(IWebElement tableWebElement)
@@ -256,8 +380,11 @@ namespace Flights.Controllers.TimeTableControllers
         private TimeSpan GetDepartureTime(IWebElement webElement)
         {
             var time = webElement
-                .FindElement(By.TagName("strong"))
                 .GetAttribute("innerHTML");
+            time = time.Replace("<strong>", "")
+                .Replace("</strong>", "")
+                .Trim();
+
             TimeSpan result = TimeSpan.Parse(time);
 
             return result;
@@ -267,6 +394,10 @@ namespace Flights.Controllers.TimeTableControllers
         {
             var time = webElement
                 .GetAttribute("innerHTML");
+            time = time.Replace("<strong>", "")
+                .Replace("</strong>", "")
+                .Trim();
+
             TimeSpan result = TimeSpan.Parse(time);
 
             return result;
@@ -288,7 +419,7 @@ namespace Flights.Controllers.TimeTableControllers
             dateTo = DateTime.Parse(dateToString);
         }
 
-        private City GetCityTo(IWebElement webElement)
+        private City GetCity(IWebElement webElement)
         {
             City result = new City();
             string cityName = webElement.GetAttribute("innerHTML");
