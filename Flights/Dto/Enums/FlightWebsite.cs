@@ -6,6 +6,7 @@
         WizzAir = 2,
         Norwegian = 3,
         GoogleFlights = 4,
-        KrakowAirport = 6
+        KrakowAirport = 6,
+        WizzAirAirport = 7
     }
 }

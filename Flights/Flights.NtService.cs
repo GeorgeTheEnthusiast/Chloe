@@ -44,59 +44,14 @@ namespace Flights
 
         public void StartQuartzJob()
         {
-            ISchedulerFactory schedFact = new StdSchedulerFactory();
-                
-            IScheduler sched = schedFact.GetScheduler();
-            sched.JobFactory = Bootstrapper.Container.Resolve<IJobFactory>();
-            sched.Start();
-                            
-            IJobDetail searchJob = JobBuilder.Create<SearchFlightsJob>()
-                .WithIdentity("SearchFlightsJob")
-                .Build();
-            
-            ITrigger searchTrigger = TriggerBuilder.Create()
-                .WithIdentity("daily_3pm_Trigger")
-                .StartNow()
-                //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(15, 00))
-                .Build();
-            
-            //sched.ScheduleJob(searchJob, searchTrigger);
-            
-            IJobDetail netjob = JobBuilder.Create<FlightsNetJob>()
-                .WithIdentity("FlightsNetJob")
-                .Build();
-            
-            ITrigger netTrigger = TriggerBuilder.Create()
-                .WithIdentity("one_a_week_5pm_Trigger")
-                .StartNow()
-                .WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 17, 00))
-                .Build();
-            
-            //sched.ScheduleJob(netjob, netTrigger);
-            
-            IJobDetail nbpCurrencyjob = JobBuilder.Create<NBPCurrencyDownloaderJob>()
-                .WithIdentity("NBPCurrencyDownloaderJob")
-                .Build();
-            
-            ITrigger nbpCurrencyTrigger = TriggerBuilder.Create()
-                .WithIdentity("one_a_week_4pm_Trigger")
-                .StartNow()
-                //.WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 16, 00))
-                .Build();
-            
-            //sched.ScheduleJob(nbpCurrencyjob, nbpCurrencyTrigger);
-
-            IJobDetail timeTableJob = JobBuilder.Create<CreateTimeTableJob>()
-                .WithIdentity("CreateTimeTableJob")
-                .Build();
-                        
-            ITrigger timeTableTrigger = TriggerBuilder.Create()
-                .WithIdentity("monthly_3pm_Trigger")
-                .StartNow()
-                //.WithSchedule(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(01, 00, 00))
-                .Build();
-                        
-            sched.ScheduleJob(timeTableJob, timeTableTrigger);
+            //QuartzJobFactory.ScheduleJob<SearchFlightsJob>(SimpleScheduleBuilder.Create());
+            //QuartzJobFactory.ScheduleJob<SearchFlightsJob>(CronScheduleBuilder.DailyAtHourAndMinute(15, 00));
+            //QuartzJobFactory.ScheduleJob<FlightsNetJob>(SimpleScheduleBuilder.Create());
+            //QuartzJobFactory.ScheduleJob<FlightsNetJob>(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 15, 00));
+            //QuartzJobFactory.ScheduleJob<NBPCurrencyDownloaderJob>(SimpleScheduleBuilder.Create());
+            //QuartzJobFactory.ScheduleJob<NBPCurrencyDownloaderJob>(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Tuesday, 15, 00));
+            QuartzJobFactory.ScheduleJob<CreateTimeTableJob>(SimpleScheduleBuilder.Create());
+            //QuartzJobFactory.ScheduleJob<CreateTimeTableJob>(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(01, 15, 00));
         }
     }
 }

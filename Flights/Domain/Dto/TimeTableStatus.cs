@@ -12,18 +12,15 @@ namespace Flights.Domain.Dto
     using System;
     using System.Collections.Generic;
     
-    public partial class TimeTable
+    public partial class TimeTableStatus
     {
         public int Id { get; set; }
-        public int Carrier_Id { get; set; }
-        public System.DateTime DepartureDate { get; set; }
+        public int FlightWebsite_Id { get; set; }
         public int CityFrom_Id { get; set; }
         public int CityTo_Id { get; set; }
-        public System.DateTime ArrivalDate { get; set; }
-        public int FlightWebsite_Id { get; set; }
+        public Nullable<System.DateTime> SearchDate { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
     
-        public virtual Carriers Carriers { get; set; }
         public virtual Cities CitiesFrom { get; set; }
         public virtual Cities CitiesTo { get; set; }
         public virtual FlightWebsites FlightWebsites { get; set; }

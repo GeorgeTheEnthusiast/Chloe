@@ -36,5 +36,8 @@ namespace Flights.Domain.Dto
         public virtual DbSet<ReceiverGroups> ReceiverGroups { get; set; }
         public virtual DbSet<SearchCriterias> SearchCriterias { get; set; }
         public virtual DbSet<TimeTable> TimeTable { get; set; }
+        public virtual DbSet<Flights_View> Flights_View { get; set; }
+        public virtual DbSet<SearchCriteria_View> SearchCriteria_View { get; set; }
+        public virtual DbSet<TimeTableStatus> TimeTableStatus { get; set; }
     }
 }

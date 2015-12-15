@@ -23,6 +23,8 @@ namespace Flights.Domain.Dto
             this.Fk_SearchCriterias_CityTo = new HashSet<SearchCriterias>();
             this.Fk_TimeTable_CityFrom = new HashSet<TimeTable>();
             this.Fk_TimeTable_CityTo = new HashSet<TimeTable>();
+            this.TimeTableStatus = new HashSet<TimeTableStatus>();
+            this.TimeTableStatus1 = new HashSet<TimeTableStatus>();
         }
     
         public int Id { get; set; }
@@ -42,5 +44,9 @@ namespace Flights.Domain.Dto
         public virtual ICollection<TimeTable> Fk_TimeTable_CityFrom { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TimeTable> Fk_TimeTable_CityTo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TimeTableStatus> TimeTableStatus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TimeTableStatus> TimeTableStatus1 { get; set; }
     }
 }

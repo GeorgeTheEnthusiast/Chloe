@@ -110,10 +110,53 @@
           <Property Name="CityFrom_Id" Type="int" Nullable="false" />
           <Property Name="CityTo_Id" Type="int" Nullable="false" />
           <Property Name="ArrivalDate" Type="datetime" Nullable="false" />
-          <Property Name="FlightWebsites_Id" Type="int" Nullable="false" />
+          <Property Name="FlightWebsite_Id" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TimeTableStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FlightWebsite_Id" Type="int" Nullable="false" />
+          <Property Name="CityFrom_Id" Type="int" Nullable="false" />
+          <Property Name="CityTo_Id" Type="int" Nullable="false" />
+          <Property Name="SearchDate" Type="date" />
+          <Property Name="Created" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Flights.dbo.Flights_View' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Flights_View">
+          <Key>
+            <PropertyRef Name="SearchDate" />
+            <PropertyRef Name="IsDirect" />
+            <PropertyRef Name="GroupName" />
+          </Key>
+          <Property Name="DepartureDate" Type="datetime" />
+          <Property Name="Price" Type="decimal" Precision="10" Scale="3" />
+          <Property Name="SearchDate" Type="datetime" Nullable="false" />
+          <Property Name="IsDirect" Type="bit" Nullable="false" />
+          <Property Name="CurrencyName" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierName" Type="nvarchar" MaxLength="100" />
+          <Property Name="CityFrom" Type="nvarchar" MaxLength="255" />
+          <Property Name="CityTo" Type="nvarchar" MaxLength="255" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="SearchCriteria_View">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="DataWylotu" />
+            <PropertyRef Name="Nazwa" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="DataWylotu" Type="date" Nullable="false" />
+          <Property Name="Nazwa" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Do" Type="nvarchar" MaxLength="255" />
+          <Property Name="Od" Type="nvarchar" MaxLength="255" />
+          <Property Name="Strona" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <Association Name="FK_Flight_Currency">
           <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
           <End Role="Flights" Type="Self.Flights" Multiplicity="*" />
@@ -302,7 +345,43 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="TimeTable">
-              <PropertyRef Name="FlightWebsites_Id" />
+              <PropertyRef Name="FlightWebsite_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TimeTableStatus_CitiesFrom">
+          <End Role="Cities" Type="Self.Cities" Multiplicity="1" />
+          <End Role="TimeTableStatus" Type="Self.TimeTableStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TimeTableStatus">
+              <PropertyRef Name="CityFrom_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TimeTableStatus_CitiesTo">
+          <End Role="Cities" Type="Self.Cities" Multiplicity="1" />
+          <End Role="TimeTableStatus" Type="Self.TimeTableStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TimeTableStatus">
+              <PropertyRef Name="CityTo_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TimeTableStatus_FlightWebsites">
+          <End Role="FlightWebsites" Type="Self.FlightWebsites" Multiplicity="1" />
+          <End Role="TimeTableStatus" Type="Self.TimeTableStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FlightWebsites">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TimeTableStatus">
+              <PropertyRef Name="FlightWebsite_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -318,6 +397,30 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
           <EntitySet Name="ReceiverGroups" EntityType="Self.ReceiverGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SearchCriterias" EntityType="Self.SearchCriterias" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TimeTable" EntityType="Self.TimeTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TimeTableStatus" EntityType="Self.TimeTableStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Flights_View" EntityType="Self.Flights_View" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Flights_View].[DepartureDate] AS [DepartureDate], 
+    [Flights_View].[Price] AS [Price], 
+    [Flights_View].[SearchDate] AS [SearchDate], 
+    [Flights_View].[IsDirect] AS [IsDirect], 
+    [Flights_View].[CurrencyName] AS [CurrencyName], 
+    [Flights_View].[CarrierName] AS [CarrierName], 
+    [Flights_View].[CityFrom] AS [CityFrom], 
+    [Flights_View].[CityTo] AS [CityTo], 
+    [Flights_View].[GroupName] AS [GroupName]
+    FROM [dbo].[Flights_View] AS [Flights_View]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="SearchCriteria_View" EntityType="Self.SearchCriteria_View" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [SearchCriteria_View].[Id] AS [Id], 
+    [SearchCriteria_View].[DataWylotu] AS [DataWylotu], 
+    [SearchCriteria_View].[Nazwa] AS [Nazwa], 
+    [SearchCriteria_View].[Do] AS [Do], 
+    [SearchCriteria_View].[Od] AS [Od], 
+    [SearchCriteria_View].[Strona] AS [Strona]
+    FROM [dbo].[SearchCriteria_View] AS [SearchCriteria_View]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Flight_Currency" Association="Self.FK_Flight_Currency">
             <End Role="Currencies" EntitySet="Currencies" />
             <End Role="Flights" EntitySet="Flights" />
@@ -382,6 +485,18 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
             <End Role="FlightWebsites" EntitySet="FlightWebsites" />
             <End Role="TimeTable" EntitySet="TimeTable" />
           </AssociationSet>
+          <AssociationSet Name="FK_TimeTableStatus_CitiesFrom" Association="Self.FK_TimeTableStatus_CitiesFrom">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="TimeTableStatus" EntitySet="TimeTableStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TimeTableStatus_CitiesTo" Association="Self.FK_TimeTableStatus_CitiesTo">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="TimeTableStatus" EntitySet="TimeTableStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TimeTableStatus_FlightWebsites" Association="Self.FK_TimeTableStatus_FlightWebsites">
+            <End Role="FlightWebsites" EntitySet="FlightWebsites" />
+            <End Role="TimeTableStatus" EntitySet="TimeTableStatus" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -412,6 +527,8 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
           <NavigationProperty Name="Fk_SearchCriterias_CityTo" Relationship="Self.FK_SearchCriteria_CityTo" FromRole="Cities" ToRole="SearchCriterias" />
           <NavigationProperty Name="Fk_TimeTable_CityFrom" Relationship="FlightsModel.FK_TimeTable_CitiesFrom" FromRole="Cities" ToRole="TimeTable" />
           <NavigationProperty Name="Fk_TimeTable_CityTo" Relationship="FlightsModel.FK_TimeTable_CitiesTo" FromRole="Cities" ToRole="TimeTable" />
+          <NavigationProperty Name="TimeTableStatus" Relationship="FlightsModel.FK_TimeTableStatus_CitiesFrom" FromRole="Cities" ToRole="TimeTableStatus" />
+          <NavigationProperty Name="TimeTableStatus1" Relationship="FlightsModel.FK_TimeTableStatus_CitiesTo" FromRole="Cities" ToRole="TimeTableStatus" />
         </EntityType>
         <EntityType Name="Currencies">
           <Key>
@@ -448,7 +565,8 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
           <Property Name="Website" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Created" Type="DateTime" Precision="3" />
           <NavigationProperty Name="SearchCriterias" Relationship="Self.FK_SearchCriterias_FlightWebsites" FromRole="FlightWebsites" ToRole="SearchCriterias" />
-          <NavigationProperty Name="TimeTable" Relationship="FlightsModel.FK_TimeTable_FlightWebsites" FromRole="FlightWebsites" ToRole="TimeTable" />
+          <NavigationProperty Name="TimeTable1" Relationship="FlightsModel.FK_TimeTable_FlightWebsites1" FromRole="FlightWebsites" ToRole="TimeTable" />
+          <NavigationProperty Name="TimeTableStatus" Relationship="FlightsModel.FK_TimeTableStatus_FlightWebsites" FromRole="FlightWebsites" ToRole="TimeTableStatus" />
         </EntityType>
         <EntityType Name="Net">
           <Key>
@@ -726,9 +844,24 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
             <End Role="Cities" EntitySet="Cities" />
             <End Role="TimeTable" EntitySet="TimeTable" />
           </AssociationSet>
-          <AssociationSet Name="FK_TimeTable_FlightWebsites" Association="FlightsModel.FK_TimeTable_FlightWebsites">
+          <EntitySet Name="Flights_View" EntityType="FlightsModel.Flights_View" />
+          <EntitySet Name="SearchCriteria_View" EntityType="FlightsModel.SearchCriteria_View" />
+          <AssociationSet Name="FK_TimeTable_FlightWebsites1" Association="FlightsModel.FK_TimeTable_FlightWebsites1">
             <End Role="FlightWebsites" EntitySet="FlightWebsites" />
             <End Role="TimeTable" EntitySet="TimeTable" />
+          </AssociationSet>
+          <EntitySet Name="TimeTableStatus" EntityType="FlightsModel.TimeTableStatus" />
+          <AssociationSet Name="FK_TimeTableStatus_CitiesFrom" Association="FlightsModel.FK_TimeTableStatus_CitiesFrom">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="TimeTableStatus" EntitySet="TimeTableStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TimeTableStatus_CitiesTo" Association="FlightsModel.FK_TimeTableStatus_CitiesTo">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="TimeTableStatus" EntitySet="TimeTableStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TimeTableStatus_FlightWebsites" Association="FlightsModel.FK_TimeTableStatus_FlightWebsites">
+            <End Role="FlightWebsites" EntitySet="FlightWebsites" />
+            <End Role="TimeTableStatus" EntitySet="TimeTableStatus" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="TimeTable">
@@ -744,8 +877,9 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
           <NavigationProperty Name="CitiesFrom" Relationship="FlightsModel.FK_TimeTable_CitiesFrom" FromRole="TimeTable" ToRole="Cities" />
           <NavigationProperty Name="CitiesTo" Relationship="FlightsModel.FK_TimeTable_CitiesTo" FromRole="TimeTable" ToRole="Cities" />
           <Property Name="ArrivalDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="FlightWebsites_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="FlightWebsites" Relationship="FlightsModel.FK_TimeTable_FlightWebsites" FromRole="TimeTable" ToRole="FlightWebsites" />
+          <Property Name="FlightWebsite_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FlightWebsites" Relationship="FlightsModel.FK_TimeTable_FlightWebsites1" FromRole="TimeTable" ToRole="FlightWebsites" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_TimeTable_Carriers">
           <End Type="FlightsModel.Carriers" Role="Carriers" Multiplicity="1" />
@@ -783,7 +917,36 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_TimeTable_FlightWebsites">
+        <EntityType Name="Flights_View">
+          <Key>
+            <PropertyRef Name="SearchDate" />
+            <PropertyRef Name="IsDirect" />
+            <PropertyRef Name="GroupName" />
+          </Key>
+          <Property Name="DepartureDate" Type="DateTime" Precision="3" />
+          <Property Name="Price" Type="Decimal" Precision="10" Scale="3" />
+          <Property Name="SearchDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsDirect" Type="Boolean" Nullable="false" />
+          <Property Name="CurrencyName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CityFrom" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CityTo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SearchCriteria_View">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="DataWylotu" />
+            <PropertyRef Name="Nazwa" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="DataWylotu" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Nazwa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Do" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Od" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Strona" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_TimeTable_FlightWebsites1">
           <End Type="FlightsModel.FlightWebsites" Role="FlightWebsites" Multiplicity="1" />
           <End Type="FlightsModel.TimeTable" Role="TimeTable" Multiplicity="*" />
           <ReferentialConstraint>
@@ -791,7 +954,57 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="TimeTable">
-              <PropertyRef Name="FlightWebsites_Id" />
+              <PropertyRef Name="FlightWebsite_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TimeTableStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FlightWebsite_Id" Type="Int32" Nullable="false" />
+          <Property Name="CityFrom_Id" Type="Int32" Nullable="false" />
+          <Property Name="CityTo_Id" Type="Int32" Nullable="false" />
+          <Property Name="SearchDate" Type="DateTime" Precision="0" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CitiesFrom" Relationship="FlightsModel.FK_TimeTableStatus_CitiesFrom" FromRole="TimeTableStatus" ToRole="Cities" />
+          <NavigationProperty Name="CitiesTo" Relationship="FlightsModel.FK_TimeTableStatus_CitiesTo" FromRole="TimeTableStatus" ToRole="Cities" />
+          <NavigationProperty Name="FlightWebsites" Relationship="FlightsModel.FK_TimeTableStatus_FlightWebsites" FromRole="TimeTableStatus" ToRole="FlightWebsites" />
+        </EntityType>
+        <Association Name="FK_TimeTableStatus_CitiesFrom">
+          <End Type="FlightsModel.Cities" Role="Cities" Multiplicity="1" />
+          <End Type="FlightsModel.TimeTableStatus" Role="TimeTableStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TimeTableStatus">
+              <PropertyRef Name="CityFrom_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TimeTableStatus_CitiesTo">
+          <End Type="FlightsModel.Cities" Role="Cities" Multiplicity="1" />
+          <End Type="FlightsModel.TimeTableStatus" Role="TimeTableStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TimeTableStatus">
+              <PropertyRef Name="CityTo_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TimeTableStatus_FlightWebsites">
+          <End Type="FlightsModel.FlightWebsites" Role="FlightWebsites" Multiplicity="1" />
+          <End Type="FlightsModel.TimeTableStatus" Role="TimeTableStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FlightWebsites">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TimeTableStatus">
+              <PropertyRef Name="FlightWebsite_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -909,12 +1122,52 @@ warning 6002: The table/view 'Flights.dbo.SearchCriteria_View' does not have a p
           <EntitySetMapping Name="TimeTable">
             <EntityTypeMapping TypeName="FlightsModel.TimeTable">
               <MappingFragment StoreEntitySet="TimeTable">
-                <ScalarProperty Name="FlightWebsites_Id" ColumnName="FlightWebsites_Id" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="FlightWebsite_Id" ColumnName="FlightWebsite_Id" />
                 <ScalarProperty Name="ArrivalDate" ColumnName="ArrivalDate" />
                 <ScalarProperty Name="CityTo_Id" ColumnName="CityTo_Id" />
                 <ScalarProperty Name="CityFrom_Id" ColumnName="CityFrom_Id" />
                 <ScalarProperty Name="DepartureDate" ColumnName="DepartureDate" />
                 <ScalarProperty Name="Carrier_Id" ColumnName="Carrier_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Flights_View">
+            <EntityTypeMapping TypeName="FlightsModel.Flights_View">
+              <MappingFragment StoreEntitySet="Flights_View">
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="CityTo" ColumnName="CityTo" />
+                <ScalarProperty Name="CityFrom" ColumnName="CityFrom" />
+                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
+                <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+                <ScalarProperty Name="IsDirect" ColumnName="IsDirect" />
+                <ScalarProperty Name="SearchDate" ColumnName="SearchDate" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="DepartureDate" ColumnName="DepartureDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchCriteria_View">
+            <EntityTypeMapping TypeName="FlightsModel.SearchCriteria_View">
+              <MappingFragment StoreEntitySet="SearchCriteria_View">
+                <ScalarProperty Name="Strona" ColumnName="Strona" />
+                <ScalarProperty Name="Od" ColumnName="Od" />
+                <ScalarProperty Name="Do" ColumnName="Do" />
+                <ScalarProperty Name="Nazwa" ColumnName="Nazwa" />
+                <ScalarProperty Name="DataWylotu" ColumnName="DataWylotu" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TimeTableStatus">
+            <EntityTypeMapping TypeName="FlightsModel.TimeTableStatus">
+              <MappingFragment StoreEntitySet="TimeTableStatus">
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="SearchDate" ColumnName="SearchDate" />
+                <ScalarProperty Name="CityTo_Id" ColumnName="CityTo_Id" />
+                <ScalarProperty Name="CityFrom_Id" ColumnName="CityFrom_Id" />
+                <ScalarProperty Name="FlightWebsite_Id" ColumnName="FlightWebsite_Id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

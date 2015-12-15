@@ -31,7 +31,13 @@
         <AssociationConnector Association="FlightsModel.FK_TimeTable_Carriers" />
         <AssociationConnector Association="FlightsModel.FK_TimeTable_CitiesFrom" />
         <AssociationConnector Association="FlightsModel.FK_TimeTable_CitiesTo" />
-        <AssociationConnector Association="FlightsModel.FK_TimeTable_FlightWebsites" />
+        <EntityTypeShape EntityType="FlightsModel.Flights_View" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="FlightsModel.SearchCriteria_View" Width="1.5" PointX="2.75" PointY="0.75" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTable_FlightWebsites1" />
+        <EntityTypeShape EntityType="FlightsModel.TimeTableStatus" Width="1.5" PointX="11.25" PointY="8.125" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTableStatus_CitiesFrom" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTableStatus_CitiesTo" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTableStatus_FlightWebsites" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -23,6 +23,8 @@ namespace Flights.Controllers.TimeTableControllers
         private readonly ITimeTablePeriodConverter _timeTablePeriodConverter;
         private readonly ICityQuery _cityQuery;
         private readonly ICarrierCommand _carrierCommand;
+        private readonly ITimeTableStatusCommand _timeTableStatusCommand;
+        private readonly ITimeTableStatusQuery _timeTableStatusQuery;
         private readonly IWebDriver _driver;
         private Flights.Dto.FlightWebsite _flightWebsite;
         private static Logger _logger = LogManager.GetCurrentClassLogger();
@@ -35,7 +37,9 @@ namespace Flights.Controllers.TimeTableControllers
             IFlightWebsiteQuery flightWebsiteQuery,
             ITimeTablePeriodConverter timeTablePeriodConverter,
             ICityQuery cityQuery,
-            ICarrierCommand carrierCommand
+            ICarrierCommand carrierCommand,
+            ITimeTableStatusCommand timeTableStatusCommand,
+            ITimeTableStatusQuery timeTableStatusQuery
             )
         {
             if (driver == null) throw new ArgumentNullException("driver");
@@ -45,6 +49,8 @@ namespace Flights.Controllers.TimeTableControllers
             if (timeTablePeriodConverter == null) throw new ArgumentNullException("timeTablePeriodConverter");
             if (cityQuery == null) throw new ArgumentNullException("cityQuery");
             if (carrierCommand == null) throw new ArgumentNullException("carrierCommand");
+            if (timeTableStatusCommand == null) throw new ArgumentNullException("timeTableStatusCommand");
+            if (timeTableStatusQuery == null) throw new ArgumentNullException("timeTableStatusQuery");
 
             _driver = driver;
             _timeTableCommand = timeTableCommand;
@@ -53,6 +59,8 @@ namespace Flights.Controllers.TimeTableControllers
             _timeTablePeriodConverter = timeTablePeriodConverter;
             _cityQuery = cityQuery;
             _carrierCommand = carrierCommand;
+            _timeTableStatusCommand = timeTableStatusCommand;
+            _timeTableStatusQuery = timeTableStatusQuery;
             _webDriverWait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _flightWebsite = _flightWebsiteQuery.GetFlightWebsiteByType(FlightWebsite.KrakowAirport);
             _cityFrom = _cityQuery.GetCityByName("Kraków");
@@ -111,6 +119,7 @@ namespace Flights.Controllers.TimeTableControllers
             var trElements = table.FindElements(By.XPath("tbody/tr"));
             City cityTo = new City();
             int i = 0;
+            var timeTableStatuses = _timeTableStatusQuery.GetTimeTableStatusesByWebSiteId(_flightWebsite.Id);
 
             foreach (var tr in trElements)
             {
@@ -130,6 +139,7 @@ namespace Flights.Controllers.TimeTableControllers
                     _logger.Error(ex);
                 }
 
+                var tableStatuses = timeTableStatuses as IList<TimeTableStatus> ?? timeTableStatuses.ToList();
                 try
                 {
                     var daysInWeekTable = tr.FindElement(By.TagName("table"));
@@ -168,6 +178,25 @@ namespace Flights.Controllers.TimeTableControllers
 
                     foreach (var date in timeTableDates)
                     {
+                        TimeTableStatus timeTableStatus = new TimeTableStatus()
+                        {
+                            FlightWebsite = _flightWebsite,
+                            CityFrom = _cityFrom,
+                            CityTo = cityTo,
+                            SearchDate = DateTime.Now
+                        };
+
+                        if (tableStatuses.Any(x => x.CityFrom.Id == _cityFrom.Id
+                                                       && x.CityTo.Id == cityTo.Id
+                                                       && x.FlightWebsite.Id == _flightWebsite.Id
+                                                       && x.SearchDate != null
+                                                       &&
+                                                       DateTime.Compare(x.SearchDate.Value.Date,
+                                                           DateTime.Now.AddMonths(-3).Date) == 1))
+                        {
+                            continue;
+                        }
+
                         TimeTable timeTable = new TimeTable()
                         {
                             FlightWebsite = _flightWebsite,
@@ -179,6 +208,7 @@ namespace Flights.Controllers.TimeTableControllers
                         timeTable.ArrivalDate = timeTable.DepartureDate.AddMinutes(timeDifference.TotalMinutes);
 
                         _logger.Info("Adding new timeTable data [{0}/{1}]...", i, trElements.Count);
+                        _timeTableStatusCommand.Merge(timeTableStatus);
                         _timeTableCommand.Merge(timeTable);
                     }
                 }
