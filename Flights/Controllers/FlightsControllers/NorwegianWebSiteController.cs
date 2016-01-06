@@ -170,7 +170,9 @@ namespace Flights.Controllers.FlightsControllers
 
         private void MakeTicketOneWay()
         {
-            IWebElement oneWayTicketWebElement = _driver.FindElement(By.Id("radio_11")).FindElement(By.XPath(".."));
+            IWebElement oneWayTicketWebElement = _driver.FindElements(By.CssSelector("span[data-ng-bind-html='option.label']"))
+                .Where(x => x.GetAttribute("innerHTML") == "W jedną stronę")
+                .First();
 
             oneWayTicketWebElement.Click();
         }
@@ -222,7 +224,9 @@ namespace Flights.Controllers.FlightsControllers
 
         private void GoToTheCheapestPricesCalendar()
         {
-            IWebElement oneWayTicketWebElement = _driver.FindElement(By.Id("radio_21")).FindElement(By.XPath(".."));
+            IWebElement oneWayTicketWebElement = _driver.FindElements(By.CssSelector("span[data-ng-bind-html='option.label']"))
+                .Where(x => x.GetAttribute("innerHTML") == "Wyświetl Kalendarz niskich cen")
+                .First();
 
             oneWayTicketWebElement.Click();
         }
