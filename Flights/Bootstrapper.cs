@@ -115,7 +115,8 @@ namespace Flights
                 //Component.For<ITimeTableController>().ImplementedBy(typeof(KrakowAirportTimeTableController)),
                 //Component.For<ITimeTableController>().ImplementedBy(typeof(WizzAirTimeTableController)),
                 //Component.For<ITimeTableController>().ImplementedBy(typeof(WroclawAirportTimeTableController)),
-                Component.For<ITimeTableController>().ImplementedBy(typeof(KatowiceAirportTimeTableController))
+                //Component.For<ITimeTableController>().ImplementedBy(typeof(KatowiceAirportTimeTableController)),
+                Component.For<ITimeTableController>().ImplementedBy(typeof(RyanAirTimeTableController))
                 );
 
             #endregion

@@ -9,6 +9,7 @@
         KrakowAirport = 6,
         WizzAirAirport = 7,
         WroclawAirport = 8,
-        KatowiceAirport = 9
+        KatowiceAirport = 9,
+        RyanAirAirpot = 11
     }
 }
