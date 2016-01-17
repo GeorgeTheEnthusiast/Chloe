@@ -40,6 +40,29 @@ namespace Flights.Converters
             return output;
         }
 
+        public int ConvertDay(string day)
+        {
+            switch (day.Trim().ToLower())
+            {
+                case "poniedziałek":
+                    return 1;
+                case "wtorek":
+                    return 2;
+                case "środa":
+                    return 3;
+                case "czwartek":
+                    return 4;
+                case "piątek":
+                    return 5;
+                case "sobota":
+                    return 6;
+                case "niedziela":
+                    return 7;
+                default:
+                    throw new NotSupportedException(string.Format("This type of day [{0}] is not supported!", day));
+            }
+        }
+
         private int ConvertDay(DateTime date)
         {
             switch (date.DayOfWeek)

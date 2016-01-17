@@ -11,5 +11,7 @@ namespace Flights.Converters
     public interface ITimeTablePeriodConverter
     {
         IEnumerable<DateTime> Convert(IEnumerable<int> daysInWeek, DateTime dateFrom, DateTime dateTo);
+
+        int ConvertDay(string day);
     }
 }

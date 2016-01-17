@@ -8,6 +8,7 @@
         GoogleFlights = 4,
         KrakowAirport = 6,
         WizzAirAirport = 7,
-        WroclawAirport = 8
+        WroclawAirport = 8,
+        KatowiceAirport = 9
     }
 }

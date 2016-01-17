@@ -125,6 +125,7 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controllers\TimeTableControllers\ITimeTableController.cs" />
+    <Compile Include="Controllers\TimeTableControllers\KatowiceAirportTimeTableController.cs" />
     <Compile Include="Controllers\TimeTableControllers\WroclawAirportTimeTableController.cs" />
     <Compile Include="Controllers\TimeTableControllers\WizzAirTimeTableController.cs" />
     <Compile Include="Controllers\TimeTableControllers\KrakowAirportTimeTableController.cs" />
