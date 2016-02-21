@@ -84,16 +84,28 @@ namespace Flights.Controllers.TimeTableControllers
             
             var timeTableStatusList = CreateTimeTableStatusList();
             var timeTableStatusListToRepeat = timeTableStatusList.ToList();
-            
+
+            RestartSite(searchBySearchButton);
+
+            Stopwatch counter = new Stopwatch();
+            counter.Start();
+
             while (timeTableStatusList.Count > 0)
             {
                 foreach (var timeTableStatus in timeTableStatusList)
                 {
+                    if (counter.Elapsed.TotalMinutes >= 18)
+                    {
+                        _logger.Debug("Resetting the counter, restarting the website...");
+                        counter.Restart();
+                        RestartSite(searchBySearchButton);
+                    }
+
                     var searchButtonWebElement = _driver.FindElement(searchBySearchButton);
 
-                    FillCity(_searchByCityFrom, timeTableStatus.TimeTableStatus.CityFrom.Name);
-                    FillCity(_searchByCityTo, timeTableStatus.TimeTableStatus.CityTo.Name);
-                    timeTableStatus.TimeTableStatus.SearchDate = DateTime.Now;
+                    FillCity(_searchByCityFrom, timeTableStatus.CityFrom.Name);
+                    FillCity(_searchByCityTo, timeTableStatus.CityTo.Name);
+                    timeTableStatus.SearchDate = DateTime.Now;
                     searchButtonWebElement.Click();
                 
                     ReadData(timeTableStatus, ref timeTableStatusListToRepeat);
@@ -103,95 +115,73 @@ namespace Flights.Controllers.TimeTableControllers
 
                 timeTableStatusList = timeTableStatusListToRepeat.ToList();
             }
+
+            counter.Stop();
         }
 
-        private void ReadData(TimeTableStatusHelper timeTableStatus, ref List<TimeTableStatusHelper> timeTableStatusList)
+        private void RestartSite(By searchBy)
         {
-            var searchByDepartures = By.CssSelector("div[route='outbound']");
-            var searchByArrivals = By.CssSelector("div[route='inbound']");
+            NavigateToUrl();
+            _webDriverWait.Until(x => x.FindElement(searchBy));
+        }
 
+        private void ReadData(TimeTableStatus timeTableStatus, ref List<TimeTableStatus> timeTableStatusList)
+        {
             try
-            {//przeijanie w prawo przewija nie ten kalendarz co potrzeba
-                if (timeTableStatus.IsDeparture)
-                {
-                    ReadAllMonthsTimeTable(timeTableStatus.TimeTableStatus.CityFrom, timeTableStatus.TimeTableStatus.CityTo,
-                        searchByDepartures);
-                }
-                else
-                {
-                    ReadAllMonthsTimeTable(timeTableStatus.TimeTableStatus.CityFrom, timeTableStatus.TimeTableStatus.CityTo,
-                        searchByArrivals);
-                }
-
+            {
+                ReadAllMonthsTimeTable(timeTableStatus.CityFrom, timeTableStatus.CityTo);
+                
                 _logger.Debug("Adding timeTable from city [{0}] to [{1}] completed without errors.",
-                    timeTableStatus.TimeTableStatus.CityFrom.Name, timeTableStatus.TimeTableStatus.CityTo.Name);
+                    timeTableStatus.CityFrom.Name, timeTableStatus.CityTo.Name);
 
                 timeTableStatusList.RemoveAll(
                     x =>
-                        x.TimeTableStatus.CityFrom.Id == timeTableStatus.TimeTableStatus.CityFrom.Id &&
-                        x.TimeTableStatus.CityTo.Id == timeTableStatus.TimeTableStatus.CityTo.Id);
+                        x.CityFrom.Id == timeTableStatus.CityFrom.Id &&
+                        x.CityTo.Id == timeTableStatus.CityTo.Id);
 
-                _timeTableStatusCommand.Merge(timeTableStatus.TimeTableStatus);
+                _timeTableStatusCommand.Merge(timeTableStatus);
             }
             catch (Exception ex)
             {
-                _logger.Error("I have to repeat timeTable from [{0}] to [{1}]", timeTableStatus.TimeTableStatus.CityFrom.Name,
-                    timeTableStatus.TimeTableStatus.CityTo.Name);
+                _logger.Error("I have to repeat timeTable from [{0}] to [{1}]", timeTableStatus.CityFrom.Name,
+                    timeTableStatus.CityTo.Name);
                 _logger.Error(ex);
             }
         }
 
-        private List<TimeTableStatusHelper> CreateTimeTableStatusList()
+        private List<TimeTableStatus> CreateTimeTableStatusList()
         {
             var cities = GetAllCities();
-            HashSet<TimeTableStatusHelper> timeTableStatusHelperHashSet = new HashSet<TimeTableStatusHelper>(new TimeTableStatusHelperComparer());
-            var timeTableStatusList = new List<TimeTableStatusHelper>();
+            var timeTableStatusList = new List<TimeTableStatus>();
+            int i = 0;
 
             foreach (var city in cities)
             {
+                _logger.Info("Getting destination citites [{0}]/[{1}]...", i, cities.Count);
                 FillCity(_searchByCityFrom, city.Name);
                 var citiesTo = GetAllCitiesTo();
 
                 foreach (var cityTo in citiesTo)
                 {
-                    var timeTableStatusDeparture = new TimeTableStatus()
+                    var timeTableStatus = new TimeTableStatus()
                     {
                         CityFrom = city,
                         CityTo = cityTo,
                         FlightWebsite = _flightWebsite,
                         SearchDate = null
                     };
-                    var timeTableStatusArrival = new TimeTableStatus()
-                    {
-                        CityFrom = cityTo,
-                        CityTo = city,
-                        FlightWebsite = _flightWebsite,
-                        SearchDate = null
-                    };
-
-                    //var mergeResult = _timeTableStatusCommand.Merge(timeTableStatusDeparture);
-                    var timetableStatusHelperDeparture = new TimeTableStatusHelper()
-                    {
-                        TimeTableStatus = timeTableStatusDeparture,
-                        IsDeparture = true
-                    };
-                    timeTableStatusHelperHashSet.Add(timetableStatusHelperDeparture);
-
-                    //mergeResult = _timeTableStatusCommand.Merge(timeTableStatusArrival);
-                    var timetableStatusHelperArrival = new TimeTableStatusHelper()
-                    {
-                        TimeTableStatus = timeTableStatusArrival,
-                        IsDeparture = false
-                    };
-                    timeTableStatusHelperHashSet.Add(timetableStatusHelperArrival);
+                    timeTableStatus = _timeTableStatusCommand.Merge(timeTableStatus);
+                    timeTableStatusList.Add(timeTableStatus);
                 }
+
+                i++;
             }
 
             timeTableStatusList =
-                timeTableStatusHelperHashSet.Where(
+                timeTableStatusList.Where(
                     x =>
-                        x.TimeTableStatus.SearchDate == null ||
-                        DateTime.Compare(x.TimeTableStatus.SearchDate.Value.Date, DateTime.Now.AddMonths(-3).Date) == -1)
+                        x.SearchDate == null ||
+                        DateTime.Compare(x.SearchDate.Value.Date, DateTime.Now.AddMonths(-3).Date) == -1)
                     .ToList();
 
             return timeTableStatusList;
@@ -206,7 +196,7 @@ namespace Flights.Controllers.TimeTableControllers
         private List<City> GetAllCities()
         {
             List<City> result = new List<City>();
-            
+            int i = 0;
             IWebElement webElement = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='three-cols']")));
 
             var countriesWebElements =
@@ -214,14 +204,13 @@ namespace Flights.Controllers.TimeTableControllers
 
             foreach (var countryWebElement in countriesWebElements)
             {
+                _logger.Info("Processing [{0}]/[{1}] cities", i, countriesWebElements.Count);
                 countryWebElement.Click();
 
                 var citiesWebElements = _driver
                     .FindElement(By.CssSelector("div[class='pane right']"))
                     .FindElements(By.CssSelector("div[class='option']"));
-
-                _logger.Info("Found {0} cities", citiesWebElements.Count);
-
+                
                 foreach (var cityWebElement in citiesWebElements)
                 {
                     City city = new City();
@@ -231,6 +220,8 @@ namespace Flights.Controllers.TimeTableControllers
 
                     result.Add(city);
                 }
+
+                i++;
             }
 
             return result;
@@ -310,25 +301,36 @@ namespace Flights.Controllers.TimeTableControllers
         
         private void ReadCurrentMonthTimeTable(City cityFrom, City cityTo, By searchByCalendar)
         {
+            var searchByFlight = By.CssSelector("li[class='flight']");
             var departuresWebElement = _webDriverWait.Until(x => x.FindElement(searchByCalendar));
-            var cellsWebElement = departuresWebElement.FindElements(By.ClassName("cell"));
+            var cellsWebElement = departuresWebElement
+                .FindElements(By.ClassName("cell"))
+                .ToList();
+            var cellsLinq = (from c in cellsWebElement.Where(x => x.FindElements(searchByFlight).Count > 0)
+                             let date = c.GetAttribute("date-id")
+                let flights =
+                    (
+                        from f in c.FindElements(searchByFlight)
+                        select new
+                        {
+                            DepartureTimeString = f.FindElement(By.CssSelector("span[class='departure-time']")).Text,
+                            ArrivalTimeString = f.FindElement(By.CssSelector("span[class='arrival-time']")).Text
+                        }
+                        )
+                select new {Date = date, Flights = flights}).ToList();
 
-            foreach (var cell in cellsWebElement)
+
+            foreach (var cell in cellsLinq)
             {
-                string date = cell.GetAttribute("date-id");
-                var flights = cell.FindElements(By.CssSelector("li[class='flight']"));
-
-                foreach (var flight in flights)
+                foreach (var flight in cell.Flights)
                 {
-                    string departureTimeString = flight.FindElement(By.CssSelector("span[class='departure-time']")).Text;
-                    string arrivalTimeString = flight.FindElement(By.CssSelector("span[class='arrival-time']")).Text;
-                    DateTime departureDate = DateTime.ParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                    DateTime departureDate = DateTime.ParseExact(cell.Date, "dd-MM-yyyy", CultureInfo.InvariantCulture);
 
                     if (DateTime.Compare(departureDate.Date, DateTime.Now.AddYears(1)) >= 0)
                         continue;
 
-                    TimeSpan departureTime = TimeSpan.Parse(departureTimeString);
-                    TimeSpan arrivalTime = TimeSpan.Parse(arrivalTimeString);
+                    TimeSpan departureTime = TimeSpan.Parse(flight.DepartureTimeString);
+                    TimeSpan arrivalTime = TimeSpan.Parse(flight.ArrivalTimeString);
                     TimeSpan timeDifference = GetTimeDifference(departureTime, arrivalTime);
                     TimeTable timeTable = new TimeTable()
                     {
@@ -345,78 +347,52 @@ namespace Flights.Controllers.TimeTableControllers
             }
         }
 
-        private void ReadAllMonthsTimeTable(City cityFrom, City cityTo, By searchByCalendar)
+        private void ReadAllMonthsTimeTable(City cityFrom, City cityTo)
         {
-            var currentCalendar = _webDriverWait.Until(x => x.FindElement(searchByCalendar));
+            var searchByDepartures = By.CssSelector("div[route='outbound']");
+            var currentCalendar = _webDriverWait.Until(x => x.FindElement(searchByDepartures));
             var scroller = currentCalendar.FindElement(By.CssSelector("ul[class='scroller']"));
-            var months = scroller.FindElements(By.ClassName("item"));
             Dictionary<string, bool> monthsReadStatus = new Dictionary<string, bool>();
+            bool readMore = true;
 
-            while (monthsReadStatus.Any(x => x.Value == false) || monthsReadStatus.Count == 0)
+            while (readMore)
             {
-                foreach (var month in months)
+                var monthsLinq = (from m in scroller.FindElements(By.ClassName("item"))
+                    select new {WebElement = m, DictionaryKey = m.Text}).ToList();
+
+                var month = monthsLinq.FirstOrDefault(x => (string.IsNullOrEmpty(x.DictionaryKey) == false) && (monthsReadStatus.ContainsKey(x.DictionaryKey) == false
+                || monthsReadStatus[x.DictionaryKey] == false) );
+
+                if (month == null || monthsReadStatus.ContainsKey(month.DictionaryKey) && monthsReadStatus[month.DictionaryKey] == true)
+                    continue;
+
+                if (month.WebElement.Displayed)
                 {
-                    string yearDisplay = month.FindElement(By.ClassName("year")).Text;
-                    string monthDisplay = month.FindElement(By.ClassName("month")).Text;
-                    string dictionaryKey = yearDisplay + monthDisplay;
-
-                    if (string.IsNullOrEmpty(dictionaryKey))
-                        continue;
-
-                    if (monthsReadStatus.ContainsKey(dictionaryKey) && monthsReadStatus[dictionaryKey] == true)
-                        continue;
-
-                    if (month.Displayed)
-                    {
-                        month.Click();
-                        ReadCurrentMonthTimeTable(cityFrom, cityTo, searchByCalendar);
-                        monthsReadStatus[dictionaryKey] = true;
-                    }
-                    else
-                    {
-                        monthsReadStatus[dictionaryKey] = false;
-                    }
-
-                    ScrollCarouselRight(scroller);
+                    month.WebElement.Click();
+                    ReadCurrentMonthTimeTable(cityFrom, cityTo, searchByDepartures);
+                    monthsReadStatus[month.DictionaryKey] = true;
+                }
+                else
+                {
+                    monthsReadStatus[month.DictionaryKey] = false;
                 }
 
-                currentCalendar = _webDriverWait.Until(x => x.FindElement(searchByCalendar));
-                scroller = currentCalendar.FindElement(By.CssSelector("ul[class='scroller']"));
-                months = scroller.FindElements(By.ClassName("item"));
+                ScrollCarouselRight();
+
+                if (monthsReadStatus.Count == monthsLinq.Count
+                    && monthsReadStatus.All(x => x.Value == true))
+                    readMore = false;
             }
         }
 
-        private void ScrollCarouselRight(IWebElement currentScroller)
+        private void ScrollCarouselRight()
         {
-            var nextButton = _webDriverWait.Until(x => x.FindElement(By.CssSelector("button[class='arrow right']")));
+            var outboundWebElement = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[type='outbound']")));
+            var nextButtons = outboundWebElement.FindElements(By.CssSelector("button[class='arrow right']"));
 
-            if (nextButton.Displayed)
+            if (nextButtons.Count > 0 && nextButtons[0].Displayed)
             {
-                nextButton.Click();
-            }
-        }
-
-        private class TimeTableStatusHelper
-        {
-            public TimeTableStatus TimeTableStatus;
-            public bool IsDeparture;
-        }
-
-        private class TimeTableStatusHelperComparer : IEqualityComparer<TimeTableStatusHelper>
-        {
-            public bool Equals(TimeTableStatusHelper x, TimeTableStatusHelper y)
-            {
-                bool IdsAreEqual = x.TimeTableStatus.Id == y.TimeTableStatus.Id;
-                bool CitiesFromAreEqual = x.TimeTableStatus.CityFrom.Id == y.TimeTableStatus.CityFrom.Id;
-                bool CitiesToAreEqual = x.TimeTableStatus.CityTo.Id == y.TimeTableStatus.CityTo.Id;
-                bool FlightWebsitesAreEqual = x.TimeTableStatus.FlightWebsite.Id == y.TimeTableStatus.FlightWebsite.Id;
-
-                return IdsAreEqual && CitiesFromAreEqual && CitiesToAreEqual && FlightWebsitesAreEqual;
-            }
-
-            public int GetHashCode(TimeTableStatusHelper obj)
-            {
-                return obj.GetHashCode();
+                nextButtons[0].Click();
             }
         }
     }

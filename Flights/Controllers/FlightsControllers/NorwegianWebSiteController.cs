@@ -71,6 +71,13 @@ namespace Flights.Controllers.FlightsControllers
             //toCityWebElement.Click();
             toCityWebElement.SendKeys(searchCriteria.CityTo.Name);
             toCityWebElement.SendKeys(Keys.Enter);
+
+            //click on the first element
+            var destinationBox = _driver.FindElement(By.Id("destinationAirports"));
+            var elementInSuggestions = destinationBox.FindElements(By.TagName("li"));
+
+            if (elementInSuggestions.Count > 0)
+                elementInSuggestions[0].Click();
         }
 
         private void FillDate(SearchCriteria searchCriteria)

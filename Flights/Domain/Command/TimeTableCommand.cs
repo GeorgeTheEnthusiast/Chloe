@@ -35,7 +35,13 @@ namespace Flights.Domain.Command
                    && timeTable.DepartureDate.Day == x.DepartureDate.Day
                    && timeTable.DepartureDate.Hour == x.DepartureDate.Hour
                    && timeTable.DepartureDate.Minute == x.DepartureDate.Minute
-                   && timeTable.DepartureDate.Second == x.DepartureDate.Second)
+                   && timeTable.DepartureDate.Second == x.DepartureDate.Second
+                   && timeTable.ArrivalDate.Year == x.ArrivalDate.Year
+                   && timeTable.ArrivalDate.Month == x.ArrivalDate.Month
+                   && timeTable.ArrivalDate.Day == x.ArrivalDate.Day
+                   && timeTable.ArrivalDate.Hour == x.ArrivalDate.Hour
+                   && timeTable.ArrivalDate.Minute == x.ArrivalDate.Minute
+                   && timeTable.ArrivalDate.Second == x.ArrivalDate.Second)
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
 
@@ -62,11 +68,17 @@ namespace Flights.Domain.Command
                    && timeTable.DepartureDate.Day == x.DepartureDate.Day
                    && timeTable.DepartureDate.Hour == x.DepartureDate.Hour
                    && timeTable.DepartureDate.Minute == x.DepartureDate.Minute
-                   && timeTable.DepartureDate.Second == x.DepartureDate.Second)
+                   && timeTable.DepartureDate.Second == x.DepartureDate.Second
+                   && timeTable.ArrivalDate.Year == x.ArrivalDate.Year
+                   && timeTable.ArrivalDate.Month == x.ArrivalDate.Month
+                   && timeTable.ArrivalDate.Day == x.ArrivalDate.Day
+                   && timeTable.ArrivalDate.Hour == x.ArrivalDate.Hour
+                   && timeTable.ArrivalDate.Minute == x.ArrivalDate.Minute
+                   && timeTable.ArrivalDate.Second == x.ArrivalDate.Second)
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
 
-                
+
                 result = _timeTableConverter.Convert(existedTimeTable);
 
                 return result;
