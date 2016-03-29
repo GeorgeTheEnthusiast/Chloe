@@ -26,7 +26,8 @@ namespace Flights.Client.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=Pędzel\\SQLEXPRESS;Initial Catalog=Flights;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=PEDZEL-KOMPUTER\\SQLEXPRESS;Initial Catalog=Flights;Integrated Securit" +
+            "y=True")]
         public string FlightsConnectionString {
             get {
                 return ((string)(this["FlightsConnectionString"]));

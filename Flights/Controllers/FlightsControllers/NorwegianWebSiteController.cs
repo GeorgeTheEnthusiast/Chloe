@@ -73,11 +73,15 @@ namespace Flights.Controllers.FlightsControllers
             toCityWebElement.SendKeys(Keys.Enter);
 
             //click on the first element
-            var destinationBox = _driver.FindElement(By.Id("destinationAirports"));
-            var elementInSuggestions = destinationBox.FindElements(By.TagName("li"));
+            var elementInSuggestions = _driver.FindElement(By.Id("destinationAirports"))
+                .FindElements(By.TagName("li"));
 
             if (elementInSuggestions.Count > 0)
                 elementInSuggestions[0].Click();
+            else
+            {
+                
+            }
         }
 
         private void FillDate(SearchCriteria searchCriteria)
@@ -177,7 +181,7 @@ namespace Flights.Controllers.FlightsControllers
 
         private void MakeTicketOneWay()
         {
-            IWebElement oneWayTicketWebElement = _driver.FindElements(By.CssSelector("span[data-ng-bind-html='option.label']"))
+            IWebElement oneWayTicketWebElement = _webDriverWait.Until(x => x.FindElements(By.CssSelector("span[data-ng-bind-html='option.label']")))
                 .Where(x => x.GetAttribute("innerHTML") == "W jedną stronę")
                 .First();
 
@@ -334,7 +338,7 @@ namespace Flights.Controllers.FlightsControllers
         {
             try
             {
-                _driver.ExecuteJavaScript<IWebElement>("scroll(0, 200)");
+                _driver.ExecuteJavaScript<IWebElement>("scroll(0, 400)");
             }
             catch
             {

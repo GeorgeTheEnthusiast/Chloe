@@ -263,7 +263,7 @@ namespace Flights.Controllers.FlightsControllers
         {
             try
             {
-                _driver.FindElement(By.CssSelector("div[class='slide active']"));
+                _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='slide active']")));
             }
             catch
             {

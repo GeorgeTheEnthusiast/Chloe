@@ -44,13 +44,13 @@ namespace Flights
 
         public void StartQuartzJob()
         {
-            //QuartzJobFactory.ScheduleJob<SearchFlightsJob>(SimpleScheduleBuilder.Create());
+            QuartzJobFactory.ScheduleJob<SearchFlightsJob>(SimpleScheduleBuilder.Create());
             //QuartzJobFactory.ScheduleJob<SearchFlightsJob>(CronScheduleBuilder.DailyAtHourAndMinute(15, 00));
             //QuartzJobFactory.ScheduleJob<FlightsNetJob>(SimpleScheduleBuilder.Create());
             //QuartzJobFactory.ScheduleJob<FlightsNetJob>(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Monday, 15, 00));
             //QuartzJobFactory.ScheduleJob<NBPCurrencyDownloaderJob>(SimpleScheduleBuilder.Create());
             //QuartzJobFactory.ScheduleJob<NBPCurrencyDownloaderJob>(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Tuesday, 15, 00));
-            QuartzJobFactory.ScheduleJob<CreateTimeTableJob>(SimpleScheduleBuilder.Create());
+            //QuartzJobFactory.ScheduleJob<CreateTimeTableJob>(SimpleScheduleBuilder.Create());
             //QuartzJobFactory.ScheduleJob<CreateTimeTableJob>(CronScheduleBuilder.MonthlyOnDayAndHourAndMinute(01, 15, 00));
         }
     }
