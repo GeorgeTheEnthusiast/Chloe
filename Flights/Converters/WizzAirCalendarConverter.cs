@@ -10,31 +10,31 @@ namespace Flights.Converters
     {
         public int ConvertMonth(string input)
         {
-            switch (input)
+            switch (input.ToUpper())
             {
-                case "Styczeń":
+                case "STYCZEŃ":
                     return 1;
-                case "Luty":
+                case "LUTY":
                     return 2;
-                case "Marzec":
+                case "MARZEC":
                     return 3;
-                case "Kwiecień":
+                case "KWIECIEŃ":
                     return 4;
-                case "Maj":
+                case "MAJ":
                     return 5;
-                case "Czerwiec":
+                case "CZERWIEC":
                     return 6;
-                case "Lipiec":
+                case "LIPIEC":
                     return 7;
-                case "Sierpień":
+                case "SIERPIEŃ":
                     return 8;
-                case "Wrzesień":
+                case "WRZESIEŃ":
                     return 9;
-                case "Październik":
+                case "PAŹDZIERNIK":
                     return 10;
-                case "Listopad":
+                case "LISTOPAD":
                     return 11;
-                case "Grudzień":
+                case "GRUDZIEŃ":
                     return 12;
                 default:
                     throw new NotSupportedException(string.Format("This month [{0}] is not supported!", input));

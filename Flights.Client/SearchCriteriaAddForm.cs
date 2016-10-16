@@ -22,13 +22,6 @@ namespace Flights.Client
             InitializeComponent();
         }
 
-        private void buttonChangeGroups_Click(object sender, EventArgs e)
-        {
-            GroupsForm groupsForm = new GroupsForm();
-            groupsForm.ShowDialog();
-
-        }
-
         private void SearchCriteriaForm_Load(object sender, EventArgs e)
         {
             this.searchCriteriasTableAdapter.Fill(this.flightsDataSet.SearchCriterias);

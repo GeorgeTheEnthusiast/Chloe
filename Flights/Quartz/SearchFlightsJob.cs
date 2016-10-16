@@ -22,17 +22,21 @@ namespace Flights.Quartz
     {
         private readonly IFlightsCommand _flightsCommand;
         private readonly ISearchCriteriaQuery _searchCriteriaQuery;
+        private readonly IFlightsQuery _flightsQuery;
         private IWebSiteController[] _webSiteControllers;
         private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
         public SearchFlightsJob(IFlightsCommand flightsCommand,
-            ISearchCriteriaQuery searchCriteriaQuery)
+            ISearchCriteriaQuery searchCriteriaQuery,
+            IFlightsQuery flightsQuery)
         {
             if (flightsCommand == null) throw new ArgumentNullException("flightsCommand");
             if (searchCriteriaQuery == null) throw new ArgumentNullException("searchCriteriaQuery");
+            if (flightsQuery == null) throw new ArgumentNullException(nameof(flightsQuery));
 
             _flightsCommand = flightsCommand;
             _searchCriteriaQuery = searchCriteriaQuery;
+            _flightsQuery = flightsQuery;
             _webSiteControllers = Bootstrapper.Container.ResolveAll<IWebSiteController>();
         }
 
@@ -61,11 +65,21 @@ namespace Flights.Quartz
                                 continue;
                             }
 
+                            var earlierFlights = _flightsQuery.GetFlightsBySearchCriteria(criteria);
+
+                            if (earlierFlights.Any(x => DateTime.Compare(DateTime.Now, x.SearchDate.AddDays(1)) < 0))
+                            {
+                                _logger.Info("This criteria is up to date!");
+                                criteriasToRepeatDictionary.Remove(criteria);
+                                continue;
+                            }
+
                             List<Flight> flights = new List<Flight>();
 
                             foreach (var webSiteController in _webSiteControllers)
                             {
-                                flights.AddRange(webSiteController.GetFlights(criteria));
+                                var webSiteControllerFlights = webSiteController.GetFlights(criteria);
+                                flights.AddRange(webSiteControllerFlights);
                             }
 
                             DeleteOldFlights(criteria);

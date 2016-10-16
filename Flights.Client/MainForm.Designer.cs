@@ -30,11 +30,12 @@
         {
             this.buttonSearchCriterias = new System.Windows.Forms.Button();
             this.buttonFlights = new System.Windows.Forms.Button();
+            this.buttonGroups = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonSearchCriterias
             // 
-            this.buttonSearchCriterias.Location = new System.Drawing.Point(101, 21);
+            this.buttonSearchCriterias.Location = new System.Drawing.Point(12, 12);
             this.buttonSearchCriterias.Name = "buttonSearchCriterias";
             this.buttonSearchCriterias.Size = new System.Drawing.Size(75, 23);
             this.buttonSearchCriterias.TabIndex = 1;
@@ -44,18 +45,29 @@
             // 
             // buttonFlights
             // 
-            this.buttonFlights.Location = new System.Drawing.Point(101, 65);
+            this.buttonFlights.Location = new System.Drawing.Point(12, 56);
             this.buttonFlights.Name = "buttonFlights";
             this.buttonFlights.Size = new System.Drawing.Size(75, 23);
             this.buttonFlights.TabIndex = 2;
             this.buttonFlights.Text = "Wyniki";
             this.buttonFlights.UseVisualStyleBackColor = true;
             // 
+            // buttonGroups
+            // 
+            this.buttonGroups.Location = new System.Drawing.Point(114, 12);
+            this.buttonGroups.Name = "buttonGroups";
+            this.buttonGroups.Size = new System.Drawing.Size(75, 23);
+            this.buttonGroups.TabIndex = 3;
+            this.buttonGroups.Text = "Grupy";
+            this.buttonGroups.UseVisualStyleBackColor = true;
+            this.buttonGroups.Click += new System.EventHandler(this.buttonGroups_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(265, 103);
+            this.Controls.Add(this.buttonGroups);
             this.Controls.Add(this.buttonFlights);
             this.Controls.Add(this.buttonSearchCriterias);
             this.Name = "MainForm";
@@ -69,5 +81,6 @@
 
         private System.Windows.Forms.Button buttonSearchCriterias;
         private System.Windows.Forms.Button buttonFlights;
+        private System.Windows.Forms.Button buttonGroups;
     }
 }

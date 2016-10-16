@@ -43,16 +43,20 @@
             this.dataGridViewJoined = new System.Windows.Forms.DataGridView();
             this.ColumnGroup = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnReceiver = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.receiverGroupsIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.notificationReceiversIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.createdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.notificationReceiversGroupsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.flightsDataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.currenciesBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.currenciesTableAdapter = new Flights.Client.FlightsDataSetTableAdapters.CurrenciesTableAdapter();
             this.notificationReceiversGroupsTableAdapter = new Flights.Client.FlightsDataSetTableAdapters.NotificationReceiversGroupsTableAdapter();
             this.buttonAddEmailToGroup = new System.Windows.Forms.Button();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.receiverGroupsIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.notificationReceiversIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.createdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonAddGroup = new System.Windows.Forms.Button();
+            this.buttonAddEmail = new System.Windows.Forms.Button();
+            this.buttonEditGroup = new System.Windows.Forms.Button();
+            this.buttonDeleteReceiverGroup = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.flightsDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.receiverGroupsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewGroups)).BeginInit();
@@ -123,7 +127,7 @@
             this.dataGridViewReceivers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.emailDataGridViewTextBoxColumn});
             this.dataGridViewReceivers.DataSource = this.notificationReceiversBindingSource;
-            this.dataGridViewReceivers.Location = new System.Drawing.Point(281, 12);
+            this.dataGridViewReceivers.Location = new System.Drawing.Point(362, 12);
             this.dataGridViewReceivers.MultiSelect = false;
             this.dataGridViewReceivers.Name = "dataGridViewReceivers";
             this.dataGridViewReceivers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -159,7 +163,7 @@
             this.notificationReceiversIdDataGridViewTextBoxColumn,
             this.createdDataGridViewTextBoxColumn});
             this.dataGridViewJoined.DataSource = this.notificationReceiversGroupsBindingSource;
-            this.dataGridViewJoined.Location = new System.Drawing.Point(13, 239);
+            this.dataGridViewJoined.Location = new System.Drawing.Point(13, 210);
             this.dataGridViewJoined.MultiSelect = false;
             this.dataGridViewJoined.Name = "dataGridViewJoined";
             this.dataGridViewJoined.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -181,39 +185,6 @@
             this.ColumnReceiver.HeaderText = "Email";
             this.ColumnReceiver.Name = "ColumnReceiver";
             this.ColumnReceiver.Width = 57;
-            // 
-            // notificationReceiversGroupsBindingSource
-            // 
-            this.notificationReceiversGroupsBindingSource.DataMember = "NotificationReceiversGroups";
-            this.notificationReceiversGroupsBindingSource.DataSource = this.flightsDataSetBindingSource;
-            // 
-            // flightsDataSetBindingSource
-            // 
-            this.flightsDataSetBindingSource.DataSource = this.flightsDataSet;
-            this.flightsDataSetBindingSource.Position = 0;
-            // 
-            // currenciesBindingSource
-            // 
-            this.currenciesBindingSource.DataMember = "Currencies";
-            this.currenciesBindingSource.DataSource = this.flightsDataSetBindingSource;
-            // 
-            // currenciesTableAdapter
-            // 
-            this.currenciesTableAdapter.ClearBeforeFill = true;
-            // 
-            // notificationReceiversGroupsTableAdapter
-            // 
-            this.notificationReceiversGroupsTableAdapter.ClearBeforeFill = true;
-            // 
-            // buttonAddEmailToGroup
-            // 
-            this.buttonAddEmailToGroup.Location = new System.Drawing.Point(202, 210);
-            this.buttonAddEmailToGroup.Name = "buttonAddEmailToGroup";
-            this.buttonAddEmailToGroup.Size = new System.Drawing.Size(150, 23);
-            this.buttonAddEmailToGroup.TabIndex = 6;
-            this.buttonAddEmailToGroup.Text = "Dodaj email do grupy";
-            this.buttonAddEmailToGroup.UseVisualStyleBackColor = true;
-            this.buttonAddEmailToGroup.Click += new System.EventHandler(this.buttonAddEmailToGroup_Click);
             // 
             // idDataGridViewTextBoxColumn
             // 
@@ -240,14 +211,91 @@
             this.createdDataGridViewTextBoxColumn.HeaderText = "Created";
             this.createdDataGridViewTextBoxColumn.Name = "createdDataGridViewTextBoxColumn";
             // 
+            // notificationReceiversGroupsBindingSource
+            // 
+            this.notificationReceiversGroupsBindingSource.DataMember = "NotificationReceiversGroups";
+            this.notificationReceiversGroupsBindingSource.DataSource = this.flightsDataSetBindingSource;
+            // 
+            // flightsDataSetBindingSource
+            // 
+            this.flightsDataSetBindingSource.DataSource = this.flightsDataSet;
+            this.flightsDataSetBindingSource.Position = 0;
+            // 
+            // currenciesBindingSource
+            // 
+            this.currenciesBindingSource.DataMember = "Currencies";
+            this.currenciesBindingSource.DataSource = this.flightsDataSetBindingSource;
+            // 
+            // currenciesTableAdapter
+            // 
+            this.currenciesTableAdapter.ClearBeforeFill = true;
+            // 
+            // notificationReceiversGroupsTableAdapter
+            // 
+            this.notificationReceiversGroupsTableAdapter.ClearBeforeFill = true;
+            // 
+            // buttonAddEmailToGroup
+            // 
+            this.buttonAddEmailToGroup.Location = new System.Drawing.Point(559, 210);
+            this.buttonAddEmailToGroup.Name = "buttonAddEmailToGroup";
+            this.buttonAddEmailToGroup.Size = new System.Drawing.Size(150, 23);
+            this.buttonAddEmailToGroup.TabIndex = 6;
+            this.buttonAddEmailToGroup.Text = "Dodaj email do grupy";
+            this.buttonAddEmailToGroup.UseVisualStyleBackColor = true;
+            this.buttonAddEmailToGroup.Click += new System.EventHandler(this.buttonAddEmailToGroup_Click);
+            // 
+            // buttonAddGroup
+            // 
+            this.buttonAddGroup.Location = new System.Drawing.Point(281, 12);
+            this.buttonAddGroup.Name = "buttonAddGroup";
+            this.buttonAddGroup.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddGroup.TabIndex = 3;
+            this.buttonAddGroup.Text = "Dodaj grupę";
+            this.buttonAddGroup.UseVisualStyleBackColor = true;
+            this.buttonAddGroup.Click += new System.EventHandler(this.buttonAddGroup_Click);
+            // 
+            // buttonAddEmail
+            // 
+            this.buttonAddEmail.Location = new System.Drawing.Point(640, 12);
+            this.buttonAddEmail.Name = "buttonAddEmail";
+            this.buttonAddEmail.Size = new System.Drawing.Size(75, 23);
+            this.buttonAddEmail.TabIndex = 7;
+            this.buttonAddEmail.Text = "Dodaj e-mail";
+            this.buttonAddEmail.UseVisualStyleBackColor = true;
+            this.buttonAddEmail.Click += new System.EventHandler(this.buttonAddEmail_Click);
+            // 
+            // buttonEditGroup
+            // 
+            this.buttonEditGroup.Location = new System.Drawing.Point(281, 41);
+            this.buttonEditGroup.Name = "buttonEditGroup";
+            this.buttonEditGroup.Size = new System.Drawing.Size(75, 23);
+            this.buttonEditGroup.TabIndex = 8;
+            this.buttonEditGroup.Text = "Edytuj grupę";
+            this.buttonEditGroup.UseVisualStyleBackColor = true;
+            this.buttonEditGroup.Click += new System.EventHandler(this.buttonEditGroup_Click);
+            // 
+            // buttonDeleteReceiverGroup
+            // 
+            this.buttonDeleteReceiverGroup.Location = new System.Drawing.Point(559, 239);
+            this.buttonDeleteReceiverGroup.Name = "buttonDeleteReceiverGroup";
+            this.buttonDeleteReceiverGroup.Size = new System.Drawing.Size(150, 23);
+            this.buttonDeleteReceiverGroup.TabIndex = 9;
+            this.buttonDeleteReceiverGroup.Text = "Usuń połączenie";
+            this.buttonDeleteReceiverGroup.UseVisualStyleBackColor = true;
+            this.buttonDeleteReceiverGroup.Click += new System.EventHandler(this.buttonDeleteReceiverGroup_Click);
+            // 
             // GroupsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(868, 493);
+            this.ClientSize = new System.Drawing.Size(721, 493);
+            this.Controls.Add(this.buttonDeleteReceiverGroup);
+            this.Controls.Add(this.buttonEditGroup);
+            this.Controls.Add(this.buttonAddEmail);
             this.Controls.Add(this.buttonAddEmailToGroup);
             this.Controls.Add(this.dataGridViewJoined);
             this.Controls.Add(this.dataGridViewReceivers);
+            this.Controls.Add(this.buttonAddGroup);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.dataGridViewGroups);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -296,5 +344,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn receiverGroupsIdDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn notificationReceiversIdDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn createdDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button buttonAddGroup;
+        private System.Windows.Forms.Button buttonAddEmail;
+        private System.Windows.Forms.Button buttonEditGroup;
+        private System.Windows.Forms.Button buttonDeleteReceiverGroup;
     }
 }

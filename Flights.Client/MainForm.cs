@@ -22,5 +22,11 @@ namespace Flights.Client
             SearchCriteriaListForm form = new SearchCriteriaListForm();
             form.ShowDialog();
         }
+
+        private void buttonGroups_Click(object sender, EventArgs e)
+        {
+            GroupsForm groupsForm = new GroupsForm();
+            groupsForm.ShowDialog();
+        }
     }
 }

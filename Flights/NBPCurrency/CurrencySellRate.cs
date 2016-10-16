@@ -12,6 +12,8 @@ namespace Flights.NBPCurrency
     {
         private readonly IXmlParser _xmlParser;
 
+        private readonly List<string> plnNames = new List<string>() { "zł", "zl", "pln" }; 
+
         public CurrencySellRate(IXmlParser xmlParser)
         {
             if (xmlParser == null) throw new ArgumentNullException("xmlParser");
@@ -21,7 +23,7 @@ namespace Flights.NBPCurrency
 
         public decimal GetSellRate(Currency currency)
         {
-            if (currency.Name == "zł")
+            if (plnNames.Contains(currency.Name.ToLower()))
                 return 1;
             
             var tabelaKursow = _xmlParser.Parse();
@@ -29,13 +31,19 @@ namespace Flights.NBPCurrency
 
             switch (currency.Name)
             {
+                case "nok":
+                case "NOK":
                 case "Nkr":
                 case "kr":
                     currencyCode = "NOK";
                     break;
+                case "gbp":
+                case "GBP":
                 case "£":
                     currencyCode = "GBP";
                     break;
+                case "eur":
+                case "EUR":
                 case "€":
                     currencyCode = "EUR";
                     break;

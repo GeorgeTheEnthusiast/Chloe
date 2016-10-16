@@ -31,8 +31,6 @@ namespace Flights.Client
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-
-
             this.Close();
         }
 
@@ -63,22 +61,78 @@ namespace Flights.Client
                 MessageBox.Show(Resources.GroupsForm_AtLeastOneEmailIsRequired);
                 return;
             }
-
-            var dataRowView = (dataGridViewGroups.SelectedRows[0].DataBoundItem as DataRowView);
-            var groupRow = dataRowView.Row as FlightsDataSet.ReceiverGroupsRow;
-
-            dataRowView = dataGridViewReceivers.SelectedRows[0].DataBoundItem as DataRowView;
-            var receiverRow = dataRowView.Row as FlightsDataSet.NotificationReceiversRow;
+            
+            var groupRow = ReturnCurrentSelectedReceiverGroupsRow();
+            var receiverRow = ReturnCurrentSelectedNotificationReceiversRow();
             
             using (var flightEntities = new FlightsEntities1())
             {
-                flightEntities.NotificationReceiversGroups.Add(new NotificationReceiversGroup()
+                bool exist =
+                    flightEntities.NotificationReceiversGroups.Any(
+                        x => x.ReceiverGroups_Id == receiverRow.Id && x.NotificationReceivers_Id == receiverRow.Id);
+
+                if (exist == false)
                 {
-                    ReceiverGroups_Id = groupRow.Id,
-                    NotificationReceivers_Id = receiverRow.Id
-                });
+                    flightEntities.NotificationReceiversGroups.Add(new NotificationReceiversGroup()
+                    {
+                        ReceiverGroups_Id = groupRow.Id,
+                        NotificationReceivers_Id = receiverRow.Id
+                    });
+                    flightEntities.SaveChanges();
+                }
+            }
+        }
+
+        private void buttonAddGroup_Click(object sender, EventArgs e)
+        {
+            using (var flightEntities = new FlightsEntities1())
+            {
+                
+            }
+        }
+
+        private void buttonEditGroup_Click(object sender, EventArgs e)
+        {
+            var currentRow = ReturnCurrentSelectedReceiverGroupsRow();
+
+            using (var flightEntities = new FlightsEntities1())
+            {
+                var row = flightEntities.ReceiverGroups.First(x => x.Id == currentRow.Id);
+                row.Name = currentRow.Name;
+
                 flightEntities.SaveChanges();
             }
+
+            MessageBox.Show("Zmiany w grupach zostały zapisane!");
+        }
+
+        private FlightsDataSet.NotificationReceiversRow ReturnCurrentSelectedNotificationReceiversRow()
+        {
+            var dataRowView = dataGridViewReceivers.SelectedRows[0].DataBoundItem as DataRowView;
+            return dataRowView.Row as FlightsDataSet.NotificationReceiversRow;
+        }
+
+        private FlightsDataSet.ReceiverGroupsRow ReturnCurrentSelectedReceiverGroupsRow()
+        {
+            var dataRowView = (dataGridViewGroups.SelectedRows[0].DataBoundItem as DataRowView);
+            return dataRowView.Row as FlightsDataSet.ReceiverGroupsRow;
+        }
+
+        private FlightsDataSet.ReceiverGroupsRow ReturnCurrentSelectedJoinedRow()
+        {
+            var dataRowView = (dataGridViewJoined.SelectedRows[0].DataBoundItem as DataRowView);
+            return dataRowView.Row as FlightsDataSet.ReceiverGroupsRow;
+        }
+
+        private void buttonDeleteReceiverGroup_Click(object sender, EventArgs e)
+        {
+            var currentRow = ReturnCurrentSelectedReceiverGroupsRow();
+            
+        }
+
+        private void buttonAddEmail_Click(object sender, EventArgs e)
+        {
+            var row = ReturnCurrentSelectedNotificationReceiversRow();
         }
     }
 }

@@ -263,7 +263,7 @@ namespace Flights.Controllers.FlightsControllers
         {
             try
             {
-                _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='slide active']")));
+                _webDriverWait.Until(x => x.FindElements(By.CssSelector("span[class='preamble']")).Any(y => y.Text == "Wybierz lot na trasie wylotu"));
             }
             catch
             {
@@ -363,8 +363,13 @@ namespace Flights.Controllers.FlightsControllers
 
         private List<Flight> CollectFlights(SearchCriteria searchCriteria)
         {
+            var slideActive = _webDriverWait.Until(
+                x => x.FindElement(By.CssSelector("div[class='wrapper']"))
+                .FindElements(By.ClassName("slide"))
+                .ToList()
+                .FirstOrDefault(y => y.GetAttribute("class").Contains("active")));
             var flightSlides = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElements(By.ClassName("slide")));
-            var slideActive = _webDriverWait.Until(x => x.FindElement(By.CssSelector("div[class='wrapper']")).FindElement(By.CssSelector("div[class='slide active']")));
+            
             DateTime activeSlideDateTime = GetDateFromCarousel(slideActive, searchCriteria.DepartureDate.Date);
             Dictionary<IWebElement, DateTime> slideDatesDictionary = new Dictionary<IWebElement, DateTime>();
             Dictionary<IWebElement, DateTime> slideDatesDictionaryLoop = new Dictionary<IWebElement, DateTime>();

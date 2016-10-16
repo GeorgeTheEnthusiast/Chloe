@@ -67,5 +67,20 @@ namespace Flights.Domain.Query
 
             return result;
         }
+
+        public IEnumerable<FlightsDto.Flight> GetFlightsBySearchCriteria(FlightsDto.SearchCriteria searchCriteria)
+        {
+            IEnumerable<FlightsDto.Flight> result;
+
+            using (var flightDataModel = new FlightsDomain.FlightsEntities())
+            {
+                var flights = flightDataModel.Flights
+                    .Where(x => x.SearchCriterias.Id == searchCriteria.Id);
+
+                result = _flightsConverter.Convert(flights);
+            }
+
+            return result;
+        }
     }
 }
