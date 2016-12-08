@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="61a70e6760a54f41863ebe594ff85600" Name="Diagram1">
+        <EntityTypeShape EntityType="FlightsModel.Carriers" Width="1.5" PointX="10.875" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="FlightsModel.Cities" Width="1.5" PointX="8.625" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="FlightsModel.Currencies" Width="1.5" PointX="6" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="FlightsModel.Flights" Width="1.5" PointX="8.25" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="FlightsModel.FlightWebsites" Width="1.5" PointX="9" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="FlightsModel.Net" Width="1.5" PointX="11" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="FlightsModel.NotificationReceivers" Width="1.5" PointX="5.875" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="FlightsModel.NotificationReceiversGroups" Width="1.5" PointX="3.625" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="FlightsModel.ReceiverGroups" Width="1.5" PointX="3.625" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="FlightsModel.SearchCriterias" Width="1.5" PointX="6" PointY="4.125" IsExpanded="true" />
+        <AssociationConnector Association="FlightsModel.FK_Flights_Carriers" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_Net_Carriers" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_Net_CitiesFrom" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_Net_CitiesTo" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_SearchCriteria_CityFrom" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_SearchCriteria_CityTo" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_Flight_Currency" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_Flight_SearchCriteria" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_SearchCriterias_FlightWebsites" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_NotificationReceiversGroups_NotificationReceivers" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_NotificationReceiversGroups_ReceiverGroups" ManuallyRouted="false" />
+        <AssociationConnector Association="FlightsModel.FK_SearchCriterias_ReceiverGroups" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="FlightsModel.TimeTable" Width="1.5" PointX="13.125" PointY="3.125" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTable_Carriers" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTable_CitiesFrom" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTable_CitiesTo" />
+        <EntityTypeShape EntityType="FlightsModel.Flights_View" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="FlightsModel.SearchCriteria_View" Width="1.5" PointX="2.75" PointY="0.75" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTable_FlightWebsites1" />
+        <EntityTypeShape EntityType="FlightsModel.TimeTableStatus" Width="1.5" PointX="11.25" PointY="8.125" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTableStatus_CitiesFrom" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTableStatus_CitiesTo" />
+        <AssociationConnector Association="FlightsModel.FK_TimeTableStatus_FlightWebsites" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
