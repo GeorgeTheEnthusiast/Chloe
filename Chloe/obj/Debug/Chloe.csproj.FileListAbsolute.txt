@@ -1,0 +1,3 @@
+d:\repo\Chloe\Chloe\bin\Debug\Flights.exe.config
+d:\repo\Chloe\Chloe\obj\Debug\Flights.exe
+d:\repo\Chloe\Chloe\obj\Debug\Flights.pdb

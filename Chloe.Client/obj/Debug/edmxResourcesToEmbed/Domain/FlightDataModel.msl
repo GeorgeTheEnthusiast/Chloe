@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="FlightsModelStoreContainer" CdmEntityContainer="FlightsEntities1">
+    <EntitySetMapping Name="Carriers">
+      <EntityTypeMapping TypeName="FlightsModel.Carrier">
+        <MappingFragment StoreEntitySet="Carriers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cities">
+      <EntityTypeMapping TypeName="FlightsModel.City">
+        <MappingFragment StoreEntitySet="Cities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="Alias" ColumnName="Alias" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Currencies">
+      <EntityTypeMapping TypeName="FlightsModel.Currency">
+        <MappingFragment StoreEntitySet="Currencies">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Flights">
+      <EntityTypeMapping TypeName="FlightsModel.Flight">
+        <MappingFragment StoreEntitySet="Flights">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="SearchCriteria_Id" ColumnName="SearchCriteria_Id" />
+          <ScalarProperty Name="DepartureDate" ColumnName="DepartureDate" />
+          <ScalarProperty Name="Currency_Id" ColumnName="Currency_Id" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="SearchDate" ColumnName="SearchDate" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="IsDirect" ColumnName="IsDirect" />
+          <ScalarProperty Name="Carrier_Id" ColumnName="Carrier_Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FlightWebsites">
+      <EntityTypeMapping TypeName="FlightsModel.FlightWebsite">
+        <MappingFragment StoreEntitySet="FlightWebsites">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Website" ColumnName="Website" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Nets">
+      <EntityTypeMapping TypeName="FlightsModel.Net">
+        <MappingFragment StoreEntitySet="Net">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Carrier_Id" ColumnName="Carrier_Id" />
+          <ScalarProperty Name="CityFrom_Id" ColumnName="CityFrom_Id" />
+          <ScalarProperty Name="CityTo_Id" ColumnName="CityTo_Id" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="NotificationReceivers">
+      <EntityTypeMapping TypeName="FlightsModel.NotificationReceiver">
+        <MappingFragment StoreEntitySet="NotificationReceivers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="NotificationReceiversGroups">
+      <EntityTypeMapping TypeName="FlightsModel.NotificationReceiversGroup">
+        <MappingFragment StoreEntitySet="NotificationReceiversGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ReceiverGroups_Id" ColumnName="ReceiverGroups_Id" />
+          <ScalarProperty Name="NotificationReceivers_Id" ColumnName="NotificationReceivers_Id" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ReceiverGroups">
+      <EntityTypeMapping TypeName="FlightsModel.ReceiverGroup">
+        <MappingFragment StoreEntitySet="ReceiverGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SearchCriterias">
+      <EntityTypeMapping TypeName="FlightsModel.SearchCriteria">
+        <MappingFragment StoreEntitySet="SearchCriterias">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CityFrom_Id" ColumnName="CityFrom_Id" />
+          <ScalarProperty Name="CityTo_Id" ColumnName="CityTo_Id" />
+          <ScalarProperty Name="DepartureDate" ColumnName="DepartureDate" />
+          <ScalarProperty Name="FlightWebsite_Id" ColumnName="FlightWebsite_Id" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+          <ScalarProperty Name="ReceiverGroups_Id" ColumnName="ReceiverGroups_Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SearchCriteria_View">
+      <EntityTypeMapping TypeName="FlightsModel.SearchCriteria_View">
+        <MappingFragment StoreEntitySet="SearchCriteria_View">
+          <ScalarProperty Name="Strona" ColumnName="Strona" />
+          <ScalarProperty Name="DataWylotu" ColumnName="DataWylotu" />
+          <ScalarProperty Name="Nazwa" ColumnName="Nazwa" />
+          <ScalarProperty Name="Do" ColumnName="Do" />
+          <ScalarProperty Name="Od" ColumnName="Od" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TimeTables">
+      <EntityTypeMapping TypeName="FlightsModel.TimeTable">
+        <MappingFragment StoreEntitySet="TimeTable">
+          <ScalarProperty Name="ArrivalDate" ColumnName="ArrivalDate" />
+          <ScalarProperty Name="CityTo_Id" ColumnName="CityTo_Id" />
+          <ScalarProperty Name="CityFrom_Id" ColumnName="CityFrom_Id" />
+          <ScalarProperty Name="DepartureDate" ColumnName="DepartureDate" />
+          <ScalarProperty Name="Carrier_Id" ColumnName="Carrier_Id" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
